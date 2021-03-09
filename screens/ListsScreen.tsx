@@ -7,6 +7,11 @@ const ListsScreen = (props: Props) => {
 	return (
 		<ScrollView style={styles.container}>
 			<FeedItem />
+			<FeedItem />
+			<FeedItem />
+			<FeedItem />
+			<FeedItem />
+			<FeedItem />
 		</ScrollView>
 	);
 };
