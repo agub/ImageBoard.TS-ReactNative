@@ -1,16 +1,22 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-
+import { StyleSheet, Text, View, ScrollView } from "react-native";
+import FeedItem from "../components/FeedItem";
 interface Props {}
 
 const ListsScreen = (props: Props) => {
 	return (
-		<View>
-			<Text>ListsScreen</Text>
-		</View>
+		<ScrollView style={styles.container}>
+			<FeedItem />
+		</ScrollView>
 	);
 };
 
 export default ListsScreen;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	container: {
+		// width: "100%",
+		flex: 1,
+		backgroundColor: "white",
+	},
+});

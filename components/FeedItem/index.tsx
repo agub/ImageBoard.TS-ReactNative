@@ -7,9 +7,9 @@ import {
 	Entypo,
 } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
-type PostItemProps = {};
+type FeedItemProps = {};
 
-const PostsItem = (props: PostItemProps) => {
+const FeedItem = (props: FeedItemProps) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.icon}>
@@ -63,4 +63,4 @@ const PostsItem = (props: PostItemProps) => {
 	);
 };
 
-export default PostsItem;
+export default FeedItem;

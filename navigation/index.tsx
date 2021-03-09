@@ -1,3 +1,4 @@
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
 	NavigationContainer,
 	DefaultTheme,
@@ -6,6 +7,7 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { Button, ColorSchemeName, Text, View } from "react-native";
+import Colors from "../constants/Colors";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
@@ -35,34 +37,57 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
 	return (
-		<Stack.Navigator screenOptions={{ headerShown: true }}>
+		<Stack.Navigator
+			screenOptions={{
+				headerShown: true,
+				// headerTitleAlign: "left",
+			}}
+		>
 			<Stack.Screen
 				name='Root'
 				component={BottomTabNavigator}
 				options={{
-					title: "My Feed",
+					title: "",
+
 					headerRight: () => (
 						<View
 							style={{
-								width: 100,
+								paddingHorizontal: 20,
 							}}
 						>
-							<Button
-								title='Logout'
-								onPress={() => console.warn("Logout")}
-							/>
+							<MaterialIcons name='menu' size={30} />
 						</View>
 					),
 					headerLeft: () => (
 						<View
 							style={{
-								width: 100,
+								flexDirection: "row",
+								alignItems: "center",
+								padding: 20,
 							}}
 						>
-							<Button
-								title='Menu'
-								onPress={() => console.warn("menu")}
-							/>
+							<View
+								style={{
+									width: 30,
+									height: 30,
+									backgroundColor: Colors.light.secondary,
+								}}
+							>
+								<Ionicons
+									name='ios-logo-vk'
+									color={"white"}
+									size={30}
+								/>
+							</View>
+							<Text
+								style={{
+									fontWeight: "bold",
+									fontSize: 20,
+									marginLeft: 10,
+								}}
+							>
+								My FEEDER
+							</Text>
 						</View>
 					),
 				}}
