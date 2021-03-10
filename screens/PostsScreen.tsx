@@ -1,14 +1,13 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import FeedItem from "../components/FeedItem/index";
+import NewPost from "../components/NewPost";
 interface Props {}
 
 const PostsScreen = (props: Props) => {
 	return (
-		<ScrollView style={styles.container}>
-			<FeedItem />
-		</ScrollView>
+		<View style={styles.container}>
+			<NewPost />
+		</View>
 	);
 };
 

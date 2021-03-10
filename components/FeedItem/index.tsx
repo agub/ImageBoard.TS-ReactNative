@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import styles from "./styles";
 import {
 	MaterialCommunityIcons,
@@ -7,11 +7,12 @@ import {
 	Entypo,
 } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+
 type FeedItemProps = {};
 
 const FeedItem = (props: FeedItemProps) => {
 	return (
-		<View style={styles.container}>
+		<TouchableOpacity style={styles.container}>
 			<View style={styles.icon}>
 				<MaterialCommunityIcons
 					name='text-box-multiple-outline'
@@ -59,7 +60,7 @@ const FeedItem = (props: FeedItemProps) => {
 					</View>
 				</View>
 			</View>
-		</View>
+		</TouchableOpacity>
 	);
 };
 

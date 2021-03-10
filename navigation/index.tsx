@@ -1,15 +1,18 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import {
 	NavigationContainer,
 	DefaultTheme,
 	DarkTheme,
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { Button, ColorSchemeName, Text, View } from "react-native";
+import NewPost from "../components/NewPost";
 import Colors from "../constants/Colors";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
+import PostsScreen from "../screens/PostsScreen";
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -92,6 +95,29 @@ function RootNavigator() {
 					),
 				}}
 			/>
+
+			{/* <Stack.Screen
+				name='Posts'
+				component={PostsScreen}
+				options={({ route }) => ({
+					title: route.name,
+					headerRight: () => (
+						<View
+							style={{
+								// flexDirection: "row",
+								width: 100,
+								height: 100,
+								// justifyContent: "space-between",
+								// marginRight: 10,
+							}}
+						>
+							<Text>dafdsafaafdadsf</Text>
+							<Octicons name='search' size={22} color={"red"} />
+						</View>
+					),
+				})}
+			/> */}
+
 			<Stack.Screen
 				name='NotFound'
 				component={NotFoundScreen}

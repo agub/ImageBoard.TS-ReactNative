@@ -71,6 +71,7 @@ const styles = StyleSheet.create({
 		width: 25,
 		height: 25,
 		marginHorizontal: 2,
+		elevation: 2,
 	},
 });
 
