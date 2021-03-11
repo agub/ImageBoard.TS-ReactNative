@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
 		// paddingHorizontal: 30,
 		// paddingVertical: 15,
 		justifyContent: "center",
-		alignItems: "flex-end",
+		// alignItems: "flex-end",
 		backgroundColor: "rgba(0, 0, 0, 0.7)",
 		// borderBottomWidth: 2,
 		// borderBottomColor: Colors.light.background,
@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: "row",
 		// width: "100%",
-		paddingBottom: 10,
+		paddingVertical: 10,
+		// paddingBottom: 10,
 		alignItems: "center",
 		justifyContent: "space-between",
 		// borderBottomWidth: 2,
@@ -52,12 +53,18 @@ const styles = StyleSheet.create({
 	textAreaBox: {
 		// paddingVertical: 30,
 	},
-	modalText: {
+	modalSubText: {
 		// marginBottom: 15,
 		paddingVertical: 5,
 		fontSize: 18,
 	},
+	modalText: {
+		paddingVertical: 5,
+		fontSize: 18,
+	},
 	mainText: {
+		justifyContent: "flex-start",
+		// height: "100%",
 		paddingVertical: 5,
 	},
 	modalView: {
