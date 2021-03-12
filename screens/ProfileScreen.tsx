@@ -6,11 +6,11 @@ import EditButton from "../components/EditButton/EditButton";
 import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
 import { BottomTabParamList, RootStackParamList } from "../types";
 
-interface Props {
+type ProfileScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
-}
+};
 
-const ProfileScreen = (props: Props) => {
+const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	const { navigation } = props;
 
 	return (

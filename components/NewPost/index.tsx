@@ -19,7 +19,7 @@ type NewPostProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
 
-const NewPost = (props: NewPostProps) => {
+const NewPost: React.FC<NewPostProps> = (props) => {
 	const { navigation } = props;
 	const [modalVisible, setModalVisible] = useState(false);
 

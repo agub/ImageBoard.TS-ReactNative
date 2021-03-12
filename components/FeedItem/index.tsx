@@ -10,7 +10,7 @@ import Colors from "../../constants/Colors";
 
 type FeedItemProps = {};
 
-const FeedItem = (props: FeedItemProps) => {
+const FeedItem: React.FC<FeedItemProps> = (props) => {
 	return (
 		<TouchableOpacity style={styles.container}>
 			<View style={styles.icon}>

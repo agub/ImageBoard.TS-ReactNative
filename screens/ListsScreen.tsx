@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import FeedItem from "../components/FeedItem";
-interface Props {}
+type ListsScreenProps = {};
 
-const ListsScreen = (props: Props) => {
+const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	return (
 		<ScrollView style={styles.container}>
 			<FeedItem />

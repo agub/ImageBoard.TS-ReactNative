@@ -9,7 +9,7 @@ type EditButtonProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
 
-const EditButton = (props: EditButtonProps) => {
+const EditButton: React.FC<EditButtonProps> = (props) => {
 	const { navigation } = props;
 
 	return (

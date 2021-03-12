@@ -18,7 +18,7 @@ type PostScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
 
-const PostsScreen = (props: PostScreenProps) => {
+const PostsScreen: React.FC<PostScreenProps> = (props) => {
 	const { navigation } = props;
 	return (
 		<View style={styles.container}>

@@ -8,7 +8,7 @@ type UserEditScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "UserEdit">;
 };
 
-const UserEditScreen = (props: UserEditScreenProps) => {
+const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 	const { navigation } = props;
 
 	const onPress = () => {
