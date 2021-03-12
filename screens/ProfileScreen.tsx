@@ -1,23 +1,22 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
+import EditButton from "../components/EditButton/EditButton";
 
-import FeedItem from "../components/FeedItem";
 import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
+import { BottomTabParamList, RootStackParamList } from "../types";
 
-interface Props {}
+interface Props {
+	navigation: StackNavigationProp<RootStackParamList, "Root">;
+}
 
 const ProfileScreen = (props: Props) => {
+	const { navigation } = props;
+
 	return (
 		<View style={styles.container}>
-			<ProfileHeader />
-			{/* <ScrollView>
-				<FeedItem />
-				<FeedItem />
-				<FeedItem />
-				<FeedItem />
-				<FeedItem />
-				<FeedItem />
-			</ScrollView> */}
+			<ProfileHeader navigation={navigation} />
+			<EditButton navigation={navigation} />
 		</View>
 	);
 };

@@ -5,18 +5,10 @@ const styles = StyleSheet.create({
 		width: "100%",
 		flexDirection: "row",
 		height: "100%",
-		// backgroundColor: "green",
-		// paddingHorizontal: 30,
-		// paddingVertical: 15,
 		justifyContent: "center",
-		// alignItems: "flex-end",
 		backgroundColor: "rgba(0, 0, 0, 0.7)",
-		// borderBottomWidth: 2,
-		// borderBottomColor: Colors.light.background,
 	},
 	modalBg: {
-		// flex: 1,
-		// justifyContent: "flex-end",
 		height: "100%",
 		backgroundColor: "rgba(0, 0, 0, 0.7)",
 		alignItems: "center",
@@ -33,9 +25,9 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		flexDirection: "row",
-		// width: "100%",
+
 		paddingVertical: 10,
-		// paddingBottom: 10,
+
 		alignItems: "center",
 		justifyContent: "space-between",
 		// borderBottomWidth: 2,
@@ -94,20 +86,29 @@ const styles = StyleSheet.create({
 	},
 	buttonOpen: {
 		backgroundColor: Colors.light.secondary,
-		// width: 200,
 		padding: 15,
 	},
 	buttonClose: {
 		backgroundColor: Colors.light.Primary,
 	},
-	OpenBtnBox: {
-		padding: 30,
-		marginTop: "auto",
-	},
 	textStyle: {
 		color: "white",
 		fontWeight: "bold",
 		textAlign: "center",
+	},
+	goBackHistory: {
+		width: 40,
+		height: 40,
+		borderRadius: 50,
+		backgroundColor: "white",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	beforePost: {
+		flexDirection: "column",
+		justifyContent: "space-between",
+		alignItems: "center",
+		padding: 30,
 	},
 });
 

@@ -11,45 +11,37 @@ import styles from "./styles";
 
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { RootStackParamList } from "../../types";
 
 // import { TextInput } from "react-native-gesture-handler";
+type NewPostProps = {
+	navigation: StackNavigationProp<RootStackParamList, "Root">;
+};
 
-interface Props {}
-
-const NewPost = (props: Props) => {
+const NewPost = (props: NewPostProps) => {
+	const { navigation } = props;
 	const [modalVisible, setModalVisible] = useState(false);
 
 	let input: any;
 	const focus = () => {
 		input.focus();
 	};
+	const closeTab = () => {
+		setModalVisible(!modalVisible);
+		navigation.goBack();
+	};
 
 	const TextArea = (): JSX.Element => (
 		<View style={styles.modalView}>
 			<View style={styles.header}>
-				{/* <Pressable
-					style={[styles.button, styles.buttonClose]}
-					onPress={() => setModalVisible(!modalVisible)}
-			
-				> */}
-				{/* <View> */}
-
-				{/* <Ionicons
-							name='close'
-							color={Colors.light.tabIconDefault}
-							size={30}
-						/> */}
-				{/* </View> */}
-
-				{/* <Text style={styles.textStyle}>X</Text>
-				</Pressable> */}
-
 				<View style={styles.textCenter}>
 					<Text style={styles.headerText}>新規投稿</Text>
 				</View>
 				<Pressable
 					// style={[styles.button, styles.buttonClose]}
-					onPress={() => setModalVisible(!modalVisible)}
+					onPress={closeTab}
+					// onPress={() => setModalVisible(!modalVisible)}
 				>
 					<Ionicons
 						name='close'
@@ -60,6 +52,7 @@ const NewPost = (props: Props) => {
 				</Pressable>
 				<View style={[styles.button, styles.buttonClose]}>
 					<TouchableWithoutFeedback
+						style={[styles.button, styles.buttonClose]}
 						onPress={() => console.warn("submitted")}
 					>
 						<Text style={styles.textStyle}>投稿</Text>
@@ -88,20 +81,24 @@ const NewPost = (props: Props) => {
 						style={styles.modalText}
 						ref={(x) => (input = x)}
 					/>
-					{/* <Text style={styles.modalText}>
-						MainText here Lorem ipsum dolor sit amet consectetur,
-						adipisicing elit. Dolorum, cumque natus eligendi non
-						voluptates exercitationem sit error, eaque enim odio
-						voluptatem ipsa deserunt iure provident possimus dolor
-						sed velit quisquam.
-					</Text> */}
 				</TouchableWithoutFeedback>
 			</View>
 		</View>
 	);
 
 	const BeforePost = (): JSX.Element => (
-		<View style={styles.OpenBtnBox}>
+		<View style={styles.beforePost}>
+			<Pressable
+				style={styles.goBackHistory}
+				onPress={() => navigation.goBack()}
+			>
+				<Ionicons
+					name='close'
+					color={Colors.light.tabIconDefault}
+					size={30}
+				/>
+			</Pressable>
+
 			<Pressable
 				style={[styles.button, styles.buttonOpen]}
 				onPress={() => setModalVisible(true)}
@@ -131,6 +128,7 @@ const NewPost = (props: Props) => {
 					<TextArea />
 				</View>
 			</Modal>
+
 			<BeforePost />
 		</View>
 	);

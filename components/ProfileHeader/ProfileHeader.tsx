@@ -2,15 +2,17 @@ import React from "react";
 import { View, Text, Button, Pressable } from "react-native";
 import styles from "./styles";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import PostsScreen from "../../screens/PostsScreen";
-import ListsScreen from "../../screens/ListsScreen";
-import TopNavigator from "../../navigation/TopNavigator";
-interface Props {}
+import {
+	createStackNavigator,
+	StackNavigationProp,
+} from "@react-navigation/stack";
+import { BottomTabParamList, RootStackParamList } from "../../types";
 
-const ProfileHeader = (props: Props) => {
-	const Stack = createStackNavigator();
+type ProfileHeaderProps = {
+	navigation: StackNavigationProp<RootStackParamList, "Root">;
+};
+const ProfileHeader = (props: ProfileHeaderProps) => {
+	const { navigation } = props;
 	return (
 		<View style={styles.container}>
 			<View style={styles.profilePic}>
@@ -20,34 +22,22 @@ const ProfileHeader = (props: Props) => {
 
 			<View style={styles.userNameBox}>
 				<Text style={styles.userNameText}>USER NAME 123</Text>
-				<Pressable>
+				<Pressable onPress={() => navigation.navigate("UserEdit")}>
 					<Text>編集</Text>
 				</Pressable>
 			</View>
 
 			<Text style={styles.info}>12 Likes {"  "}25 Jan 2021</Text>
 
-			<View style={styles.buttonBox}>
-				<Pressable style={styles.button}>
-					<Text style={styles.buttonText}>ユーザー設定を変える</Text>
-				</Pressable>
-			</View>
-			{/* <NavigationContainer independent={true}>
-				<Stack.Navigator
-					screenOptions={{
-						headerShown: true,
-						// headerTitleAlign: "left",
+			{/* <View style={styles.buttonBox}>
+				<Pressable
+					style={styles.button}
+					onPress={() => {
+						navigation.navigate("Home");
 					}}
 				>
-					<Stack.Screen
-						name='Home'
-						component={TopNavigator}
-						options={{ title: "過去の投稿" }}
-					/>
-				</Stack.Navigator>
-			</NavigationContainer> */}
-			{/* <View style={styles.menuText}>
-				<Text>投稿済み</Text>
+					<Text style={styles.buttonText}>ユーザー設定を変更</Text>
+				</Pressable>
 			</View> */}
 		</View>
 	);

@@ -13,6 +13,7 @@ import Colors from "../constants/Colors";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import PostsScreen from "../screens/PostsScreen";
+import UserEditScreen from "../screens/UserEditScreen";
 import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -95,7 +96,7 @@ function RootNavigator() {
 					),
 				}}
 			/>
-
+			<Stack.Screen name='UserEdit' component={UserEditScreen} />
 			{/* <Stack.Screen
 				name='Posts'
 				component={PostsScreen}

@@ -8,21 +8,25 @@ import {
 	DefaultTheme,
 	DarkTheme,
 } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import {
+	createStackNavigator,
+	StackNavigationProp,
+} from "@react-navigation/stack";
+import { RootStackParamList } from "../types";
 
-interface Props {
-	navigation: () => null;
-}
+type PostScreenProps = {
+	navigation: StackNavigationProp<RootStackParamList, "Root">;
+};
 
-const PostsScreen = (props: Props) => {
+const PostsScreen = (props: PostScreenProps) => {
 	const { navigation } = props;
 	return (
 		<View style={styles.container}>
-			<NewPost />
-			{/* <Button
-				title='go back'
-				onPress={() => navigation.navigate("Lists")}
-			/> */}
+			{/* <View>
+				<Text>asdfafasdfas</Text>
+			</View> */}
+			<NewPost navigation={navigation} />
+			{/* <Button title='abc' /> */}
 		</View>
 	);
 };
