@@ -22,11 +22,7 @@ const PostsScreen: React.FC<PostScreenProps> = (props) => {
 	const { navigation } = props;
 	return (
 		<View style={styles.container}>
-			{/* <View>
-				<Text>asdfafasdfas</Text>
-			</View> */}
 			<NewPost navigation={navigation} />
-			{/* <Button title='abc' /> */}
 		</View>
 	);
 };

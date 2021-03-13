@@ -1,17 +1,17 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import FeedItem from "../components/FeedItem";
-type ListsScreenProps = {};
+import { RootStackParamList } from "../types";
+type ListsScreenProps = {
+	navigation: StackNavigationProp<RootStackParamList, "Root">;
+};
 
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
+	const { navigation } = props;
 	return (
 		<ScrollView style={styles.container}>
-			<FeedItem />
-			<FeedItem />
-			<FeedItem />
-			<FeedItem />
-			<FeedItem />
-			<FeedItem />
+			<FeedItem navigation={navigation} />
 		</ScrollView>
 	);
 };

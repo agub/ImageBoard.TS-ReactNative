@@ -1,8 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
+import { AntDesign } from "@expo/vector-icons";
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
 import { BottomTabParamList, RootStackParamList } from "../types";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 type UserEditScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "UserEdit">;
@@ -16,8 +18,20 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 	};
 	return (
 		<View>
-			<Text>this is UserEdit Screen</Text>
-			<Button title='go back' onPress={onPress} />
+			<TouchableOpacity>
+				<Text>登録済みEmailの変更</Text>
+				<AntDesign name='arrowright' size={25} />
+			</TouchableOpacity>
+			<TouchableOpacity>
+				<Text>パスワードの変更</Text>
+				<AntDesign name='arrowright' size={25} />
+			</TouchableOpacity>
+			<TouchableOpacity>
+				<Text>ユーザーネームを変更</Text>
+				<AntDesign name='arrowright' size={25} />
+			</TouchableOpacity>
+
+			<Button title='戻る' onPress={onPress} />
 		</View>
 	);
 };

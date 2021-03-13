@@ -27,7 +27,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	return (
 		<View style={styles.container}>
 			<ProfileHeader navigation={navigation} />
-			<EditButton navigation={navigation} />
+			<EditButton
+				navigation={navigation}
+				buttonTitle='ユーザー設定を変更'
+				navigateTo='UserEdit'
+				color={Colors.light.secondary}
+			/>
 			{/* <Tab title='ユーザー投稿記事' BarColor={Colors.light.Primary} /> */}
 
 			<NavigationContainer independent={true}>

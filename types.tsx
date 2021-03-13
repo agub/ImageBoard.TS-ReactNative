@@ -2,11 +2,11 @@ export type RootStackParamList = {
 	Root: undefined;
 	NotFound: undefined;
 	UserEdit: undefined;
-	Drawer: undefined;
+	Content: undefined;
 };
 export type DrawerParamList = {
-	Home: undefined;
-	Notifications: undefined;
+	Menu: undefined;
+	// Edit: undefined;
 };
 
 export type BottomTabParamList = {

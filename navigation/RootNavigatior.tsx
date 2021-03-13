@@ -1,4 +1,4 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Octicons, Feather } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
 	NavigationContainer,
@@ -11,10 +11,9 @@ import {
 } from "@react-navigation/stack";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { Button, ColorSchemeName, Text, View } from "react-native";
+import { Button, ColorSchemeName, Pressable, Text, View } from "react-native";
 import NewPost from "../components/NewPost";
 import Colors from "../constants/Colors";
-import { DrawerScreen } from "../screens/DrawerScreen";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import PostsScreen from "../screens/PostsScreen";
@@ -22,10 +21,14 @@ import UserEditScreen from "../screens/UserEditScreen";
 import { DrawerParamList, RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-
+import { DrawerActions } from "@react-navigation/native";
+import ContentScreen from "../screens/ContentScreen";
 const Stack = createStackNavigator<RootStackParamList>();
 
-const RootNavigator = () => {
+type RootNavigatorProps = {
+	navigation: StackNavigationProp<DrawerParamList, "Menu">;
+};
+export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 	return (
 		<>
 			<Stack.Navigator
@@ -46,7 +49,15 @@ const RootNavigator = () => {
 									paddingHorizontal: 20,
 								}}
 							>
-								<MaterialIcons name='menu' size={30} />
+								<MaterialIcons
+									name='menu'
+									size={30}
+									onPress={() =>
+										props.navigation.dispatch(
+											DrawerActions.toggleDrawer()
+										)
+									}
+								/>
 							</View>
 						),
 						headerLeft: () => (
@@ -88,7 +99,6 @@ const RootNavigator = () => {
 					component={UserEditScreen}
 					options={{
 						title: "",
-
 						headerRight: () => (
 							<View
 								style={{
@@ -99,6 +109,30 @@ const RootNavigator = () => {
 							</View>
 						),
 					}}
+					// options={{ headerShown: false }}
+				/>
+				<Stack.Screen
+					name='Content'
+					component={ContentScreen}
+					options={{
+						title: "titlecomeshere",
+						headerStyle: {
+							backgroundColor: Colors.light.secondary,
+						},
+						headerTitleStyle: {
+							fontWeight: "bold",
+						},
+						headerRight: () => (
+							<Pressable
+								style={{
+									paddingHorizontal: 20,
+								}}
+							>
+								<Feather name='star' size={25} color='white' />
+							</Pressable>
+						),
+					}}
+					// options={{ headerShown: false }}
 				/>
 
 				<Stack.Screen
