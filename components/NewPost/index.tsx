@@ -24,6 +24,8 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	let input: any;
+
+	// const input = useRef(() => {});
 	const focus = () => {
 		input.focus();
 	};

@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 		// width: "100%",
 		flexDirection: "row",
 		justifyContent: "center",
+		paddingHorizontal: 20,
 	},
 	button: {
 		width: "100%",

@@ -2,10 +2,7 @@ import React from "react";
 import { View, Text, Button, Pressable } from "react-native";
 import styles from "./styles";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import {
-	createStackNavigator,
-	StackNavigationProp,
-} from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { BottomTabParamList, RootStackParamList } from "../../types";
 
 type ProfileHeaderProps = {

@@ -23,25 +23,6 @@ import { DrawerParamList, RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
 
-// If you are not familiar with React Navigation, we recommend going through the
-// "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
-export default function Navigation({
-	colorScheme,
-}: {
-	colorScheme: ColorSchemeName;
-}) {
-	return (
-		<NavigationContainer
-			linking={LinkingConfiguration}
-			theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
-		>
-			<RootNavigator />
-		</NavigationContainer>
-	);
-}
-
-// A root stack navigator is often used for displaying modals on top of all other content
-// Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
 const RootNavigator = () => {
@@ -129,48 +110,3 @@ const RootNavigator = () => {
 		</>
 	);
 };
-
-// type NotificationsScreenProps = {
-// 	navigation: StackNavigationProp<DrawerParamList, "Notifications">;
-// };
-
-// const NotificationsScreen: React.FC<NotificationsScreenProps> = (props) => {
-// 	return (
-// 		<View
-// 			style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-// 		>
-// 			<Button
-// 				onPress={() => props.navigation.goBack()}
-// 				title='Go back home'
-// 			/>
-// 		</View>
-// 	);
-// };
-// const HomeScreen: React.FC<NotificationsScreenProps> = (props) => {
-// 	return (
-// 		<View
-// 			style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-// 		>
-// 			<Button
-// 				onPress={() => props.navigation.navigate("Notifications")}
-// 				title='Go to notifications'
-// 			/>
-// 		</View>
-// 	);
-// };
-
-// const Drawer = createDrawerNavigator<DrawerParamList>();
-
-// export function DrawerComp() {
-// 	return (
-// 		<NavigationContainer>
-// 			<Drawer.Navigator initialRouteName='Notifications'>
-// 				<Drawer.Screen
-// 					name='Notifications'
-// 					component={NotificationsScreen}
-// 				/>
-// 				<Drawer.Screen name='Home' component={HomeScreen} />
-// 			</Drawer.Navigator>
-// 		</NavigationContainer>
-// 	);
-// }
