@@ -98,14 +98,14 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 					name='UserEdit'
 					component={UserEditScreen}
 					options={{
-						title: "",
+						title: "ユーザー設定",
 						headerRight: () => (
 							<View
 								style={{
 									paddingHorizontal: 20,
 								}}
 							>
-								<Text>Submit</Text>
+								{/* <Text>Submit</Text> */}
 							</View>
 						),
 					}}

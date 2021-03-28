@@ -35,12 +35,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 			/>
 			{/* <Tab title='ユーザー投稿記事' BarColor={Colors.light.Primary} /> */}
 
-			<NavigationContainer independent={true}>
-				<Tab.Navigator>
-					<Tab.Screen name='Home' component={FeedItem} />
-					<Tab.Screen name='Settings' component={FeedItem} />
-				</Tab.Navigator>
-			</NavigationContainer>
+			{/* <NavigationContainer independent={true}> */}
+
+			<Tab.Navigator>
+				<Tab.Screen name='Home' component={FeedItem} />
+				<Tab.Screen name='Settings' component={FeedItem} />
+			</Tab.Navigator>
+
+			{/* </NavigationContainer> */}
 
 			{/* <FeedItem /> */}
 		</View>

@@ -1,5 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import React from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 
@@ -25,8 +25,18 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 	const SettingButton: React.FC<SettingButtonButtonProps> = (props) => {
 		return (
 			<TouchableOpacity style={styles.buttonBox}>
-				<View style={{ flexDirection: "row", alignItems: "center" }}>
-					<AntDesign name='leftsquare' size={20} />
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						height: 40,
+					}}
+				>
+					<Feather
+						name='settings'
+						size={20}
+						style={{ paddingRight: 10 }}
+					/>
 					<View
 						style={{
 							alignItems: "flex-start",
@@ -35,7 +45,12 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 					>
 						<Text style={styles.ButtonText}>{props.text}</Text>
 						{props.additional && (
-							<Text style={styles.ButtonText}>
+							<Text
+								style={[
+									styles.ButtonText,
+									{ color: Colors.light.textLight },
+								]}
+							>
 								{props.additional}
 							</Text>
 						)}
@@ -61,7 +76,9 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 						additional='agub1994'
 					/>
 					<SettingButton text='パスワードの変更' />
-					<Button title='戻る' onPress={onPress} />
+					<View style={styles.backBtn}>
+						<Button title='戻る' onPress={onPress} />
+					</View>
 				</View>
 			</View>
 		</>
@@ -80,7 +97,8 @@ const styles = StyleSheet.create({
 		// paddingHorizontal: 20,
 	},
 	text: {
-		padding: 20,
+		paddingVertical: 20,
+		paddingHorizontal: 25,
 		width: "100%",
 		fontWeight: "bold",
 		backgroundColor: Colors.light.background,
@@ -93,5 +111,8 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		flexDirection: "row",
 		justifyContent: "space-between",
+	},
+	backBtn: {
+		marginTop: 20,
 	},
 });

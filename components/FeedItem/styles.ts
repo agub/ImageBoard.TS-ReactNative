@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		flexDirection: "row",
 		// height: "100%",
+		backgroundColor: "white",
 		// backgroundColor: "green",
 		paddingHorizontal: 10,
 		paddingVertical: 15,
