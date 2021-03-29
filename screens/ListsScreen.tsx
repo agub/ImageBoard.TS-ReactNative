@@ -1,18 +1,44 @@
+import API, { graphqlOperation } from "@aws-amplify/api";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import FeedItem from "../components/FeedItem";
+import { listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
+import { ListPostsQuery } from "../src/API";
+
 type ListsScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
 
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
+	const [posts, setPosts] = useState<ListPostsQuery>();
+
+	useEffect(() => {
+		const fetchPosts = async () => {
+			try {
+				const postData = await API.graphql(graphqlOperation(listPosts));
+				// console.log(postData);
+				if ("data" in postData) {
+					setPosts(postData.data);
+				}
+
+				// console.log(postData.data.listPosts?.items);
+			} catch (e) {
+				console.log(e);
+			}
+		};
+		fetchPosts();
+	}, []);
 	return (
-		<ScrollView style={styles.container}>
-			<FeedItem navigation={navigation} />
-		</ScrollView>
+		// <ScrollView style={styles.container}>
+		<FlatList
+			data={posts?.listPosts?.items}
+			renderItem={({ item }) => (
+				<FeedItem navigation={navigation} posts={item} />
+			)}
+		/>
 	);
 };
 

@@ -1,0 +1,29 @@
+type User @model {
+	id: ID!
+	name: String!
+	imageUri: String
+	status: String
+	posts: [Post] @connection(keyName: "byUser", fields: ["id"])
+}
+
+type Post @model @key(name: "byUser", fields: ["userID"]) {
+	id: ID!
+	title: String!
+	content: String!
+	userID: ID!
+	imageUri: String
+	vote: Int!
+	user: User @connection(fields: ["userID"])
+	comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
+}
+
+type Comment @model @key(name: "byPost", fields: ["postID", "createdAt"]) {
+	id: ID!
+	postID: ID!
+	createdAt: String!
+	content: String!
+	vote: Int!
+	post: Post @connection(fields: ["postID"])
+	userID: ID!
+	user: User @connection(fields: ["userID"])
+}

@@ -8,9 +8,11 @@ import {
 } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../../types";
+import { CommentData, RootStackParamList } from "../../types";
 
-type FeedItemProps = {};
+type FeedItemProps = {
+	data: CommentData | null;
+};
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
 	return (
@@ -18,31 +20,24 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			style={styles.container}
 			// onPress={navigation.navigate("Content")}
 		>
-			{/* <View style={styles.iconBox}>
-				<View style={styles.icon}>
-					<MaterialCommunityIcons
-						name='text-box-multiple-outline'
-						size={30}
-					/>
-				</View>
-			</View> */}
 			<View style={styles.content}>
 				<View style={styles.header}>
-					<Text style={styles.titleText}>REPLY ITEM</Text>
+					<Text style={styles.titleText}></Text>
 					<Text style={styles.timestampText}>3hrs ago</Text>
 				</View>
 				<View style={styles.mainTextBox}>
 					<Text>replying to this</Text>
 				</View>
 				<View style={styles.bottomBtn}>
-					<TouchableOpacity style={styles.comment}>
+					{/* <TouchableOpacity style={styles.comment}>
 						<MaterialIcons
 							name='comment'
 							size={20}
 							color={Colors.light.textLight}
 						/>
 						<Text style={styles.commentText}>0 Comments</Text>
-					</TouchableOpacity>
+					</TouchableOpacity> */}
+
 					<View style={styles.voteBox}>
 						<Text style={styles.voteText}>20</Text>
 						<View style={styles.voteIcon}>

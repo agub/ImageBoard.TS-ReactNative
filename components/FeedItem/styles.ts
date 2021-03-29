@@ -38,6 +38,18 @@ const styles = StyleSheet.create({
 		// backgroundColor: "red",
 		width: "100%",
 	},
+	profileBox: {
+		flexDirection: "row",
+		alignItems: "center",
+
+		marginLeft: "auto",
+	},
+	profile: {
+		width: 20,
+		height: 20,
+		borderRadius: 5,
+		marginRight: 5,
+	},
 	header: {
 		flexDirection: "row",
 		justifyContent: "space-between",

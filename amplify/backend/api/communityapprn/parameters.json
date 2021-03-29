@@ -1,0 +1,11 @@
+{
+  "AppSyncApiName": "communityapprn",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthCognitoUserPoolId": {
+    "Fn::GetAtt": [
+      "authcommunityapprn70eef3fe",
+      "Outputs.UserPoolId"
+    ]
+  }
+}

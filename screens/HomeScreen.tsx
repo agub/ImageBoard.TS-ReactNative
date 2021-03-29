@@ -10,9 +10,7 @@ type HomeScreenProps = {
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 	return (
-		<View style={styles.container}>
-			<FeedItem {...props} />
-		</View>
+		<View style={styles.container}>{/* <FeedItem {...props} /> */}</View>
 	);
 };
 

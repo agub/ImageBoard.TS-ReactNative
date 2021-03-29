@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
 		color: Colors.light.textLight,
 	},
 	voteBox: {
+		marginLeft: "auto",
 		flexDirection: "row",
 		alignItems: "center",
 	},

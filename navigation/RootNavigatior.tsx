@@ -114,8 +114,8 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 				<Stack.Screen
 					name='Content'
 					component={ContentScreen}
-					options={{
-						title: "titlecomeshere",
+					options={({ route }: any) => ({
+						title: route.params.data.getPost.title,
 						headerStyle: {
 							backgroundColor: Colors.light.secondary,
 						},
@@ -131,7 +131,7 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 								<Feather name='star' size={25} color='white' />
 							</Pressable>
 						),
-					}}
+					})}
 					// options={{ headerShown: false }}
 				/>
 

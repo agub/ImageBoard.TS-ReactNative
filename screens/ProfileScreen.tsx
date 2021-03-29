@@ -3,17 +3,21 @@ import {
 	createStackNavigator,
 	StackNavigationProp,
 } from "@react-navigation/stack";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import EditButton from "../components/EditButton/EditButton";
 import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
-import { BottomTabParamList, RootStackParamList } from "../types";
+import { BottomTabParamList, RootStackParamList, UserData } from "../types";
 
 import FeedItem from "../components/FeedItem";
 import Tab from "../components/Tab/Tab";
 import Colors from "../constants/Colors";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import Auth from "@aws-amplify/auth";
+import { API, graphqlOperation } from "aws-amplify";
+import { getUser } from "../src/graphql/queries";
+import { GetUserQuery } from "../src/API";
 
 type ProfileScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -21,12 +25,26 @@ type ProfileScreenProps = {
 
 const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	const { navigation } = props;
+	const [userData, setUserData] = useState<GetUserQuery | undefined>();
 
 	const Tab = createMaterialTopTabNavigator();
 
+	useEffect(() => {
+		const fetchUserData = async () => {
+			const userInfo = await Auth.currentAuthenticatedUser();
+			// console.log(userInfo.attributes.sub);
+			const user = await API.graphql(
+				graphqlOperation(getUser, { id: userInfo.attributes.sub })
+			);
+			//@ts-ignore
+			setUserData(user.data);
+		};
+		fetchUserData();
+	}, []);
+
 	return (
 		<View style={styles.container}>
-			<ProfileHeader navigation={navigation} />
+			<ProfileHeader userData={userData} navigation={navigation} />
 			<EditButton
 				navigation={navigation}
 				buttonTitle='ユーザー設定を変更'

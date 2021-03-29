@@ -1,5 +1,5 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Pressable, Image } from "react-native";
 import styles from "./styles";
 import {
 	MaterialCommunityIcons,
@@ -8,18 +8,41 @@ import {
 } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../../types";
+import { PostData, RootStackParamList } from "../../types";
+
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { getPost } from "../../src/graphql/queries";
+import { GetPostQuery } from "../../src/API";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
+	posts: PostData | null | undefined;
 };
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
-	const { navigation } = props;
+	const { navigation, posts } = props;
+	const [allData, setAllData] = useState<GetPostQuery>();
+	// console.log(allData);
+
+	useEffect(() => {
+		const fetchCommentData = async () => {
+			try {
+				const postData = await API.graphql(
+					graphqlOperation(getPost, { id: posts?.id })
+				);
+				if ("data" in postData) {
+					setAllData(postData.data);
+					console.log(postData.data);
+				}
+			} catch (e) {
+				console.log(e);
+			}
+		};
+		fetchCommentData();
+	}, []);
+
 	const onPress = () => {
-		if (navigation) {
-			navigation?.navigate("Content");
-		}
+		navigation?.navigate("Content", { data: allData });
 	};
 	return (
 		<Pressable
@@ -37,16 +60,20 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			</View>
 			<View style={styles.content}>
 				<View style={styles.header}>
-					<Text style={styles.titleText}>Title is Coming HERE!!</Text>
+					<Text style={styles.titleText}>{posts?.title}</Text>
 					<Text style={styles.timestampText}>3hrs ago</Text>
 				</View>
 				<View style={styles.mainTextBox}>
-					<Text>
-						Lorem ipsum dolor, sit amet consectetur adipisicing
-						elit. Nemo in ad possimus quasi similique pariatur neque
-						adipisci aliquammo in ad possimus quasi similique
-						pariatur neque adipisci aliquam
-					</Text>
+					<Text>{posts?.content}</Text>
+				</View>
+				<View style={styles.profileBox}>
+					{posts?.user?.imageUri && (
+						<Image
+							style={styles.profile}
+							source={{ uri: posts?.user?.imageUri }}
+						/>
+					)}
+					<Text>{posts?.user?.name}</Text>
 				</View>
 				<View style={styles.bottomBtn}>
 					<TouchableOpacity style={styles.comment} onPress={onPress}>
@@ -55,10 +82,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 							size={20}
 							color={Colors.light.textLight}
 						/>
-						<Text style={styles.commentText}>30 Comments</Text>
+						<Text style={styles.commentText}>
+							{allData?.getPost?.comments?.items?.length}Comments
+						</Text>
 					</TouchableOpacity>
 					<View style={styles.voteBox}>
-						<Text style={styles.voteText}>1231</Text>
+						<Text style={styles.voteText}>{posts?.vote}</Text>
 						<View style={styles.voteIcon}>
 							<Entypo
 								name='arrow-up'
