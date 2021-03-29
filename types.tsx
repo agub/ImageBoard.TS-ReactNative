@@ -1,3 +1,4 @@
+import { StackNavigationProp } from "@react-navigation/stack";
 import { GetPostQuery } from "./src/API";
 
 export type RootStackParamList = {
@@ -76,4 +77,11 @@ export type CommentData = {
 	vote: number;
 	userID: string;
 	updatedAt: string;
+};
+
+export type ProfileTabParamList = {
+	Users: {
+		navigation: StackNavigationProp<RootStackParamList, "Root">;
+	};
+	Liked: undefined;
 };

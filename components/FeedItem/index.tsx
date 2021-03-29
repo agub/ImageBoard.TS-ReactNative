@@ -13,6 +13,7 @@ import { PostData, RootStackParamList } from "../../types";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
+import moment from "moment";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -32,7 +33,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				);
 				if ("data" in postData) {
 					setAllData(postData.data);
-					console.log(postData.data);
+					// console.log(postData.data);
 				}
 			} catch (e) {
 				console.log(e);
@@ -61,10 +62,20 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			<View style={styles.content}>
 				<View style={styles.header}>
 					<Text style={styles.titleText}>{posts?.title}</Text>
-					<Text style={styles.timestampText}>3hrs ago</Text>
+					<Text style={styles.timestampText}>
+						{" "}
+						{moment(posts?.createdAt).fromNow()}
+					</Text>
 				</View>
 				<View style={styles.mainTextBox}>
-					<Text>{posts?.content}</Text>
+					<Text>
+						{posts?.content}
+						Lorem ipsum dolor, sit amet consectetur adipisicing
+						elit. Delectus, odit architecto deserunt fugit amet
+						repellendus harum, nemo aspernatur aliquid suscipit
+						sapiente maxime quasi deleniti unde quos tempore vel ea
+						numquam!
+					</Text>
 				</View>
 				<View style={styles.profileBox}>
 					{posts?.user?.imageUri && (

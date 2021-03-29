@@ -16,7 +16,20 @@ const styles = StyleSheet.create({
 	},
 	mainTextBox: {
 		paddingVertical: 5,
-		width: "95%",
+		width: "84%",
+		marginLeft: 32,
+	},
+	profileBox: {
+		flexDirection: "row",
+		alignItems: "center",
+
+		marginRight: "auto",
+	},
+	profile: {
+		width: 20,
+		height: 20,
+		borderRadius: 5,
+		marginRight: 5,
 	},
 	icon: {
 		width: 60,
@@ -35,15 +48,20 @@ const styles = StyleSheet.create({
 		// marginHorizontal: 10,
 		flex: 1,
 		// backgroundColor: "red",
-		paddingLeft: 30,
+		paddingLeft: 20,
 		width: "100%",
+	},
+	replyBox: {
+		flexDirection: "row",
+		alignItems: "center",
 	},
 	header: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
 	titleText: {
-		fontWeight: "bold",
+		// fontWeight: "bold",
+		marginLeft: 27,
 		// color: Colors.light.textLight,
 	},
 	timestampText: {

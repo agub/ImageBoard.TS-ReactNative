@@ -7,7 +7,12 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import EditButton from "../components/EditButton/EditButton";
 import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
-import { BottomTabParamList, RootStackParamList, UserData } from "../types";
+import {
+	BottomTabParamList,
+	ProfileTabParamList,
+	RootStackParamList,
+	UserData,
+} from "../types";
 
 import FeedItem from "../components/FeedItem";
 import Tab from "../components/Tab/Tab";
@@ -18,6 +23,7 @@ import Auth from "@aws-amplify/auth";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from "../src/graphql/queries";
 import { GetUserQuery } from "../src/API";
+import UserFeedItem from "../components/UserFeedItem/UserFeedItem";
 
 type ProfileScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -27,7 +33,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	const { navigation } = props;
 	const [userData, setUserData] = useState<GetUserQuery | undefined>();
 
-	const Tab = createMaterialTopTabNavigator();
+	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -56,8 +62,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 			{/* <NavigationContainer independent={true}> */}
 
 			<Tab.Navigator>
-				<Tab.Screen name='Home' component={FeedItem} />
-				<Tab.Screen name='Settings' component={FeedItem} />
+				<Tab.Screen
+					name='Users'
+					// options={{ navigation: navigation }}
+					component={UserFeedItem}
+				/>
+				<Tab.Screen name='Liked' component={FeedItem} />
 			</Tab.Navigator>
 
 			{/* </NavigationContainer> */}
