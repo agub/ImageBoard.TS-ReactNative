@@ -74,6 +74,7 @@ export const getPost = /* GraphQL */ `
           id
           postID
           createdAt
+          title
           content
           vote
           userID
@@ -124,6 +125,7 @@ export const getComment = /* GraphQL */ `
       id
       postID
       createdAt
+      title
       content
       vote
       post {
@@ -174,6 +176,7 @@ export const listComments = /* GraphQL */ `
         id
         postID
         createdAt
+        title
         content
         vote
         post {

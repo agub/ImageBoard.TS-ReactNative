@@ -21,6 +21,7 @@ type Comment @model @key(name: "byPost", fields: ["postID", "createdAt"]) {
 	id: ID!
 	postID: ID!
 	createdAt: String!
+	title: String!
 	content: String!
 	vote: Int!
 	post: Post @connection(fields: ["postID"])

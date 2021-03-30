@@ -76,6 +76,7 @@ export type CommentData = {
 	content: string;
 	vote: number;
 	userID: string;
+	title: string;
 	updatedAt: string;
 };
 

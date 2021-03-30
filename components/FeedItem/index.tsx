@@ -15,7 +15,6 @@ import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
 import moment from "moment";
 import { updatePost } from "../../src/graphql/mutations";
-import { onUpdatePost } from "../../src/graphql/subscriptions";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -28,6 +27,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const { navigation, posts, addComment, clickable } = props;
 	const [allData, setAllData] = useState<GetPostQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
+	const [showComment, setShowComment] = useState<boolean>(false);
+
 	// console.log(allData);
 
 	useEffect(() => {
@@ -107,6 +108,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		navigation?.navigate("Content", { data: allData });
 	};
 	const onCommentPress = () => {
+		setShowComment(!showComment);
 		// await navigation?.navigate("Content", { data: allData });
 		addComment();
 	};
@@ -150,11 +152,20 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						disabled={clickable}
 						onPress={onCommentPress}
 					>
-						<MaterialIcons
-							name='comment'
-							size={20}
-							color={Colors.light.textLight}
-						/>
+						{showComment ? (
+							<MaterialCommunityIcons
+								name='arrow-up-bold-box'
+								size={20}
+								color={Colors.light.textLight}
+							/>
+						) : (
+							<MaterialIcons
+								name='comment'
+								size={20}
+								color={Colors.light.textLight}
+							/>
+						)}
+
 						<Text style={styles.commentText}>
 							{allData?.getPost?.comments?.items?.length}Comments
 						</Text>

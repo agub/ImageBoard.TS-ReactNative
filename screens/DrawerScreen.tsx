@@ -16,7 +16,7 @@ type DrawerScreenProps = {
 
 const DrawerScreen: React.FC<DrawerScreenProps> = (props) => {
 	const { navigation } = props;
-	console.log(props);
+	// console.log(props);
 	return (
 		<View style={styles.container}>
 			<DrawerContentScrollView {...props}>

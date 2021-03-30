@@ -114,6 +114,7 @@ export const createPost = /* GraphQL */ `
           id
           postID
           createdAt
+          title
           content
           vote
           userID
@@ -154,6 +155,7 @@ export const updatePost = /* GraphQL */ `
           id
           postID
           createdAt
+          title
           content
           vote
           userID
@@ -194,6 +196,7 @@ export const deletePost = /* GraphQL */ `
           id
           postID
           createdAt
+          title
           content
           vote
           userID
@@ -215,6 +218,7 @@ export const createComment = /* GraphQL */ `
       id
       postID
       createdAt
+      title
       content
       vote
       post {
@@ -263,6 +267,7 @@ export const updateComment = /* GraphQL */ `
       id
       postID
       createdAt
+      title
       content
       vote
       post {
@@ -311,6 +316,7 @@ export const deleteComment = /* GraphQL */ `
       id
       postID
       createdAt
+      title
       content
       vote
       post {

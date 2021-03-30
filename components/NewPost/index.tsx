@@ -47,7 +47,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 		try {
 			if (title !== "" && content !== "") {
 				const userData = await API.Auth.currentAuthenticatedUser();
-				console.log(userData.attributes.sub);
+				// console.log(userData.attributes.sub);
 				await API.graphql(
 					graphqlOperation(createPost, {
 						input: {

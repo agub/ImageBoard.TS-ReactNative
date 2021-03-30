@@ -18,7 +18,7 @@ type FeedItemProps = {
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const { data } = props;
-	console.log(data);
+	// console.log(data);
 	const [commentUser, setCommentUser] = useState<GetUserQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 
@@ -103,17 +103,14 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 							size={24}
 							color={Colors.light.textLight}
 						/>
-						<Text style={styles.titleText}>{data?.content}</Text>
+						<Text style={styles.titleText}>{data?.title}</Text>
 					</View>
 					<Text style={styles.timestampText}>
 						{moment(data?.createdAt).fromNow()}
 					</Text>
 				</View>
 				<View style={styles.content}>
-					<Text style={styles.mainTextBox}>
-						NEED TO ADD CONTENT ON SCHEMA!!!!!!!Lorem ipsum dolor,
-						sit amet consectetur adipisicing elit.
-					</Text>
+					<Text style={styles.mainTextBox}>{data?.content}</Text>
 				</View>
 				<View style={styles.bottomBtn}>
 					{commentUser?.getUser?.imageUri && (
