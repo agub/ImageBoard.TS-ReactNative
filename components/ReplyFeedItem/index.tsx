@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Pressable, Image } from "react-native";
 import styles from "./styles";
-import {
-	MaterialCommunityIcons,
-	MaterialIcons,
-	FontAwesome,
-	Entypo,
-} from "@expo/vector-icons";
+import { FontAwesome, Entypo } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { CommentData, RootStackParamList } from "../../types";
@@ -15,6 +10,7 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../src/graphql/queries";
 import { GetUserQuery } from "../../src/API";
 import moment from "moment";
+import { updateComment } from "../../src/graphql/mutations";
 
 type FeedItemProps = {
 	data: CommentData | null;
@@ -22,8 +18,10 @@ type FeedItemProps = {
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const { data } = props;
-	// console.log(data);
+	console.log(data);
 	const [commentUser, setCommentUser] = useState<GetUserQuery>();
+	const [voteNumber, setVoteNumber] = useState<number>(0);
+
 	useEffect(() => {
 		const fetchUserData = async () => {
 			const userData = await API.graphql(
@@ -31,10 +29,58 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			);
 			if ("data" in userData) {
 				setCommentUser(userData.data);
+				// console.log(userData.data);
 			}
 		};
 		fetchUserData();
 	}, []);
+
+	const voteUp = async () => {
+		if (voteNumber >= 1) {
+			setVoteNumber((prev) => prev - 1);
+			await API.graphql(
+				graphqlOperation(updateComment, {
+					input: {
+						id: data?.id,
+						vote: data?.vote - 1,
+					},
+				})
+			);
+		} else {
+			setVoteNumber((prev) => prev + 1);
+			await API.graphql(
+				graphqlOperation(updateComment, {
+					input: {
+						id: data?.id,
+						vote: data?.vote + 1,
+					},
+				})
+			);
+		}
+	};
+	const voteDown = async () => {
+		if (voteNumber <= -1) {
+			setVoteNumber((prev) => prev + 1);
+			await API.graphql(
+				graphqlOperation(updateComment, {
+					input: {
+						id: data?.id,
+						vote: data?.vote + 1,
+					},
+				})
+			);
+		} else {
+			setVoteNumber((prev) => prev - 1);
+			await API.graphql(
+				graphqlOperation(updateComment, {
+					input: {
+						id: data?.id,
+						vote: data?.vote - 1,
+					},
+				})
+			);
+		}
+	};
 
 	return (
 		<Pressable
@@ -75,20 +121,26 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						</View>
 					)}
 					<View style={styles.voteBox}>
-						<Text style={styles.voteText}>20</Text>
+						<Text style={styles.voteText}>
+							{data?.vote + voteNumber}
+						</Text>
 						<View style={styles.voteIcon}>
-							<Entypo
-								name='arrow-up'
-								size={18}
-								color={Colors.light.tint}
-							/>
+							<TouchableOpacity onPress={voteUp}>
+								<Entypo
+									name='arrow-up'
+									size={18}
+									color={Colors.light.tint}
+								/>
+							</TouchableOpacity>
 						</View>
 						<View style={styles.voteIcon}>
-							<Entypo
-								name='arrow-down'
-								size={18}
-								color={Colors.light.tint}
-							/>
+							<TouchableOpacity onPress={voteDown}>
+								<Entypo
+									name='arrow-down'
+									size={18}
+									color={Colors.light.tint}
+								/>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>

@@ -8,7 +8,6 @@ import { listPosts } from "../../src/graphql/queries";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 //@ts-ignore
-import AnimatedLoader from "react-native-animated-loader";
 
 type UserFeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -48,24 +47,12 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 	return (
 		// <ScrollView style={styles.container}>
 		<View>
-			{/* <AnimatedLoader
-				visible={false}
-				overlayColor='rgba(255,255,255,0.75)'
-				source={require("../../assets/loader/7993-loader.json")}
-				animationStyle={{
-					width: 100,
-					height: 100,
-				}}
-				speed={1}
-			>
-				<Text>Doing something...</Text>
-			</AnimatedLoader> */}
-			{/* <FlatList
+			<FlatList
 				data={usersPosts}
 				renderItem={({ item }) => (
 					<FeedItem navigation={navigation} posts={item} />
 				)}
-			/> */}
+			/>
 		</View>
 	);
 };

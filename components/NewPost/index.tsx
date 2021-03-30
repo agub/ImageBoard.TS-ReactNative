@@ -13,6 +13,7 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 // import { TextInput } from "react-native-gesture-handler";
 type NewPostProps = {
@@ -22,6 +23,8 @@ type NewPostProps = {
 const NewPost: React.FC<NewPostProps> = (props) => {
 	const { navigation } = props;
 	const [modalVisible, setModalVisible] = useState(false);
+	const [title, setTitle] = useState("");
+	const [content, setContent] = useState("");
 
 	let input: any;
 
@@ -53,12 +56,12 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 					{/* <Text style={styles.textStyle}>x</Text> */}
 				</Pressable>
 				<View style={[styles.button, styles.buttonClose]}>
-					<TouchableWithoutFeedback
+					<TouchableOpacity
 						style={[styles.button, styles.buttonClose]}
 						onPress={() => console.warn("submitted")}
 					>
 						<Text style={styles.textStyle}>投稿</Text>
-					</TouchableWithoutFeedback>
+					</TouchableOpacity>
 				</View>
 			</View>
 			<View style={styles.textAreaBox}>
@@ -69,6 +72,8 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 						blurOnSubmit={false}
 						autoFocus={true}
 						style={styles.modalSubText}
+						onChangeText={setTitle}
+						value={title}
 					/>
 					{/* <Text style={styles.modalText}>Title comes here</Text> */}
 				</View>
@@ -82,6 +87,8 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 						blurOnSubmit={false}
 						style={styles.modalText}
 						ref={(x) => (input = x)}
+						onChangeText={setContent}
+						value={content}
 					/>
 				</TouchableWithoutFeedback>
 			</View>

@@ -14,16 +14,20 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
 import moment from "moment";
+import { updatePost } from "../../src/graphql/mutations";
+import { onUpdatePost } from "../../src/graphql/subscriptions";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
-	posts: PostData | null | undefined;
+	posts: PostData;
 };
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const { navigation, posts } = props;
 	const [allData, setAllData] = useState<GetPostQuery>();
+	const [voteNumber, setVoteNumber] = useState<number>(0);
 	// console.log(allData);
+	// console.log(allData?.getPost);
 
 	useEffect(() => {
 		const fetchCommentData = async () => {
@@ -41,6 +45,53 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		};
 		fetchCommentData();
 	}, []);
+
+	const voteUp = async () => {
+		if (voteNumber >= 1) {
+			setVoteNumber((prev) => prev - 1);
+			await API.graphql(
+				graphqlOperation(updatePost, {
+					input: {
+						id: posts?.id,
+						vote: posts?.vote - 1,
+					},
+				})
+			);
+		} else {
+			setVoteNumber((prev) => prev + 1);
+			await API.graphql(
+				graphqlOperation(updatePost, {
+					input: {
+						id: posts?.id,
+						vote: posts?.vote + 1,
+					},
+				})
+			);
+		}
+	};
+	const voteDown = async () => {
+		if (voteNumber <= -1) {
+			setVoteNumber((prev) => prev + 1);
+			await API.graphql(
+				graphqlOperation(updatePost, {
+					input: {
+						id: posts?.id,
+						vote: posts?.vote + 1,
+					},
+				})
+			);
+		} else {
+			setVoteNumber((prev) => prev - 1);
+			await API.graphql(
+				graphqlOperation(updatePost, {
+					input: {
+						id: posts?.id,
+						vote: posts?.vote - 1,
+					},
+				})
+			);
+		}
+	};
 
 	const onPress = () => {
 		navigation?.navigate("Content", { data: allData });
@@ -98,20 +149,45 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						</Text>
 					</TouchableOpacity>
 					<View style={styles.voteBox}>
-						<Text style={styles.voteText}>{posts?.vote}</Text>
+						<Text style={styles.voteText}>
+							{allData?.getPost?.vote + voteNumber}
+						</Text>
 						<View style={styles.voteIcon}>
-							<Entypo
-								name='arrow-up'
-								size={18}
-								color={Colors.light.tint}
-							/>
+							<TouchableOpacity onPress={voteUp}>
+								<Entypo
+									name='arrow-up'
+									size={18}
+									style={[
+										{
+											color:
+												voteNumber === 1
+													? Colors.light.Primary
+													: Colors.light.tint,
+										},
+										{
+											color:
+												voteNumber === -1
+													? Colors.light.textLight
+													: Colors.light.tint,
+										},
+									]}
+									// color={Colors.light.tint}
+								/>
+							</TouchableOpacity>
 						</View>
 						<View style={styles.voteIcon}>
-							<Entypo
-								name='arrow-down'
-								size={18}
-								color={Colors.light.tint}
-							/>
+							<TouchableOpacity onPress={voteDown}>
+								<Entypo
+									name='arrow-down'
+									size={18}
+									style={{
+										color:
+											voteNumber === 1
+												? Colors.light.textLight
+												: Colors.light.tint,
+									}}
+								/>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
