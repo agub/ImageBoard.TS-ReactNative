@@ -28,12 +28,10 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
-	console.log({ content, title });
 
 	let input: any;
 	// console.log(navigation);
 
-	// const input = useRef(() => {});
 	const focus = () => {
 		input.focus();
 	};
@@ -60,7 +58,9 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 						},
 					})
 				);
-				navigation.goBack();
+				setTitle("");
+				setContent("");
+				closeTab();
 			} else {
 				console.log("title or content is missing");
 			}
@@ -68,74 +68,6 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 			console.log(e);
 		}
 	};
-
-	// const TextArea = (submit): JSX.Element => {
-	// 	const [title, setTitle] = useState<string>("");
-	// 	const [content, setContent] = useState<string>("");
-	// 	return (
-	// 		<View style={styles.modalView}>
-	// 			<View style={styles.header}>
-	// 				<View style={styles.textCenter}>
-	// 					<Text style={styles.headerText}>新規投稿</Text>
-	// 				</View>
-	// 				<Pressable
-	// 					// style={[styles.button, styles.buttonClose]}
-	// 					onPress={closeTab}
-	// 					// onPress={() => setModalVisible(!modalVisible)}
-	// 				>
-	// 					<Ionicons
-	// 						name='close'
-	// 						color={Colors.light.tabIconDefault}
-	// 						size={30}
-	// 					/>
-	// 					{/* <Text style={styles.textStyle}>x</Text> */}
-	// 				</Pressable>
-	// 				<View style={[styles.button, styles.buttonClose]}>
-	// 					<TouchableWithoutFeedback
-	// 						style={[styles.button, styles.buttonClose]}
-	// 						onPress={submit}
-	// 					>
-	// 						<Text style={styles.textStyle}>投稿</Text>
-	// 					</TouchableWithoutFeedback>
-	// 				</View>
-	// 			</View>
-	// 			<View style={styles.textAreaBox}>
-	// 				<View style={styles.title}>
-	// 					<TextInput
-	// 						placeholder='タイトル'
-	// 						placeholderTextColor={Colors.light.textLight}
-	// 						// blurOnSubmit={false}
-	// 						// autoFocus={true}
-	// 						editable={true}
-	// 						style={styles.modalSubText}
-	// 						value={title}
-	// 						onChangeText={(e) => setTitle(e)}
-	// 						// onEndEditing={(e) => setTitle(e)}
-	// 					/>
-	// 				</View>
-	// 				{/* <TouchableWithoutFeedback
-	// 					// onPress={focus}
-	// 					style={styles.mainText}
-	// 				> */}
-	// 				<TextInput
-	// 					placeholder='投稿内容'
-	// 					placeholderTextColor={Colors.light.textLight}
-	// 					// blurOnSubmit={false}
-	// 					style={styles.modalText}
-	// 					editable={true}
-	// 					// ref={(x) => (input = x)}
-	// 					// onEndEdit={() => {
-	// 					// 	console.log("ended");
-	// 					// }}
-	// 					value={content}
-	// 					onChangeText={({ text }) => setContent({ text })}
-	// 					autoFocus={true}
-	// 				/>
-	// 				{/* </TouchableWithoutFeedback> */}
-	// 			</View>
-	// 		</View>
-	// 	);
-	// };
 
 	const BeforePost = (): JSX.Element => (
 		<View style={styles.beforePost}>
@@ -223,10 +155,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 								keyboardVerticalOffset={100}
 								style={{ flex: 1 }}
 							>
-								<View
-									// onPress={focus}
-									style={styles.mainText}
-								>
+								<View style={styles.mainText}>
 									<TextInput
 										placeholder='投稿内容'
 										placeholderTextColor={

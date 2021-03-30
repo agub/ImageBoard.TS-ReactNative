@@ -111,11 +111,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				</View>
 				<View style={styles.content}>
 					<Text style={styles.mainTextBox}>
-						NEED TO ADD CONTENT ON SCHEMA!!Lorem ipsum dolor, sit
-						amet consectetur adipisicing elit. Deleniti amet eos
-						minus ea, sapiente, eligendi adipisci mollitia deserunt
-						nam est voluptate? Ducimus mollitia maiores voluptatum
-						impedit hic, cupiditate sit fuga!
+						NEED TO ADD CONTENT ON SCHEMA!!!!!!!Lorem ipsum dolor,
+						sit amet consectetur adipisicing elit.
 					</Text>
 				</View>
 				<View style={styles.bottomBtn}>

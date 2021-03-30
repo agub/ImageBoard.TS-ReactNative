@@ -20,14 +20,15 @@ import { onUpdatePost } from "../../src/graphql/subscriptions";
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
 	posts: PostData;
+	addComment: () => void | undefined | null;
+	clickable: boolean | null;
 };
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
-	const { navigation, posts } = props;
+	const { navigation, posts, addComment, clickable } = props;
 	const [allData, setAllData] = useState<GetPostQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	// console.log(allData);
-	// console.log(allData?.getPost);
 
 	useEffect(() => {
 		const fetchCommentData = async () => {
@@ -102,7 +103,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	};
 
 	const onPress = () => {
+		// addComment();
 		navigation?.navigate("Content", { data: allData });
+	};
+	const onCommentPress = () => {
+		// await navigation?.navigate("Content", { data: allData });
+		addComment();
 	};
 	return (
 		<Pressable
@@ -127,14 +133,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					</Text>
 				</View>
 				<View style={styles.mainTextBox}>
-					<Text>
-						{posts?.content}
-						Lorem ipsum dolor, sit amet consectetur adipisicing
-						elit. Delectus, odit architecto deserunt fugit amet
-						repellendus harum, nemo aspernatur aliquid suscipit
-						sapiente maxime quasi deleniti unde quos tempore vel ea
-						numquam!
-					</Text>
+					<Text>{posts?.content}</Text>
 				</View>
 				<View style={styles.profileBox}>
 					{posts?.user?.imageUri && (
@@ -146,7 +145,11 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					<Text>{posts?.user?.name}</Text>
 				</View>
 				<View style={styles.bottomBtn}>
-					<TouchableOpacity style={styles.comment} onPress={onPress}>
+					<TouchableOpacity
+						style={styles.comment}
+						disabled={clickable}
+						onPress={onCommentPress}
+					>
 						<MaterialIcons
 							name='comment'
 							size={20}

@@ -36,7 +36,11 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		<FlatList
 			data={posts?.listPosts?.items}
 			renderItem={({ item }) => (
-				<FeedItem navigation={navigation} posts={item} />
+				<FeedItem
+					navigation={navigation}
+					clickable={true}
+					posts={item}
+				/>
 			)}
 		/>
 	);
