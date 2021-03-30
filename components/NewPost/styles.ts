@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
 	},
 	textAreaBox: {
 		// paddingVertical: 30,
+		height: "100%",
 	},
 	modalSubText: {
 		// marginBottom: 15,
@@ -55,8 +56,10 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 	},
 	mainText: {
-		justifyContent: "flex-start",
+		// justifyContent: "flex-start",
 		// height: "100%",
+		justifyContent: "flex-start",
+		height: "100%",
 		paddingVertical: 5,
 	},
 	modalView: {

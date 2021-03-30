@@ -47,49 +47,57 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	}, []);
 
 	const voteUp = async () => {
-		if (voteNumber >= 1) {
-			setVoteNumber((prev) => prev - 1);
-			await API.graphql(
-				graphqlOperation(updatePost, {
-					input: {
-						id: posts?.id,
-						vote: posts?.vote - 1,
-					},
-				})
-			);
-		} else {
-			setVoteNumber((prev) => prev + 1);
-			await API.graphql(
-				graphqlOperation(updatePost, {
-					input: {
-						id: posts?.id,
-						vote: posts?.vote + 1,
-					},
-				})
-			);
+		try {
+			if (voteNumber >= 1) {
+				setVoteNumber((prev) => prev - 1);
+				await API.graphql(
+					graphqlOperation(updatePost, {
+						input: {
+							id: posts?.id,
+							vote: posts?.vote - 1,
+						},
+					})
+				);
+			} else {
+				setVoteNumber((prev) => prev + 1);
+				await API.graphql(
+					graphqlOperation(updatePost, {
+						input: {
+							id: posts?.id,
+							vote: posts?.vote + 1,
+						},
+					})
+				);
+			}
+		} catch (e) {
+			console.log(e);
 		}
 	};
 	const voteDown = async () => {
-		if (voteNumber <= -1) {
-			setVoteNumber((prev) => prev + 1);
-			await API.graphql(
-				graphqlOperation(updatePost, {
-					input: {
-						id: posts?.id,
-						vote: posts?.vote + 1,
-					},
-				})
-			);
-		} else {
-			setVoteNumber((prev) => prev - 1);
-			await API.graphql(
-				graphqlOperation(updatePost, {
-					input: {
-						id: posts?.id,
-						vote: posts?.vote - 1,
-					},
-				})
-			);
+		try {
+			if (voteNumber <= -1) {
+				setVoteNumber((prev) => prev + 1);
+				await API.graphql(
+					graphqlOperation(updatePost, {
+						input: {
+							id: posts?.id,
+							vote: posts?.vote + 1,
+						},
+					})
+				);
+			} else {
+				setVoteNumber((prev) => prev - 1);
+				await API.graphql(
+					graphqlOperation(updatePost, {
+						input: {
+							id: posts?.id,
+							vote: posts?.vote - 1,
+						},
+					})
+				);
+			}
+		} catch (e) {
+			console.log(e);
 		}
 	};
 

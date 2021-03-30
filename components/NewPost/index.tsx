@@ -6,6 +6,7 @@ import {
 	Pressable,
 	TextInput,
 	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
 } from "react-native";
 import styles from "./styles";
 
@@ -13,7 +14,9 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../types";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { createPost } from "../../src/graphql/mutations";
 
 // import { TextInput } from "react-native-gesture-handler";
 type NewPostProps = {
@@ -23,10 +26,12 @@ type NewPostProps = {
 const NewPost: React.FC<NewPostProps> = (props) => {
 	const { navigation } = props;
 	const [modalVisible, setModalVisible] = useState(false);
-	const [title, setTitle] = useState("");
-	const [content, setContent] = useState("");
+	const [title, setTitle] = useState<string>("");
+	const [content, setContent] = useState<string>("");
+	console.log({ content, title });
 
 	let input: any;
+	// console.log(navigation);
 
 	// const input = useRef(() => {});
 	const focus = () => {
@@ -36,64 +41,101 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 		setModalVisible(!modalVisible);
 		navigation.goBack();
 	};
+	type submitProps = {
+		title: string;
+		content: string;
+	};
+	const submit = async () => {
+		try {
+			if (title !== "" && content !== "") {
+				const userData = await API.Auth.currentAuthenticatedUser();
+				console.log(userData.attributes.sub);
+				await API.graphql(
+					graphqlOperation(createPost, {
+						input: {
+							userID: userData.attributes.sub,
+							title: title,
+							content: content,
+							vote: 0,
+						},
+					})
+				);
+				navigation.goBack();
+			} else {
+				console.log("title or content is missing");
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
 
-	const TextArea = (): JSX.Element => (
-		<View style={styles.modalView}>
-			<View style={styles.header}>
-				<View style={styles.textCenter}>
-					<Text style={styles.headerText}>新規投稿</Text>
-				</View>
-				<Pressable
-					// style={[styles.button, styles.buttonClose]}
-					onPress={closeTab}
-					// onPress={() => setModalVisible(!modalVisible)}
-				>
-					<Ionicons
-						name='close'
-						color={Colors.light.tabIconDefault}
-						size={30}
-					/>
-					{/* <Text style={styles.textStyle}>x</Text> */}
-				</Pressable>
-				<View style={[styles.button, styles.buttonClose]}>
-					<TouchableOpacity
-						style={[styles.button, styles.buttonClose]}
-						onPress={() => console.warn("submitted")}
-					>
-						<Text style={styles.textStyle}>投稿</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-			<View style={styles.textAreaBox}>
-				<View style={styles.title}>
-					<TextInput
-						placeholder='タイトル'
-						placeholderTextColor={Colors.light.textLight}
-						blurOnSubmit={false}
-						autoFocus={true}
-						style={styles.modalSubText}
-						onChangeText={setTitle}
-						value={title}
-					/>
-					{/* <Text style={styles.modalText}>Title comes here</Text> */}
-				</View>
-				<TouchableWithoutFeedback
-					onPress={focus}
-					style={styles.mainText}
-				>
-					<TextInput
-						placeholder='投稿内容'
-						placeholderTextColor={Colors.light.textLight}
-						blurOnSubmit={false}
-						style={styles.modalText}
-						ref={(x) => (input = x)}
-						onChangeText={setContent}
-						value={content}
-					/>
-				</TouchableWithoutFeedback>
-			</View>
-		</View>
-	);
+	// const TextArea = (submit): JSX.Element => {
+	// 	const [title, setTitle] = useState<string>("");
+	// 	const [content, setContent] = useState<string>("");
+	// 	return (
+	// 		<View style={styles.modalView}>
+	// 			<View style={styles.header}>
+	// 				<View style={styles.textCenter}>
+	// 					<Text style={styles.headerText}>新規投稿</Text>
+	// 				</View>
+	// 				<Pressable
+	// 					// style={[styles.button, styles.buttonClose]}
+	// 					onPress={closeTab}
+	// 					// onPress={() => setModalVisible(!modalVisible)}
+	// 				>
+	// 					<Ionicons
+	// 						name='close'
+	// 						color={Colors.light.tabIconDefault}
+	// 						size={30}
+	// 					/>
+	// 					{/* <Text style={styles.textStyle}>x</Text> */}
+	// 				</Pressable>
+	// 				<View style={[styles.button, styles.buttonClose]}>
+	// 					<TouchableWithoutFeedback
+	// 						style={[styles.button, styles.buttonClose]}
+	// 						onPress={submit}
+	// 					>
+	// 						<Text style={styles.textStyle}>投稿</Text>
+	// 					</TouchableWithoutFeedback>
+	// 				</View>
+	// 			</View>
+	// 			<View style={styles.textAreaBox}>
+	// 				<View style={styles.title}>
+	// 					<TextInput
+	// 						placeholder='タイトル'
+	// 						placeholderTextColor={Colors.light.textLight}
+	// 						// blurOnSubmit={false}
+	// 						// autoFocus={true}
+	// 						editable={true}
+	// 						style={styles.modalSubText}
+	// 						value={title}
+	// 						onChangeText={(e) => setTitle(e)}
+	// 						// onEndEditing={(e) => setTitle(e)}
+	// 					/>
+	// 				</View>
+	// 				{/* <TouchableWithoutFeedback
+	// 					// onPress={focus}
+	// 					style={styles.mainText}
+	// 				> */}
+	// 				<TextInput
+	// 					placeholder='投稿内容'
+	// 					placeholderTextColor={Colors.light.textLight}
+	// 					// blurOnSubmit={false}
+	// 					style={styles.modalText}
+	// 					editable={true}
+	// 					// ref={(x) => (input = x)}
+	// 					// onEndEdit={() => {
+	// 					// 	console.log("ended");
+	// 					// }}
+	// 					value={content}
+	// 					onChangeText={({ text }) => setContent({ text })}
+	// 					autoFocus={true}
+	// 				/>
+	// 				{/* </TouchableWithoutFeedback> */}
+	// 			</View>
+	// 		</View>
+	// 	);
+	// };
 
 	const BeforePost = (): JSX.Element => (
 		<View style={styles.beforePost}>
@@ -134,7 +176,77 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 				}}
 			>
 				<View style={styles.modalBg}>
-					<TextArea />
+					<View style={styles.modalView}>
+						<View style={styles.header}>
+							<View style={styles.textCenter}>
+								<Text style={styles.headerText}>新規投稿</Text>
+							</View>
+							<Pressable
+								// style={[styles.button, styles.buttonClose]}
+								onPress={closeTab}
+								// onPress={() => setModalVisible(!modalVisible)}
+							>
+								<Ionicons
+									name='close'
+									color={Colors.light.tabIconDefault}
+									size={30}
+								/>
+								{/* <Text style={styles.textStyle}>x</Text> */}
+							</Pressable>
+							<View style={[styles.button, styles.buttonClose]}>
+								<TouchableWithoutFeedback
+									style={[styles.button, styles.buttonClose]}
+									onPress={submit}
+								>
+									<Text style={styles.textStyle}>投稿</Text>
+								</TouchableWithoutFeedback>
+							</View>
+						</View>
+						<View style={styles.textAreaBox}>
+							<View style={styles.title}>
+								<TextInput
+									placeholder='タイトル'
+									placeholderTextColor={
+										Colors.light.textLight
+									}
+									blurOnSubmit={false}
+									autoFocus={true}
+									// editable={true}
+									style={styles.modalSubText}
+									value={title}
+									onChangeText={(e) => setTitle(e)}
+									// onEndEditing={(e) => setTitle(e)}
+								/>
+							</View>
+							<KeyboardAvoidingView
+								behavior='height'
+								keyboardVerticalOffset={100}
+								style={{ flex: 1 }}
+							>
+								<View
+									// onPress={focus}
+									style={styles.mainText}
+								>
+									<TextInput
+										placeholder='投稿内容'
+										placeholderTextColor={
+											Colors.light.textLight
+										}
+										multiline
+										blurOnSubmit={false}
+										style={styles.modalText}
+										// editable={true}
+										value={content}
+										onChangeText={(text) =>
+											setContent(text)
+										}
+										autoFocus={true}
+									/>
+								</View>
+								{/* </TouchableWithoutFeedback> */}
+							</KeyboardAvoidingView>
+						</View>
+					</View>
 				</View>
 			</Modal>
 
