@@ -23,16 +23,13 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		const fetchPosts = async () => {
 			try {
 				const userData = await Auth.currentAuthenticatedUser();
-				// console.log(userData.attributes.sub);
-
 				const postData = await API.graphql(graphqlOperation(listPosts));
-				// console.log(postData);
-				// console.log(postData.data.listPosts.items);
 
-				// setPosts(postData.data);
+				// console.log(postData.data.listPosts.items);
 
 				// console.log(posts?.listPosts);
 				const mainData = postData.data.listPosts.items.map(
+					//@ts-ignore
 					(spreadData) => {
 						if (spreadData.userID === userData.attributes.sub) {
 							if (mount) {
@@ -43,7 +40,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 				);
 				console.log("mainData");
 
-				console.log(mainData);
+				// console.log(mainData);
 
 				setUsersPosts(mainData);
 				// console.log("usersPost");

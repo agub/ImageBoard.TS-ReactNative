@@ -28,8 +28,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [allData, setAllData] = useState<GetPostQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	const [showComment, setShowComment] = useState<boolean>(false);
-
-	// console.log(posts.content);
+	const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 
 	useEffect(() => {
 		let mounted = true;
@@ -42,8 +41,10 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					if (mounted) {
 						setAllData(postData.data);
 					}
+					// console.log(allData.getPost);
 					// console.log(postData.data);
 				}
+				await fetchSavePost();
 			} catch (e) {
 				console.log(e);
 			}
@@ -53,6 +54,28 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			mounted = false;
 		};
 	}, []);
+
+	const fetchSavePost = async () => {
+		const usersSavedPost = await allData?.getPost?.saved?.items.map(
+			(obj) => {
+				if (obj?.userID === allData.getPost?.userID) {
+					return obj;
+				}
+			}
+		);
+		if (usersSavedPost?.length) {
+			if (mount) {
+				setIsUserSaved((isUserSaved) => true);
+			}
+		}
+	};
+
+	let mount = true;
+	useEffect(() => {
+		return () => {
+			mount = false;
+		};
+	});
 
 	const voteUp = async () => {
 		try {
@@ -111,7 +134,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const onPress = () => {
 		// addComment();
-		navigation?.navigate("Content", { data: allData });
+		// console.log(isUserSaved);
+
+		navigation?.navigate("Content", {
+			data: allData,
+			isUserSaved: isUserSaved,
+		});
 	};
 	const onCommentPress = () => {
 		setShowComment(!showComment);

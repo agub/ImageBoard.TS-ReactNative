@@ -1,4 +1,10 @@
-import { Ionicons, MaterialIcons, Octicons, Feather } from "@expo/vector-icons";
+import {
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+	Feather,
+	FontAwesome,
+} from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
 	NavigationContainer,
@@ -23,12 +29,15 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { DrawerActions } from "@react-navigation/native";
 import ContentScreen from "../screens/ContentScreen";
+import { useState } from "react";
 const Stack = createStackNavigator<RootStackParamList>();
 
 type RootNavigatorProps = {
 	navigation: StackNavigationProp<DrawerParamList, "Menu">;
 };
 export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
+	const [isUserSaved, setIsUserSaved] = useState(false);
+
 	return (
 		<>
 			<Stack.Navigator
@@ -127,8 +136,31 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 								style={{
 									paddingHorizontal: 20,
 								}}
+								// onPress={() =>
+								// 	console.log(route.params.isUserSaved)
+								// }
 							>
-								<Feather name='star' size={25} color='white' />
+								{route.params.isUserSaved ? (
+									<FontAwesome
+										name='star'
+										size={25}
+										color={
+											route.params.isUserSaved
+												? Colors.light.tint
+												: "white"
+										}
+									/>
+								) : (
+									<Feather
+										name='star'
+										size={25}
+										color={
+											route.params.isUserSaved
+												? Colors.light.tint
+												: "white"
+										}
+									/>
+								)}
 							</Pressable>
 						),
 					})}
