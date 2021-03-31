@@ -75,7 +75,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		return () => {
 			mount = false;
 		};
-	});
+	}, []);
 
 	const voteUp = async () => {
 		try {
@@ -134,7 +134,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const onPress = () => {
 		// addComment();
-		// console.log(isUserSaved);
+		console.log(isUserSaved);
 
 		navigation?.navigate("Content", {
 			data: allData,

@@ -136,9 +136,9 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 								style={{
 									paddingHorizontal: 20,
 								}}
-								// onPress={() =>
-								// 	console.log(route.params.isUserSaved)
-								// }
+								onPress={() =>
+									console.log(route.params.isUserSaved)
+								}
 							>
 								{route.params.isUserSaved ? (
 									<FontAwesome
