@@ -85,6 +85,7 @@ export type Post = {
   vote?: number,
   user?: User,
   comments?: ModelCommentConnection,
+  saved?: ModelSavedConnection,
   createdAt?: string,
   updatedAt?: string,
 };
@@ -106,6 +107,23 @@ export type Comment = {
   post?: Post,
   userID?: string,
   user?: User,
+  updatedAt?: string,
+};
+
+export type ModelSavedConnection = {
+  __typename: "ModelSavedConnection",
+  items?:  Array<Saved | null > | null,
+  nextToken?: string | null,
+};
+
+export type Saved = {
+  __typename: "Saved",
+  id?: string,
+  postID?: string,
+  post?: Post,
+  userID?: string,
+  user?: User,
+  createdAt?: string,
   updatedAt?: string,
 };
 
@@ -217,6 +235,30 @@ export type DeleteCommentInput = {
   id?: string | null,
 };
 
+export type CreateSavedInput = {
+  id?: string | null,
+  postID: string,
+  userID: string,
+};
+
+export type ModelSavedConditionInput = {
+  postID?: ModelIDInput | null,
+  userID?: ModelIDInput | null,
+  and?: Array< ModelSavedConditionInput | null > | null,
+  or?: Array< ModelSavedConditionInput | null > | null,
+  not?: ModelSavedConditionInput | null,
+};
+
+export type UpdateSavedInput = {
+  id: string,
+  postID?: string | null,
+  userID?: string | null,
+};
+
+export type DeleteSavedInput = {
+  id?: string | null,
+};
+
 export type ModelUserFilterInput = {
   id?: ModelIDInput | null,
   name?: ModelStringInput | null,
@@ -256,6 +298,15 @@ export type ModelCommentFilterInput = {
   and?: Array< ModelCommentFilterInput | null > | null,
   or?: Array< ModelCommentFilterInput | null > | null,
   not?: ModelCommentFilterInput | null,
+};
+
+export type ModelSavedFilterInput = {
+  id?: ModelIDInput | null,
+  postID?: ModelIDInput | null,
+  userID?: ModelIDInput | null,
+  and?: Array< ModelSavedFilterInput | null > | null,
+  or?: Array< ModelSavedFilterInput | null > | null,
+  not?: ModelSavedFilterInput | null,
 };
 
 export type CreateUserMutationVariables = {
@@ -396,6 +447,18 @@ export type CreatePostMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -439,6 +502,18 @@ export type UpdatePostMutation = {
         content: string,
         vote: number,
         userID: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -490,6 +565,18 @@ export type DeletePostMutation = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -528,6 +615,10 @@ export type CreateCommentMutation = {
       } | null,
       comments?:  {
         __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -586,6 +677,10 @@ export type UpdateCommentMutation = {
         __typename: "ModelCommentConnection",
         nextToken?: string | null,
       } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -642,6 +737,10 @@ export type DeleteCommentMutation = {
         __typename: "ModelCommentConnection",
         nextToken?: string | null,
       } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -659,6 +758,177 @@ export type DeleteCommentMutation = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type CreateSavedMutationVariables = {
+  input?: CreateSavedInput,
+  condition?: ModelSavedConditionInput | null,
+};
+
+export type CreateSavedMutation = {
+  createSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type UpdateSavedMutationVariables = {
+  input?: UpdateSavedInput,
+  condition?: ModelSavedConditionInput | null,
+};
+
+export type UpdateSavedMutation = {
+  updateSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type DeleteSavedMutationVariables = {
+  input?: DeleteSavedInput,
+  condition?: ModelSavedConditionInput | null,
+};
+
+export type DeleteSavedMutation = {
+  deleteSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
     updatedAt: string,
   } | null,
 };
@@ -761,6 +1031,18 @@ export type GetPostQuery = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -794,6 +1076,10 @@ export type ListPostsQuery = {
       } | null,
       comments?:  {
         __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -835,6 +1121,10 @@ export type GetCommentQuery = {
       } | null,
       comments?:  {
         __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -896,6 +1186,103 @@ export type ListCommentsQuery = {
         createdAt: string,
         updatedAt: string,
       } | null,
+      updatedAt: string,
+    } | null > | null,
+    nextToken?: string | null,
+  } | null,
+};
+
+export type GetSavedQueryVariables = {
+  id?: string,
+};
+
+export type GetSavedQuery = {
+  getSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type ListSavedsQueryVariables = {
+  filter?: ModelSavedFilterInput | null,
+  limit?: number | null,
+  nextToken?: string | null,
+};
+
+export type ListSavedsQuery = {
+  listSaveds?:  {
+    __typename: "ModelSavedConnection",
+    items?:  Array< {
+      __typename: "Saved",
+      id: string,
+      postID: string,
+      post?:  {
+        __typename: "Post",
+        id: string,
+        title: string,
+        content: string,
+        userID: string,
+        imageUri?: string | null,
+        vote: number,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      userID: string,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      createdAt: string,
       updatedAt: string,
     } | null > | null,
     nextToken?: string | null,
@@ -1020,6 +1407,18 @@ export type OnCreatePostSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1058,6 +1457,18 @@ export type OnUpdatePostSubscription = {
         content: string,
         vote: number,
         userID: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
         updatedAt: string,
       } | null > | null,
       nextToken?: string | null,
@@ -1104,6 +1515,18 @@ export type OnDeletePostSubscription = {
       } | null > | null,
       nextToken?: string | null,
     } | null,
+    saved?:  {
+      __typename: "ModelSavedConnection",
+      items?:  Array< {
+        __typename: "Saved",
+        id: string,
+        postID: string,
+        userID: string,
+        createdAt: string,
+        updatedAt: string,
+      } | null > | null,
+      nextToken?: string | null,
+    } | null,
     createdAt: string,
     updatedAt: string,
   } | null,
@@ -1137,6 +1560,10 @@ export type OnCreateCommentSubscription = {
       } | null,
       comments?:  {
         __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
         nextToken?: string | null,
       } | null,
       createdAt: string,
@@ -1190,6 +1617,10 @@ export type OnUpdateCommentSubscription = {
         __typename: "ModelCommentConnection",
         nextToken?: string | null,
       } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1241,6 +1672,10 @@ export type OnDeleteCommentSubscription = {
         __typename: "ModelCommentConnection",
         nextToken?: string | null,
       } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
       createdAt: string,
       updatedAt: string,
     } | null,
@@ -1258,6 +1693,162 @@ export type OnDeleteCommentSubscription = {
       createdAt: string,
       updatedAt: string,
     } | null,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnCreateSavedSubscription = {
+  onCreateSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnUpdateSavedSubscription = {
+  onUpdateSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
+    updatedAt: string,
+  } | null,
+};
+
+export type OnDeleteSavedSubscription = {
+  onDeleteSaved?:  {
+    __typename: "Saved",
+    id: string,
+    postID: string,
+    post?:  {
+      __typename: "Post",
+      id: string,
+      title: string,
+      content: string,
+      userID: string,
+      imageUri?: string | null,
+      vote: number,
+      user?:  {
+        __typename: "User",
+        id: string,
+        name: string,
+        imageUri?: string | null,
+        status?: string | null,
+        createdAt: string,
+        updatedAt: string,
+      } | null,
+      comments?:  {
+        __typename: "ModelCommentConnection",
+        nextToken?: string | null,
+      } | null,
+      saved?:  {
+        __typename: "ModelSavedConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    userID: string,
+    user?:  {
+      __typename: "User",
+      id: string,
+      name: string,
+      imageUri?: string | null,
+      status?: string | null,
+      posts?:  {
+        __typename: "ModelPostConnection",
+        nextToken?: string | null,
+      } | null,
+      createdAt: string,
+      updatedAt: string,
+    } | null,
+    createdAt: string,
     updatedAt: string,
   } | null,
 };

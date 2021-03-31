@@ -15,7 +15,7 @@ type Post @model @key(name: "byUser", fields: ["userID"]) {
 	vote: Int!
 	user: User @connection(fields: ["userID"])
 	comments: [Comment] @connection(keyName: "byPost", fields: ["id"])
-	likes: [Like] @connection(keyName: "byLike", fields: ["id"])
+	saved: [Saved] @connection(keyName: "bySaved", fields: ["id"])
 }
 
 type Comment @model @key(name: "byPost", fields: ["postID", "createdAt"]) {
@@ -29,7 +29,7 @@ type Comment @model @key(name: "byPost", fields: ["postID", "createdAt"]) {
 	userID: ID!
 	user: User @connection(fields: ["userID"])
 }
-type Like @model @key(name: "byLike", fields: ["postID"]) {
+type Saved @model @key(name: "bySaved", fields: ["postID"]) {
 	id: ID!
 	postID: ID!
 	post: Post @connection(fields: ["postID"])

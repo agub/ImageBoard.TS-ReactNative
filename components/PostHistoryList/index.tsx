@@ -9,14 +9,14 @@ import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 //@ts-ignore
 
-type UserFeedItemProps = {
+type PostHistoryListProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
-
-const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
+// UserFeedItem
+const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState<ListPostsQuery>();
-	const [usersPosts, setUsersPosts] = useState<PostData[]>();
+	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
 
 	useEffect(() => {
 		let mount = true;
@@ -27,20 +27,28 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 
 				const postData = await API.graphql(graphqlOperation(listPosts));
 				// console.log(postData);
+				// console.log(postData.data.listPosts.items);
 
 				// setPosts(postData.data);
 
 				// console.log(posts?.listPosts);
-				postData.data.listPosts.items.map((data) => {
-					if (data.user.id === userData.attributes.sub) {
-						if (mount) {
-							setUsersPosts([data]);
+				const mainData = postData.data.listPosts.items.map(
+					(spreadData) => {
+						if (spreadData.userID === userData.attributes.sub) {
+							if (mount) {
+								return spreadData;
+							}
 						}
-						// console.log(usersPosts);
 					}
-				});
+				);
+				console.log("mainData");
 
-				// console.log(postData.data.listPosts?.items);
+				console.log(mainData);
+
+				setUsersPosts(mainData);
+				// console.log("usersPost");
+
+				// console.log(usersPosts);
 			} catch (e) {
 				console.log(e);
 			}
@@ -68,7 +76,7 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 	);
 };
 
-export default UserFeedItem;
+export default PostHistoryList;
 
 const styles = StyleSheet.create({
 	container: {

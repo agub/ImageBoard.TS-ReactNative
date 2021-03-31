@@ -5,7 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import ProfileScreen from "./ProfileScreen";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DrawerParamList, RootStackParamList } from "../types";
-import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
+import ProfileHeader from "../components/ProfileHeader";
 import EditButton from "../components/EditButton/EditButton";
 import Colors from "../constants/Colors";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";

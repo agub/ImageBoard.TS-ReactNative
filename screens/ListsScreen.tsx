@@ -20,7 +20,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		const fetchPosts = async () => {
 			try {
 				const postData = await API.graphql(graphqlOperation(listPosts));
-				// console.log(postData);
+
 				if ("data" in postData) {
 					if (mount) {
 						setPosts(postData.data);

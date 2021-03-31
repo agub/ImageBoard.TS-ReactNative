@@ -110,6 +110,16 @@ export const onCreatePost = /* GraphQL */ `
         }
         nextToken
       }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -144,6 +154,16 @@ export const onUpdatePost = /* GraphQL */ `
           content
           vote
           userID
+          updatedAt
+        }
+        nextToken
+      }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
           updatedAt
         }
         nextToken
@@ -186,6 +206,16 @@ export const onDeletePost = /* GraphQL */ `
         }
         nextToken
       }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -216,6 +246,9 @@ export const onCreateComment = /* GraphQL */ `
           updatedAt
         }
         comments {
+          nextToken
+        }
+        saved {
           nextToken
         }
         createdAt
@@ -264,6 +297,9 @@ export const onUpdateComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        saved {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -310,6 +346,9 @@ export const onDeleteComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        saved {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -325,6 +364,144 @@ export const onDeleteComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const onCreateSaved = /* GraphQL */ `
+  subscription OnCreateSaved {
+    onCreateSaved {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onUpdateSaved = /* GraphQL */ `
+  subscription OnUpdateSaved {
+    onUpdateSaved {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const onDeleteSaved = /* GraphQL */ `
+  subscription OnDeleteSaved {
+    onDeleteSaved {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
       updatedAt
     }
   }

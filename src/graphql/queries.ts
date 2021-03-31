@@ -82,6 +82,16 @@ export const getPost = /* GraphQL */ `
         }
         nextToken
       }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -110,6 +120,9 @@ export const listPosts = /* GraphQL */ `
           updatedAt
         }
         comments {
+          nextToken
+        }
+        saved {
           nextToken
         }
         createdAt
@@ -144,6 +157,9 @@ export const getComment = /* GraphQL */ `
           updatedAt
         }
         comments {
+          nextToken
+        }
+        saved {
           nextToken
         }
         createdAt
@@ -198,6 +214,88 @@ export const listComments = /* GraphQL */ `
           createdAt
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getSaved = /* GraphQL */ `
+  query GetSaved($id: ID!) {
+    getSaved(id: $id) {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const listSaveds = /* GraphQL */ `
+  query ListSaveds(
+    $filter: ModelSavedFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listSaveds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        postID
+        post {
+          id
+          title
+          content
+          userID
+          imageUri
+          vote
+          createdAt
+          updatedAt
+        }
+        userID
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        createdAt
         updatedAt
       }
       nextToken

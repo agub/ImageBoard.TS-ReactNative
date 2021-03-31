@@ -6,7 +6,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import EditButton from "../components/EditButton/EditButton";
-import ProfileHeader from "../components/ProfileHeader/ProfileHeader";
+import ProfileHeader from "../components/ProfileHeader";
 import {
 	BottomTabParamList,
 	ProfileTabParamList,
@@ -23,7 +23,9 @@ import Auth from "@aws-amplify/auth";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from "../src/graphql/queries";
 import { GetUserQuery } from "../src/API";
-import UserFeedItem from "../components/UserFeedItem/UserFeedItem";
+
+import PostHistoryList from "../components/PostHistoryList";
+import SavedPosts from "../components/SavedPosts";
 
 type ProfileScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -71,9 +73,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 				<Tab.Screen
 					name='Users'
 					// options={{ navigation: navigation }}
-					component={UserFeedItem}
+					options={{ title: "投稿履歴" }}
+					component={PostHistoryList}
 				/>
-				<Tab.Screen name='Liked' component={FeedItem} />
+				<Tab.Screen name='Liked' component={SavedPosts} />
 			</Tab.Navigator>
 
 			{/* </NavigationContainer> */}

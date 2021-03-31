@@ -64,6 +64,18 @@ export type PostData = {
 		__typename: "ModelCommentConnection";
 		nextToken?: string | null;
 	} | null;
+	saved?: {
+		__typename: "ModelSavedConnection";
+		items?: Array<{
+			__typename: "Saved";
+			id: string;
+			postID: string;
+			userID: string;
+			createdAt: string;
+			updatedAt: string;
+		} | null> | null;
+		nextToken?: string | null;
+	} | null;
 	createdAt: string;
 	updatedAt: string;
 };

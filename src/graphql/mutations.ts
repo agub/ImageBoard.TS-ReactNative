@@ -122,6 +122,16 @@ export const createPost = /* GraphQL */ `
         }
         nextToken
       }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -159,6 +169,16 @@ export const updatePost = /* GraphQL */ `
           content
           vote
           userID
+          updatedAt
+        }
+        nextToken
+      }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
           updatedAt
         }
         nextToken
@@ -204,6 +224,16 @@ export const deletePost = /* GraphQL */ `
         }
         nextToken
       }
+      saved {
+        items {
+          id
+          postID
+          userID
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       createdAt
       updatedAt
     }
@@ -237,6 +267,9 @@ export const createComment = /* GraphQL */ `
           updatedAt
         }
         comments {
+          nextToken
+        }
+        saved {
           nextToken
         }
         createdAt
@@ -288,6 +321,9 @@ export const updateComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        saved {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -337,6 +373,9 @@ export const deleteComment = /* GraphQL */ `
         comments {
           nextToken
         }
+        saved {
+          nextToken
+        }
         createdAt
         updatedAt
       }
@@ -352,6 +391,153 @@ export const deleteComment = /* GraphQL */ `
         createdAt
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const createSaved = /* GraphQL */ `
+  mutation CreateSaved(
+    $input: CreateSavedInput!
+    $condition: ModelSavedConditionInput
+  ) {
+    createSaved(input: $input, condition: $condition) {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateSaved = /* GraphQL */ `
+  mutation UpdateSaved(
+    $input: UpdateSavedInput!
+    $condition: ModelSavedConditionInput
+  ) {
+    updateSaved(input: $input, condition: $condition) {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteSaved = /* GraphQL */ `
+  mutation DeleteSaved(
+    $input: DeleteSavedInput!
+    $condition: ModelSavedConditionInput
+  ) {
+    deleteSaved(input: $input, condition: $condition) {
+      id
+      postID
+      post {
+        id
+        title
+        content
+        userID
+        imageUri
+        vote
+        user {
+          id
+          name
+          imageUri
+          status
+          createdAt
+          updatedAt
+        }
+        comments {
+          nextToken
+        }
+        saved {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      userID
+      user {
+        id
+        name
+        imageUri
+        status
+        posts {
+          nextToken
+        }
+        createdAt
+        updatedAt
+      }
+      createdAt
       updatedAt
     }
   }

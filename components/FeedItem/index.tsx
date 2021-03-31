@@ -29,7 +29,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	const [showComment, setShowComment] = useState<boolean>(false);
 
-	// console.log(allData);
+	// console.log(posts.content);
 
 	useEffect(() => {
 		let mounted = true;
