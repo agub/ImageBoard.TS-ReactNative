@@ -19,6 +19,7 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 	const [usersPosts, setUsersPosts] = useState<PostData[]>();
 
 	useEffect(() => {
+		let mount = true;
 		const fetchPosts = async () => {
 			try {
 				const userData = await Auth.currentAuthenticatedUser();
@@ -32,7 +33,9 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 				// console.log(posts?.listPosts);
 				postData.data.listPosts.items.map((data) => {
 					if (data.user.id === userData.attributes.sub) {
-						setUsersPosts([data]);
+						if (mount) {
+							setUsersPosts([data]);
+						}
 						// console.log(usersPosts);
 					}
 				});
@@ -43,6 +46,9 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 			}
 		};
 		fetchPosts();
+		return () => {
+			mount = false;
+		};
 	}, []);
 	return (
 		// <ScrollView style={styles.container}>
@@ -50,7 +56,12 @@ const UserFeedItem: React.FC<UserFeedItemProps> = (props) => {
 			<FlatList
 				data={usersPosts}
 				renderItem={({ item }) => (
-					<FeedItem navigation={navigation} posts={item} />
+					<FeedItem
+						// addComment={undefined}
+						clickable={true}
+						navigation={navigation}
+						posts={item}
+					/>
 				)}
 			/>
 		</View>

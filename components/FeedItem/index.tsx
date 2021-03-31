@@ -32,13 +32,16 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	// console.log(allData);
 
 	useEffect(() => {
+		let mounted = true;
 		const fetchCommentData = async () => {
 			try {
 				const postData = await API.graphql(
 					graphqlOperation(getPost, { id: posts?.id })
 				);
 				if ("data" in postData) {
-					setAllData(postData.data);
+					if (mounted) {
+						setAllData(postData.data);
+					}
 					// console.log(postData.data);
 				}
 			} catch (e) {
@@ -46,6 +49,9 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			}
 		};
 		fetchCommentData();
+		return () => {
+			mounted = false;
+		};
 	}, []);
 
 	const voteUp = async () => {

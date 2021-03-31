@@ -36,6 +36,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
 
 	useEffect(() => {
+		let mount = true;
 		const fetchUserData = async () => {
 			const userInfo = await Auth.currentAuthenticatedUser();
 			// console.log(userInfo.attributes.sub);
@@ -43,9 +44,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 				graphqlOperation(getUser, { id: userInfo.attributes.sub })
 			);
 			//@ts-ignore
-			setUserData(user.data);
+			if (mount) {
+				setUserData(user.data);
+			}
 		};
 		fetchUserData();
+		return () => {
+			mount = false;
+		};
 	}, []);
 
 	return (

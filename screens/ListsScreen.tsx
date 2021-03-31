@@ -16,12 +16,15 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const [posts, setPosts] = useState<ListPostsQuery>();
 
 	useEffect(() => {
+		let mount = true;
 		const fetchPosts = async () => {
 			try {
 				const postData = await API.graphql(graphqlOperation(listPosts));
 				// console.log(postData);
 				if ("data" in postData) {
-					setPosts(postData.data);
+					if (mount) {
+						setPosts(postData.data);
+					}
 				}
 
 				// console.log(postData.data.listPosts?.items);
@@ -30,6 +33,9 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			}
 		};
 		fetchPosts();
+		return () => {
+			mount = false;
+		};
 	}, []);
 	return (
 		// <ScrollView style={styles.container}>

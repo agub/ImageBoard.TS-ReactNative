@@ -23,16 +23,21 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 
 	useEffect(() => {
+		let mount = true;
 		const fetchUserData = async () => {
 			const userData = await API.graphql(
 				graphqlOperation(getUser, { id: data?.userID })
 			);
 			if ("data" in userData) {
-				setCommentUser(userData.data);
-				// console.log(userData.data);
+				if (mount) {
+					setCommentUser(userData.data);
+				}
 			}
 		};
 		fetchUserData();
+		return () => {
+			mount = false;
+		};
 	}, []);
 
 	const voteUp = async () => {
