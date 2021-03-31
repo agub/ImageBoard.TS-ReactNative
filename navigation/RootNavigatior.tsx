@@ -30,13 +30,14 @@ import LinkingConfiguration from "./LinkingConfiguration";
 import { DrawerActions } from "@react-navigation/native";
 import ContentScreen from "../screens/ContentScreen";
 import { useState } from "react";
+import SavedHeaderButton from "../components/SavedHeaderButton";
 const Stack = createStackNavigator<RootStackParamList>();
 
 type RootNavigatorProps = {
 	navigation: StackNavigationProp<DrawerParamList, "Menu">;
 };
 export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
-	const [isUserSaved, setIsUserSaved] = useState(false);
+	// const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 
 	return (
 		<>
@@ -131,37 +132,41 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 						headerTitleStyle: {
 							fontWeight: "bold",
 						},
+
 						headerRight: () => (
-							<Pressable
-								style={{
-									paddingHorizontal: 20,
-								}}
-								onPress={() =>
-									console.log(route.params.isUserSaved)
-								}
-							>
-								{route.params.isUserSaved ? (
-									<FontAwesome
-										name='star'
-										size={25}
-										color={
-											route.params.isUserSaved
-												? Colors.light.tint
-												: "white"
-										}
-									/>
-								) : (
-									<Feather
-										name='star'
-										size={25}
-										color={
-											route.params.isUserSaved
-												? Colors.light.tint
-												: "white"
-										}
-									/>
-								)}
-							</Pressable>
+							<SavedHeaderButton
+								postID={route.params.data.getPost.id}
+							/>
+							// <Pressable
+							// 	style={{
+							// 		paddingHorizontal: 20,
+							// 	}}
+							// 	onPress={() =>
+							// 		console.log(route.params.data.getPost.id)
+							// 	}
+							// >
+							// 	{route.params.isUserSaved ? (
+							// 		<FontAwesome
+							// 			name='star'
+							// 			size={25}
+							// 			color={
+							// 				route.params.isUserSaved
+							// 					? Colors.light.tint
+							// 					: "white"
+							// 			}
+							// 		/>
+							// 	) : (
+							// 		<Feather
+							// 			name='star'
+							// 			size={25}
+							// 			color={
+							// 				route.params.isUserSaved
+							// 					? Colors.light.tint
+							// 					: "white"
+							// 			}
+							// 		/>
+							// 	)}
+							// </Pressable>
 						),
 					})}
 					// options={{ headerShown: false }}

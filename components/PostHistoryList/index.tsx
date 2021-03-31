@@ -38,13 +38,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 						}
 					}
 				);
-				console.log("mainData");
-
-				// console.log(mainData);
-
 				setUsersPosts(mainData);
-				// console.log("usersPost");
-
 				// console.log(usersPosts);
 			} catch (e) {
 				console.log(e);
