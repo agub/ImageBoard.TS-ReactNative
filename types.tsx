@@ -7,7 +7,6 @@ export type RootStackParamList = {
 	UserEdit: undefined;
 	Content: {
 		data: GetPostQuery | undefined;
-		isUserSaved: boolean;
 	};
 };
 export type ContentRouteParamList = {

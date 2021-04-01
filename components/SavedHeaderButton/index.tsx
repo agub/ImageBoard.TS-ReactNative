@@ -4,73 +4,124 @@ import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 import Colors from "../../constants/Colors";
+import {
+	createSaved,
+	deleteSaved,
+	updateSaved,
+} from "../../src/graphql/mutations";
 import { getPost } from "../../src/graphql/queries";
 
 type SavedHeaderButtonProps = {
 	postID: string;
 };
 const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
-	// console.log(data?.getPost?.id);
 	const { postID } = props;
 	const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
+	const [loading, setLoading] = useState(false);
+	const [userData, setUserData] = useState();
+	const [savedID, setSavedID] = useState("");
+
+	const savePost = async () => {
+		try {
+			if (isUserSaved === false) {
+				setLoading(true);
+				setIsUserSaved(true);
+				await API.graphql(
+					graphqlOperation(createSaved, {
+						input: {
+							postID: postID,
+							userID: userData.attributes.sub,
+						},
+					})
+				);
+				setLoading(false);
+			}
+
+			if (isUserSaved === true) {
+				setLoading(true);
+				setIsUserSaved(false);
+				await API.graphql(
+					graphqlOperation(deleteSaved, {
+						input: { id: savedID },
+					})
+				);
+				setSavedID("");
+				setLoading(false);
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+	console.log(savedID);
+
+	console.log(isUserSaved);
 
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
 			try {
+				setLoading(true);
+				const fetchUserData = await API.Auth.currentAuthenticatedUser();
 				const postData = await API.graphql(
 					graphqlOperation(getPost, { id: postID })
 				);
-				if (postData.data.getPost.saved.items.length) {
-					if (mounted) {
-						setIsUserSaved(true);
+				if (mounted) {
+					setUserData(fetchUserData);
+				}
+				let i;
+				for (i = 0; i < postData.data.getPost.saved.items.length; i++) {
+					if (
+						postData.data.getPost.saved.items[i].userID ===
+						fetchUserData.attributes.sub
+					) {
+						if (mounted) {
+							await setSavedID(
+								postData.data.getPost.saved.items[i].id
+							);
+
+							setIsUserSaved(true);
+							console.log("to True");
+						}
 					}
 				}
+				setLoading(false);
 			} catch (e) {
 				console.log(e);
+				setLoading(false);
 			}
 		};
+
 		fetchCommentData();
 		return () => {
 			mounted = false;
 		};
-	}, []);
-
-	// const fetchSavePost = async () => {
-	// 	const usersSavedPost = await allData?.getPost?.saved?.items.map(
-	// 		(obj) => {
-	// 			if (obj?.userID === allData.getPost?.userID) {
-	// 				return obj;
-	// 			}
-	// 		}
-	// 	);
-	// 	if (usersSavedPost?.length) {
-	// 		if (mount) {
-	// 			setIsUserSaved(true);
-	// 		}
-	// 	}
-	// };
+	}, [setLoading]);
 
 	return (
-		<Pressable
-			style={{
-				paddingHorizontal: 20,
-			}}
-		>
-			{isUserSaved ? (
-				<FontAwesome
-					name='star'
-					size={25}
-					color={isUserSaved ? Colors.light.tint : "white"}
-				/>
-			) : (
-				<Feather
-					name='star'
-					size={25}
-					color={isUserSaved ? Colors.light.tint : "white"}
-				/>
+		<>
+			{!loading && (
+				<Pressable
+					style={{
+						paddingHorizontal: 20,
+					}}
+					onPress={savePost}
+				>
+					{isUserSaved ? (
+						<FontAwesome
+							name='star'
+							size={25}
+							color={isUserSaved ? Colors.light.tint : "white"}
+						/>
+					) : (
+						<Feather
+							name='star'
+							size={25}
+							color={isUserSaved ? Colors.light.tint : "white"}
+						/>
+					)}
+				</Pressable>
 			)}
-		</Pressable>
+		</>
 	);
 };
 

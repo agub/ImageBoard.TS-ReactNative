@@ -44,7 +44,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					// console.log(allData.getPost);
 					// console.log(postData.data);
 				}
-				await fetchSavePost();
+				// await fetchSavePost();
 			} catch (e) {
 				console.log(e);
 			}
@@ -62,20 +62,20 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		};
 	}, []);
 
-	const fetchSavePost = async () => {
-		const usersSavedPost = await allData?.getPost?.saved?.items.map(
-			(obj) => {
-				if (obj?.userID === allData.getPost?.userID) {
-					return obj;
-				}
-			}
-		);
-		if (usersSavedPost?.length) {
-			if (mount) {
-				setIsUserSaved(true);
-			}
-		}
-	};
+	// const fetchSavePost = async () => {
+	// 	const usersSavedPost = await allData?.getPost?.saved?.items.map(
+	// 		(obj) => {
+	// 			if (obj?.userID === allData.getPost?.userID) {
+	// 				return obj;
+	// 			}
+	// 		}
+	// 	);
+	// 	if (usersSavedPost?.length) {
+	// 		if (mount) {
+	// 			setIsUserSaved(true);
+	// 		}
+	// 	}
+	// };
 
 	const voteUp = async () => {
 		try {
@@ -133,13 +133,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	};
 
 	const onPress = async () => {
-		// console.log(isUserSaved);
-
 		await navigation?.navigate("Content", {
 			data: allData,
-			isUserSaved: isUserSaved,
+			//wontuse!!!
 		});
 	};
+
 	const onCommentPress = () => {
 		setShowComment(!showComment);
 		addComment();
