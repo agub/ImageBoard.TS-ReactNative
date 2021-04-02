@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { ListPostsQuery } from "../../src/API";
 import { listPosts } from "../../src/graphql/queries";
+import { onCreatePost } from "../../src/graphql/subscriptions";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 //@ts-ignore
@@ -17,6 +18,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState<ListPostsQuery>();
 	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
+	const [userID, setUserID] = useState("");
 
 	useEffect(() => {
 		let mount = true;
@@ -32,13 +34,14 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 					//@ts-ignore
 					(spreadData) => {
 						if (spreadData.userID === userData.attributes.sub) {
-							if (mount) {
-								return spreadData;
-							}
+							return spreadData;
 						}
 					}
 				);
-				setUsersPosts(mainData);
+				if (mount) {
+					setUsersPosts(mainData);
+					setUserID(userData.attributes.sub);
+				}
 				// console.log(usersPosts);
 			} catch (e) {
 				console.log(e);
@@ -49,6 +52,28 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 			mount = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		const subscription = API.graphql(
+			graphqlOperation(onCreatePost)
+		).subscribe({
+			next: (data) => {
+				// setPosts([data.value.data.onCreatePost, ...posts]);
+
+				if (data.value.data.onCreatePost.userID !== userID) {
+					return;
+				} else {
+					setUsersPosts([
+						data.value.data.onCreatePost,
+						...usersPosts,
+					]);
+				}
+			},
+		});
+		return () => subscription.unsubscribe();
+	}, [usersPosts]);
+	// console.log(usersPosts);
+
 	return (
 		// <ScrollView style={styles.container}>
 		<View>

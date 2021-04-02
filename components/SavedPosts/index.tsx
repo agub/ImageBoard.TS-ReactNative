@@ -6,6 +6,7 @@ import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import { listSaveds } from "../../src/graphql/queries";
+import { onCreatePost, onCreateSaved } from "../../src/graphql/subscriptions";
 //@ts-ignore
 
 type SavedPostsProps = {
@@ -15,6 +16,7 @@ type SavedPostsProps = {
 const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const { navigation } = props;
 	const [savedPosts, setSavedPosts] = useState<PostData[]>([]);
+	const [userID, setUserID] = useState("");
 
 	useEffect(() => {
 		let mount = true;
@@ -24,20 +26,17 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 				const savedData = await API.graphql(
 					graphqlOperation(listSaveds)
 				);
-
-				// console.log(postData);
-				// console.log(savedData.data.listSaveds.items);
-
 				const mainData = savedData.data.listSaveds.items.map(
 					(spreadData) => {
 						if (spreadData.userID === userData.attributes.sub) {
-							if (mount) {
-								return spreadData;
-							}
+							return spreadData;
 						}
 					}
 				);
-				setSavedPosts(mainData);
+				if (mount) {
+					setSavedPosts(mainData);
+					setUserID(userData.attributes.sub);
+				}
 			} catch (e) {
 				console.log(e);
 			}
@@ -47,6 +46,32 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 			mount = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		const subscription = API.graphql(
+			graphqlOperation(onCreateSaved)
+		).subscribe({
+			next: (data) => {
+				console.log(data.value.data.onCreateSaved);
+
+				// setPosts([data.value.data.onCreatePost, ...posts]);
+				console.log(userID);
+
+				if (data.value.data.onCreateSaved.userID !== userID) {
+					return;
+				} else {
+					setSavedPosts([
+						data.value.data.onCreateSaved,
+						...savedPosts,
+					]);
+				}
+			},
+		});
+		return () => subscription.unsubscribe();
+	});
+
+	// console.log(savedPosts);
+
 	return (
 		// <ScrollView style={styles.container}>
 		<View>
