@@ -23,9 +23,8 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 
 	const savePost = async () => {
 		try {
-			if (isUserSaved === false) {
+			if (!isUserSaved) {
 				setLoading(true);
-				setIsUserSaved(true);
 				await API.graphql(
 					graphqlOperation(createSaved, {
 						input: {
@@ -34,12 +33,12 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 						},
 					})
 				);
+				setIsUserSaved(true);
 				setLoading(false);
 			}
 
-			if (isUserSaved === true) {
+			if (isUserSaved) {
 				setLoading(true);
-				setIsUserSaved(false);
 				await API.graphql(
 					graphqlOperation(deleteSaved, {
 						input: { id: savedID },
@@ -47,55 +46,55 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 				);
 				setSavedID("");
 				setLoading(false);
+				setIsUserSaved(false);
 			}
+			fetchCommentData();
 		} catch (e) {
 			console.log(e);
 		}
 	};
-	console.log(savedID);
-
-	console.log(isUserSaved);
-
-	useEffect(() => {
-		let mounted = true;
-		const fetchCommentData = async () => {
-			try {
-				setLoading(true);
-				const fetchUserData = await API.Auth.currentAuthenticatedUser();
-				const postData = await API.graphql(
-					graphqlOperation(getPost, { id: postID })
-				);
-				if (mounted) {
-					setUserData(fetchUserData);
-				}
-				let i;
-				for (i = 0; i < postData.data.getPost.saved.items.length; i++) {
-					if (
-						postData.data.getPost.saved.items[i].userID ===
-						fetchUserData.attributes.sub
-					) {
-						if (mounted) {
-							await setSavedID(
-								postData.data.getPost.saved.items[i].id
-							);
-
-							setIsUserSaved(true);
-							console.log("to True");
-						}
+	let mounted = true;
+	const fetchCommentData = async () => {
+		try {
+			setLoading(true);
+			const fetchUserData = await API.Auth.currentAuthenticatedUser();
+			const postData = await API.graphql(
+				graphqlOperation(getPost, { id: postID })
+			);
+			if (mounted) {
+				setUserData(fetchUserData);
+			}
+			let i;
+			for (
+				i = 0;
+				i < (await postData.data.getPost.saved.items.length);
+				i++
+			) {
+				if (
+					postData.data.getPost.saved.items[i].userID ===
+					fetchUserData.attributes.sub
+				) {
+					if (mounted) {
+						await setSavedID(
+							postData.data.getPost.saved.items[i].id
+						);
+						setIsUserSaved(true);
 					}
 				}
-				setLoading(false);
-			} catch (e) {
-				console.log(e);
-				setLoading(false);
 			}
-		};
+			setLoading(false);
+		} catch (e) {
+			console.log(e);
+			setLoading(false);
+		}
+	};
 
+	useEffect(() => {
 		fetchCommentData();
 		return () => {
 			mounted = false;
 		};
-	}, [setLoading]);
+	}, []);
 
 	return (
 		<>

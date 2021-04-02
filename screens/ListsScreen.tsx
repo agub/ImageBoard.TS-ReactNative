@@ -6,6 +6,7 @@ import FeedItem from "../components/FeedItem";
 import { listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
+import { onCreatePost } from "../src/graphql/subscriptions";
 
 type ListsScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -13,7 +14,7 @@ type ListsScreenProps = {
 
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
-	const [posts, setPosts] = useState<ListPostsQuery>();
+	const [posts, setPosts] = useState([]);
 
 	useEffect(() => {
 		let mount = true;
@@ -23,7 +24,8 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 				if ("data" in postData) {
 					if (mount) {
-						setPosts(postData.data);
+						setPosts(postData.data.listPosts?.items);
+						// setPosts(posts?.listPosts?.items);
 					}
 				}
 
@@ -37,10 +39,25 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			mount = false;
 		};
 	}, []);
+
+	useEffect(() => {
+		const subscription = API.graphql(
+			graphqlOperation(onCreatePost)
+		).subscribe({
+			next: (data) => {
+				console.log(data.value.data.onCreatePost);
+
+				setPosts([data.value.data.onCreatePost, ...posts]);
+			},
+		});
+		return () => subscription.unsubscribe();
+	}, [posts]);
+	// console.log(posts?.listPosts?.items);
+
 	return (
 		// <ScrollView style={styles.container}>
 		<FlatList
-			data={posts?.listPosts?.items}
+			data={posts}
 			renderItem={({ item }) => (
 				<FeedItem
 					navigation={navigation}
@@ -56,7 +73,6 @@ export default ListsScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		// width: "100%",
 		flex: 1,
 		backgroundColor: "white",
 	},

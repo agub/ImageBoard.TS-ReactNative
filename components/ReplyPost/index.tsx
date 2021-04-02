@@ -23,7 +23,6 @@ type ContentScreenProps = {
 };
 const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const { data } = props;
-	// console.log(data?.getPost?.id);
 
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");

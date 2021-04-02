@@ -28,12 +28,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [allData, setAllData] = useState<GetPostQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	const [showComment, setShowComment] = useState<boolean>(false);
-	const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
 			try {
+				setLoading(true);
 				const postData = await API.graphql(
 					graphqlOperation(getPost, { id: posts?.id })
 				);
@@ -44,7 +45,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					// console.log(allData.getPost);
 					// console.log(postData.data);
 				}
-				// await fetchSavePost();
+				setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}
@@ -61,21 +62,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			mount = false;
 		};
 	}, []);
-
-	// const fetchSavePost = async () => {
-	// 	const usersSavedPost = await allData?.getPost?.saved?.items.map(
-	// 		(obj) => {
-	// 			if (obj?.userID === allData.getPost?.userID) {
-	// 				return obj;
-	// 			}
-	// 		}
-	// 	);
-	// 	if (usersSavedPost?.length) {
-	// 		if (mount) {
-	// 			setIsUserSaved(true);
-	// 		}
-	// 	}
-	// };
 
 	const voteUp = async () => {
 		try {
@@ -144,11 +130,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		addComment();
 	};
 	return (
-		<Pressable
-			style={styles.container}
-			onPress={onPress}
-			// onPress={navigation.navigate("Content")}
-		>
+		<Pressable style={styles.container} onPress={onPress}>
 			<View style={styles.iconBox}>
 				<View style={styles.icon}>
 					<MaterialCommunityIcons
@@ -202,9 +184,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						</Text>
 					</TouchableOpacity>
 					<View style={styles.voteBox}>
-						<Text style={styles.voteText}>
-							{allData?.getPost?.vote + voteNumber}
-						</Text>
+						{!loading && (
+							<Text style={styles.voteText}>
+								{allData?.getPost?.vote + voteNumber}
+							</Text>
+						)}
+
 						<View style={styles.voteIcon}>
 							<TouchableOpacity onPress={voteUp}>
 								<Entypo
