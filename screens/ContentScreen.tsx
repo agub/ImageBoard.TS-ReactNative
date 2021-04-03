@@ -1,5 +1,6 @@
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/core";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -16,12 +17,20 @@ import ReplyFeedItem from "../components/ReplyFeedItem";
 import ReplyPost from "../components/ReplyPost";
 import { GetPostQuery } from "../src/API";
 import { onCreateComment } from "../src/graphql/subscriptions";
-import { CommentData, ContentRouteParamList } from "../types";
+import {
+	CommentData,
+	ContentRouteParamList,
+	RootStackParamList,
+} from "../types";
 
-type ContentScreenProps = {};
+type ContentScreenProps = {
+	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
+};
 const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	//@ts-ignore
 	const route = useRoute<ContentRouteParamList>();
+
+	const { navigation } = props;
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
@@ -66,7 +75,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 		<View style={styles.container}>
 			<FeedItem
 				posts={route.params.data.getPost}
-				navigation={undefined}
+				navigation={navigation}
 				addComment={addComment}
 				clickable={false}
 			/>

@@ -53,7 +53,6 @@ export const DrawerComp = () => {
 	return (
 		// <NavigationContainer>
 		<Drawer.Navigator initialRouteName='Menu'>
-			{/* <Drawer.Screen name='Edit' component={UserEditScreen} /> */}
 			<Drawer.Screen
 				name='Menu'
 				component={RootNavigator}

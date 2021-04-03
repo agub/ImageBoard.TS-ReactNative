@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Pressable, Image } from "react-native";
+import {
+	View,
+	Text,
+	TouchableOpacity,
+	Pressable,
+	Image,
+	Button,
+} from "react-native";
 import styles from "./styles";
 import {
 	MaterialCommunityIcons,
@@ -14,7 +21,13 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
 import moment from "moment";
-import { updatePost } from "../../src/graphql/mutations";
+import {
+	deleteComment,
+	deletePost,
+	deleteSaved,
+	updatePost,
+} from "../../src/graphql/mutations";
+import Modal from "react-native-modal";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -30,6 +43,52 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [showComment, setShowComment] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
 
+	const [isModalVisible, setModalVisible] = useState(false);
+
+	const toggleModal = () => {
+		setModalVisible(!isModalVisible);
+	};
+
+	const deleteHandler = async () => {
+		try {
+			//Deleting Saved
+			if (allData?.getPost?.saved?.items?.length > 0) {
+				await allData?.getPost?.saved?.items?.forEach((savedObj) =>
+					// console.log(save.id)
+					API.graphql(
+						graphqlOperation(deleteSaved, {
+							input: { id: savedObj.id },
+						})
+					)
+				);
+			}
+			//Deleting Comments
+			if (allData?.getPost?.comments?.items?.length > 0) {
+				await allData?.getPost?.comments?.items?.forEach(
+					(commentsObj) => {
+						API.graphql(
+							graphqlOperation(deleteComment, {
+								input: { id: commentsObj.id },
+							})
+						);
+					}
+				);
+			}
+			//Deleting actual post
+			await API.graphql(
+				graphqlOperation(deletePost, {
+					input: {
+						id: allData?.getPost?.id,
+					},
+				})
+			);
+		} catch (e) {
+			console.log(e);
+		}
+		// navigation?.canGoBack();
+		setModalVisible(false);
+	};
+
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
@@ -42,7 +101,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					if (mounted) {
 						setAllData(postData.data);
 					}
-					// console.log(allData.getPost);
+
 					// console.log(postData.data);
 				}
 				setLoading(false);
@@ -130,107 +189,159 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		addComment();
 	};
 	return (
-		<Pressable style={styles.container} onPress={onPress}>
-			<View style={styles.iconBox}>
-				<View style={styles.icon}>
-					<MaterialCommunityIcons
-						name='text-box-multiple-outline'
-						size={30}
-					/>
-				</View>
-			</View>
-			<View style={styles.content}>
-				<View style={styles.header}>
-					<Text style={styles.titleText}>{posts?.title}</Text>
-					<Text style={styles.timestampText}>
-						{" "}
-						{moment(posts?.createdAt).fromNow()}
-					</Text>
-				</View>
-				<View style={styles.mainTextBox}>
-					<Text>{posts?.content}</Text>
-				</View>
-				<View style={styles.profileBox}>
-					{posts?.user?.imageUri && (
-						<Image
-							style={styles.profile}
-							source={{ uri: posts?.user?.imageUri }}
-						/>
-					)}
-					<Text>{posts?.user?.name}</Text>
-				</View>
-				<View style={styles.bottomBtn}>
-					<TouchableOpacity
-						style={styles.comment}
-						disabled={clickable}
-						onPress={onCommentPress}
-					>
-						{showComment ? (
-							<MaterialCommunityIcons
-								name='arrow-up-bold-box'
-								size={20}
-								color={Colors.light.textLight}
-							/>
-						) : (
-							<MaterialIcons
-								name='comment'
-								size={20}
-								color={Colors.light.textLight}
-							/>
-						)}
-
-						<Text style={styles.commentText}>
-							{allData?.getPost?.comments?.items?.length}Comments
+		<>
+			<Modal
+				isVisible={isModalVisible}
+				onBackdropPress={() => setModalVisible(false)}
+				backdropOpacity={0.8}
+				// hasBackdrop={false}
+			>
+				<View style={{ justifyContent: "flex-end" }}>
+					<View style={{ alignItems: "center", marginBottom: 80 }}>
+						<Text style={{ color: "white", fontSize: 20 }}>
+							この投稿を削除いたしますか？
 						</Text>
-					</TouchableOpacity>
-					<View style={styles.voteBox}>
-						{!loading && (
-							<Text style={styles.voteText}>
-								{allData?.getPost?.vote + voteNumber}
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-between",
+							paddingHorizontal: 30,
+						}}
+					>
+						<Button title='キャンセル' onPress={toggleModal} />
+						<Button
+							color='red'
+							title='削除します'
+							onPress={deleteHandler}
+						/>
+					</View>
+				</View>
+			</Modal>
+			<Pressable style={styles.container} onPress={onPress}>
+				<View style={styles.iconBox}>
+					<View style={styles.icon}>
+						<MaterialCommunityIcons
+							name='text-box-multiple-outline'
+							size={30}
+						/>
+					</View>
+				</View>
+				<View style={styles.content}>
+					<View style={styles.header}>
+						<Text style={styles.titleText}>{posts?.title}</Text>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+							}}
+						>
+							<Text style={styles.timestampText}>
+								{" "}
+								{moment(posts?.createdAt).fromNow()}{" "}
 							</Text>
-						)}
 
-						<View style={styles.voteIcon}>
-							<TouchableOpacity onPress={voteUp}>
+							<TouchableOpacity
+								style={{
+									justifyContent: "center",
+								}}
+								onPress={() => setModalVisible(!isModalVisible)}
+							>
 								<Entypo
-									name='arrow-up'
-									size={18}
-									style={[
-										{
-											color:
-												voteNumber === 1
-													? Colors.light.Primary
-													: Colors.light.tint,
-										},
-										{
-											color:
-												voteNumber === -1
-													? Colors.light.textLight
-													: Colors.light.tint,
-										},
-									]}
-									// color={Colors.light.tint}
-								/>
-							</TouchableOpacity>
-						</View>
-						<View style={styles.voteIcon}>
-							<TouchableOpacity onPress={voteDown}>
-								<Entypo
-									name='arrow-down'
-									size={18}
-									style={{
-										color:
-											voteNumber === 1
-												? Colors.light.textLight
-												: Colors.light.tint,
-									}}
+									name='dots-three-vertical'
+									color={Colors.light.textLight}
+									size={15}
 								/>
 							</TouchableOpacity>
 						</View>
 					</View>
+
+					<View style={styles.mainTextBox}>
+						<Text>{posts?.content}</Text>
+					</View>
+					<View style={styles.profileBox}>
+						{posts?.user?.imageUri && (
+							<Image
+								style={styles.profile}
+								source={{ uri: posts?.user?.imageUri }}
+							/>
+						)}
+						<Text>{posts?.user?.name}</Text>
+					</View>
+					<View style={styles.bottomBtn}>
+						<TouchableOpacity
+							style={styles.comment}
+							disabled={clickable}
+							onPress={onCommentPress}
+						>
+							{showComment ? (
+								<MaterialCommunityIcons
+									name='arrow-up-bold-box'
+									size={20}
+									color={Colors.light.textLight}
+								/>
+							) : (
+								<MaterialIcons
+									name='comment'
+									size={20}
+									color={Colors.light.textLight}
+								/>
+							)}
+
+							<Text style={styles.commentText}>
+								{allData?.getPost?.comments?.items?.length}
+								Comments
+							</Text>
+						</TouchableOpacity>
+						<View style={styles.voteBox}>
+							{!loading && (
+								<Text style={styles.voteText}>
+									{allData?.getPost?.vote + voteNumber}
+								</Text>
+							)}
+
+							<View style={styles.voteIcon}>
+								<TouchableOpacity onPress={voteUp}>
+									<Entypo
+										name='arrow-up'
+										size={18}
+										style={[
+											{
+												color:
+													voteNumber === 1
+														? Colors.light.Primary
+														: Colors.light.tint,
+											},
+											{
+												color:
+													voteNumber === -1
+														? Colors.light.textLight
+														: Colors.light.tint,
+											},
+										]}
+										// color={Colors.light.tint}
+									/>
+								</TouchableOpacity>
+							</View>
+							<View style={styles.voteIcon}>
+								<TouchableOpacity onPress={voteDown}>
+									<Entypo
+										name='arrow-down'
+										size={18}
+										style={{
+											color:
+												voteNumber === 1
+													? Colors.light.textLight
+													: Colors.light.tint,
+										}}
+									/>
+								</TouchableOpacity>
+							</View>
+						</View>
+					</View>
 				</View>
-			</View>
-		</Pressable>
+			</Pressable>
+		</>
 	);
 };
 

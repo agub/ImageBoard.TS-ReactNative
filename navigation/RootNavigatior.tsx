@@ -137,36 +137,6 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 							<SavedHeaderButton
 								postID={route.params.data.getPost.id}
 							/>
-							// <Pressable
-							// 	style={{
-							// 		paddingHorizontal: 20,
-							// 	}}
-							// 	onPress={() =>
-							// 		console.log(route.params.data.getPost.id)
-							// 	}
-							// >
-							// 	{route.params.isUserSaved ? (
-							// 		<FontAwesome
-							// 			name='star'
-							// 			size={25}
-							// 			color={
-							// 				route.params.isUserSaved
-							// 					? Colors.light.tint
-							// 					: "white"
-							// 			}
-							// 		/>
-							// 	) : (
-							// 		<Feather
-							// 			name='star'
-							// 			size={25}
-							// 			color={
-							// 				route.params.isUserSaved
-							// 					? Colors.light.tint
-							// 					: "white"
-							// 			}
-							// 		/>
-							// 	)}
-							// </Pressable>
 						),
 					})}
 					// options={{ headerShown: false }}

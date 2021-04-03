@@ -37,7 +37,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	};
 	const closeTab = () => {
 		setModalVisible(!modalVisible);
-		navigation.goBack();
+		navigation.navigate("Lists");
 	};
 	type submitProps = {
 		title: string;

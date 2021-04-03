@@ -6,7 +6,11 @@ import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import { listSaveds } from "../../src/graphql/queries";
-import { onCreatePost, onCreateSaved } from "../../src/graphql/subscriptions";
+import {
+	onCreatePost,
+	onCreateSaved,
+	onDeleteSaved,
+} from "../../src/graphql/subscriptions";
 //@ts-ignore
 
 type SavedPostsProps = {
@@ -18,29 +22,32 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const [savedPosts, setSavedPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
 
-	useEffect(() => {
-		let mount = true;
-		const fetchPosts = async () => {
-			try {
-				const userData = await Auth.currentAuthenticatedUser();
-				const savedData = await API.graphql(
-					graphqlOperation(listSaveds)
-				);
-				const mainData = savedData.data.listSaveds.items.map(
-					(spreadData) => {
-						if (spreadData.userID === userData.attributes.sub) {
-							return spreadData;
-						}
+	let mount = true;
+	const fetchPosts = async () => {
+		try {
+			const userData = await Auth.currentAuthenticatedUser();
+
+			const savedData = await API.graphql(graphqlOperation(listSaveds));
+			const mainData = savedData.data.listSaveds.items.map(
+				(spreadData) => {
+					if (spreadData.userID === userData.attributes.sub) {
+						return spreadData;
 					}
-				);
-				if (mount) {
-					setSavedPosts(mainData);
-					setUserID(userData.attributes.sub);
 				}
-			} catch (e) {
-				console.log(e);
+			);
+			console.log(mainData);
+
+			if (mount) {
+				setSavedPosts(mainData);
+				setUserID(userData.attributes.sub);
 			}
-		};
+			// }
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	useEffect(() => {
 		fetchPosts();
 		return () => {
 			mount = false;
@@ -55,7 +62,7 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 				console.log(data.value.data.onCreateSaved);
 
 				// setPosts([data.value.data.onCreatePost, ...posts]);
-				console.log(userID);
+				// console.log(userID);
 
 				if (data.value.data.onCreateSaved.userID !== userID) {
 					return;
@@ -69,22 +76,43 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 		});
 		return () => subscription.unsubscribe();
 	});
+	useEffect(() => {
+		const subscription = API.graphql(
+			graphqlOperation(onDeleteSaved)
+		).subscribe({
+			next: (data) => {
+				console.log(data.value.data.onDeleteSaved);
+
+				// setPosts([data.value.data.onCreatePost, ...posts]);
+				// console.log(userID);
+
+				if (data.value.data.onDeleteSaved.userID !== userID) {
+					return;
+				} else {
+					fetchPosts();
+				}
+			},
+		});
+		return () => subscription.unsubscribe();
+	});
 
 	// console.log(savedPosts);
 
 	return (
 		// <ScrollView style={styles.container}>
 		<View>
-			<FlatList
-				data={savedPosts}
-				renderItem={({ item }) => (
-					<FeedItem
-						clickable={true}
-						navigation={navigation}
-						posts={item.post}
-					/>
-				)}
-			/>
+			{savedPosts.length > 0 && (
+				<FlatList
+					data={savedPosts}
+					renderItem={({ item }) => (
+						<FeedItem
+							clickable={true}
+							navigation={navigation}
+							posts={item.post}
+						/>
+					)}
+				/>
+			)}
 		</View>
 	);
 };
