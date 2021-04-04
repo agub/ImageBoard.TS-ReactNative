@@ -41,7 +41,7 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 						}
 					}
 				);
-				if (mount) {
+				if (isMounted) {
 					setSavedPosts(mainData);
 					setUserID(userData.attributes.sub);
 				}
@@ -51,9 +51,6 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 			}
 		};
 		fetchPosts();
-		return () => {
-			mount = false;
-		};
 	}, []);
 
 	useEffect(() => {

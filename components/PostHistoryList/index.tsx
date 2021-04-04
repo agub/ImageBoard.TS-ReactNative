@@ -23,34 +23,29 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const [userID, setUserID] = useState("");
 
 	const isMounted = useIsMounted();
-	console.log(isMounted.current);
-	const fetchPosts = async () => {
-		try {
-			const userData = await Auth.currentAuthenticatedUser();
-			const postData = await API.graphql(graphqlOperation(listPosts));
-			const mainData = postData.data.listPosts.items.map(
-				//@ts-ignore
-				(spreadData) => {
-					if (spreadData.userID === userData.attributes.sub) {
-						return spreadData;
-					}
-				}
-			);
-			if (isMounted.current) {
-				setUserID(userData.attributes.sub);
-				setUsersPosts(mainData);
-			}
-		} catch (e) {
-			console.log(e);
-		}
-	};
-	useEffect(() => {
-		let mount = true;
 
-		fetchPosts();
-		return () => {
-			mount = false;
+	useEffect(() => {
+		const fetchPosts = async () => {
+			try {
+				const userData = await Auth.currentAuthenticatedUser();
+				const postData = await API.graphql(graphqlOperation(listPosts));
+				const mainData = postData.data.listPosts.items.map(
+					//@ts-ignore
+					(spreadData) => {
+						if (spreadData.userID === userData.attributes.sub) {
+							return spreadData;
+						}
+					}
+				);
+				if (isMounted.current) {
+					setUserID(userData.attributes.sub);
+					setUsersPosts(mainData);
+				}
+			} catch (e) {
+				console.log(e);
+			}
 		};
+		fetchPosts();
 	}, []);
 
 	// setUsersPosts, isMounted
@@ -58,6 +53,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	useEffect(() => {
 		const subscription = API.graphql(
 			graphqlOperation(onCreatePost)
+			//@ts-ignore
 		).subscribe({
 			next: (data) => {
 				if (data.value.data.onCreatePost.userID !== userID) {
@@ -81,23 +77,17 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	useEffect(() => {
 		const subscription = API.graphql(
 			graphqlOperation(onDeletePost)
+			//@ts-ignore
 		).subscribe({
 			next: (data) => {
-				// console.log(data.value.data.onDeletePost);
-				// const deletePosted = data.value.data.onDeletePost;
-				// console.log(userID);
-				// console.log(data.value.data.onDeletePost);
-
 				if (data.value.data.onDeletePost.userID !== userID) {
 					return;
 				} else {
 					const newData = usersPosts.filter(
 						(obj) => obj.id !== data.value.data.onDeletePost.id
 					);
-
 					if (isMounted.current) {
 						setUsersPosts([...newData]);
-						// fetchPosts();
 					}
 				}
 			},

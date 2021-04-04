@@ -21,6 +21,7 @@ import { GetUserQuery } from "../src/API";
 
 import PostHistoryList from "../components/PostHistoryList";
 import SavedPosts from "../components/SavedPosts";
+import useIsMounted from "../components/custom/useIsMounted";
 
 type ProfileScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -31,9 +32,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 	const [userData, setUserData] = useState<GetUserQuery | undefined>();
 
 	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
+	const isMounted = useIsMounted();
+	// console.log(isMounted.current);
 
 	useEffect(() => {
-		let mount = true;
 		const fetchUserData = async () => {
 			const userInfo = await Auth.currentAuthenticatedUser();
 			// console.log(userInfo.attributes.sub);
@@ -41,14 +43,11 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 				graphqlOperation(getUser, { id: userInfo.attributes.sub })
 			);
 			//@ts-ignore
-			if (mount) {
+			if (isMounted.current) {
 				setUserData(user.data);
 			}
 		};
 		fetchUserData();
-		return () => {
-			mount = false;
-		};
 	}, []);
 
 	return (

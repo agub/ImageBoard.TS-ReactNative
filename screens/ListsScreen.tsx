@@ -28,11 +28,8 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 				if ("data" in postData) {
 					if (mount) {
 						setPosts(postData.data.listPosts?.items);
-						// setPosts(posts?.listPosts?.items);
 					}
 				}
-
-				// console.log(postData.data.listPosts?.items);
 			} catch (e) {
 				console.log(e);
 			}
@@ -80,17 +77,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		});
 		return () => subscription.unsubscribe();
 	});
-
-	// useEffect(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onDeletePost)
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			fetchPosts();
-	// 		},
-	// 	});
-	// 	return () => subscription.unsubscribe();
-	// }, [posts]);
 
 	return (
 		<>

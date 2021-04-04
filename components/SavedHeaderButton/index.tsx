@@ -10,6 +10,7 @@ import {
 	updateSaved,
 } from "../../src/graphql/mutations";
 import { getPost } from "../../src/graphql/queries";
+import useIsMounted from "../custom/useIsMounted";
 
 type SavedHeaderButtonProps = {
 	postID: string;
@@ -20,17 +21,6 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 	const [loading, setLoading] = useState(false);
 	const [userData, setUserData] = useState();
 	const [savedID, setSavedID] = useState("");
-
-	const useIsMounted = () => {
-		const isMounted = useRef(false);
-		useEffect(() => {
-			isMounted.current = true;
-			return () => {
-				isMounted.current = false;
-			};
-		}, []);
-		return isMounted;
-	};
 
 	const isMounted = useIsMounted();
 
@@ -100,13 +90,9 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 			console.log(e);
 		}
 	};
-	let mounted = true;
 
 	useEffect(() => {
 		fetchCommentData();
-		return () => {
-			mounted = false;
-		};
 	}, []);
 
 	return (
