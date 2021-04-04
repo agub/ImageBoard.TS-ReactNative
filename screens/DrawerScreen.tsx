@@ -1,40 +1,79 @@
-import React from "react";
-import { Button, View, Text, StyleSheet } from "react-native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
-import ProfileScreen from "./ProfileScreen";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { DrawerParamList, RootStackParamList } from "../types";
-import ProfileHeader from "../components/ProfileHeader";
-import EditButton from "../components/EditButton/EditButton";
-import Colors from "../constants/Colors";
-import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
+import moment from "moment";
+import React, { useState } from "react";
+import {
+	Alert,
+	Modal,
+	StyleSheet,
+	Text,
+	Pressable,
+	View,
+	TouchableWithoutFeedback,
+	ScrollView,
+	TouchableOpacity,
+} from "react-native";
 
 type DrawerScreenProps = {
-	navigation: StackNavigationProp<DrawerParamList>;
+	modalVisible: boolean;
+	setModalVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DrawerScreen: React.FC<DrawerScreenProps> = (props) => {
-	const { navigation } = props;
+	// const [modalVisible, setModalVisible] = useState(false);
+	const { modalVisible, setModalVisible } = props;
+
+	// if (!modalVisible) return null;
 	// console.log(props);
 	return (
 		<View style={styles.container}>
-			<DrawerContentScrollView {...props}>
-				{/* <ProfileHeader navigation={navigation} /> */}
-				<View style={styles.logoutBox}>
-					<DrawerItem
-						label='Edit'
-						onPress={() => {
-							// props.navigation.navigate("Edit");
-						}}
-					/>
-					<Button
-						title='logout'
-						onPress={() => console.warn("logout")}
-					/>
-				</View>
-			</DrawerContentScrollView>
+			<View style={styles.centeredView}>
+				<Modal
+					animationType='fade'
+					transparent={true}
+					visible={modalVisible}
+					onRequestClose={() => {
+						Alert.alert("Modal has been closed.");
+						setModalVisible(!modalVisible);
+					}}
+				>
+					<Pressable
+						style={{ width: "100%" }}
+						onPress={() => setModalVisible(!modalVisible)}
+					>
+						<View style={styles.centeredView}>
+							<View style={styles.modalView}>
+								<Text style={styles.modalText}>
+									Hello World!
+								</Text>
+							</View>
+						</View>
+					</Pressable>
+				</Modal>
+			</View>
 		</View>
+
+		// <Modal
+		// 	animationType='fade'
+		// 	transparent={true}
+		// 	visible={modalVisible}
+		// 	onRequestClose={() => {
+		// 		setModalVisible(false);
+		// 	}}
+		// >
+		// 	<TouchableOpacity
+		// 		style={styles.container}
+		// 		activeOpacity={1}
+		// 		onPressOut={() => {
+		// 			setModalVisible(false);
+		// 		}}
+		// 	>
+		// 		<ScrollView
+		// 			directionalLockEnabled={true}
+		// 			contentContainerStyle={styles.scrollModal}
+		// 		>
+		// 			<TouchableWithoutFeedback></TouchableWithoutFeedback>
+		// 		</ScrollView>
+		// 	</TouchableOpacity>
+		// </Modal>
 	);
 };
 
@@ -42,15 +81,51 @@ export default DrawerScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "white",
+		// flex: 1,
+		// // width: "20%",
+		width: "70%",
+		// backgroundColor: "black",
+	},
+	centeredView: {
+		// justifyContent: "flex-end",
+		// alignItems: "center",
+		zIndex: 100,
+	},
+	scrollModal: {
+		// margin: 20,
+		width: "70%",
 		height: "100%",
+
+		borderRadius: 20,
+		padding: 35,
+		alignItems: "center",
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 2,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 5,
 	},
 	button: {
-		marginTop: 20,
+		borderRadius: 20,
+		padding: 10,
+		elevation: 2,
 	},
-	logoutBox: {
-		padding: 20,
-		marginTop: "auto",
-		marginRight: "auto",
+	buttonOpen: {
+		backgroundColor: "#F194FF",
+	},
+	buttonClose: {
+		backgroundColor: "#2196F3",
+	},
+	textStyle: {
+		color: "white",
+		fontWeight: "bold",
+		textAlign: "center",
+	},
+	modalText: {
+		marginBottom: 15,
+		textAlign: "center",
 	},
 });

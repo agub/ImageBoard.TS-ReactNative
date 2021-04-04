@@ -20,13 +20,12 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const isMounted = useIsMounted();
 
 	useEffect(() => {
-		let mount = true;
 		const fetchPosts = async () => {
 			try {
 				const postData = await API.graphql(graphqlOperation(listPosts));
 
 				if ("data" in postData) {
-					if (mount) {
+					if (isMounted.current) {
 						setPosts(postData.data.listPosts?.items);
 					}
 				}
@@ -35,9 +34,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			}
 		};
 		fetchPosts();
-		return () => {
-			mount = false;
-		};
 	}, []);
 	// [setPosts]
 
@@ -48,7 +44,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		).subscribe({
 			next: (data) => {
 				// console.log(data.value.data.onCreatePost);
-				if (mount) {
+				if (isMounted.current) {
 					setPosts([data.value.data.onCreatePost, ...posts]);
 				}
 			},

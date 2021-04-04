@@ -1,4 +1,9 @@
-import { Ionicons } from "@expo/vector-icons";
+import {
+	AntDesign,
+	Feather,
+	Ionicons,
+	MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
@@ -20,46 +25,53 @@ export default function BottomTabNavigator() {
 
 	return (
 		<BottomTab.Navigator
-			initialRouteName='Home'
+			initialRouteName='Lists'
 			tabBarOptions={{ activeTintColor: Colors[colorScheme].background }}
 		>
-			<BottomTab.Screen
-				name='Home'
-				component={HomeScreen}
-				options={{
-					tabBarLabel: "ホーム",
-					tabBarIcon: ({ color }) => (
-						<TabBarIcon name='ios-code' color={color} />
-					),
-				}}
-			/>
-			<BottomTab.Screen
-				name='Posts'
-				component={PostsScreen}
-				options={{
-					tabBarLabel: "投稿",
-					tabBarIcon: ({ color }) => (
-						<TabBarIcon name='ios-code' color={color} />
-					),
-				}}
-			/>
 			<BottomTab.Screen
 				name='Lists'
 				component={ListsScreen}
 				options={{
 					tabBarLabel: "リスト",
 					tabBarIcon: ({ color }) => (
-						<TabBarIcon name='ios-code' color={color} />
+						<Feather name='home' size={30} color={color} />
 					),
 				}}
 			/>
+			<BottomTab.Screen
+				name='Home'
+				component={HomeScreen}
+				options={{
+					tabBarLabel: "saved",
+					tabBarIcon: ({ color }) => (
+						<AntDesign name='save' size={30} color={color} />
+					),
+				}}
+			/>
+
+			<BottomTab.Screen
+				name='Posts'
+				component={PostsScreen}
+				options={{
+					tabBarLabel: "投稿",
+					tabBarIcon: ({ color }) => (
+						// <TabBarIcon name='ios-code' color={color} />
+						<MaterialCommunityIcons
+							name='pencil-plus-outline'
+							size={30}
+							color={color}
+						/>
+					),
+				}}
+			/>
+
 			<BottomTab.Screen
 				name='Profile'
 				component={ProfileScreen}
 				options={{
 					tabBarLabel: "プロフィール",
 					tabBarIcon: ({ color }) => (
-						<TabBarIcon name='ios-code' color={color} />
+						<Feather name='user' color={color} size={30} />
 					),
 				}}
 			/>

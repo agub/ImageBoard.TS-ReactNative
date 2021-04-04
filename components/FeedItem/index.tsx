@@ -33,7 +33,9 @@ import useIsMounted from "../custom/useIsMounted";
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
 	posts: PostData;
-	addComment: () => void | undefined | null;
+
+	/////!!!!
+	addComment: (value: React.SetStateAction<boolean>) => void;
 	clickable: boolean | null;
 };
 
@@ -55,7 +57,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		let mounted = true;
 		const fetchCommentData = async () => {
 			try {
-				// setLoading(true);
+				setLoading(true);
 				const postData = await API.graphql(
 					graphqlOperation(getPost, { id: posts?.id })
 				);
@@ -64,7 +66,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						setAllData(postData.data);
 					}
 				}
-				// setLoading(false);
+				setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}

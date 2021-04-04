@@ -1,16 +1,30 @@
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import FeedItem from "../components/FeedItem";
-import { RootStackParamList } from "../types";
+import PostHistoryList from "../components/PostHistoryList";
+import SavedPosts from "../components/SavedPosts";
+import { ProfileTabParamList, RootStackParamList } from "../types";
 
 type HomeScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
 
 const HomeScreen: React.FC<HomeScreenProps> = (props) => {
+	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
 	return (
-		<View style={styles.container}>{/* <FeedItem {...props} /> */}</View>
+		<View style={styles.container}>
+			<Tab.Navigator initialRouteName='Liked'>
+				<Tab.Screen name='Liked' component={SavedPosts} />
+				<Tab.Screen
+					name='Users'
+					// options={{ navigation: navigation }}
+					options={{ title: "投稿履歴" }}
+					component={PostHistoryList}
+				/>
+			</Tab.Navigator>
+		</View>
 	);
 };
 

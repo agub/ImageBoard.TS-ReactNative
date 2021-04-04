@@ -4,6 +4,7 @@ import {
 	Octicons,
 	Feather,
 	FontAwesome,
+	AntDesign,
 } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
@@ -31,16 +32,51 @@ import { DrawerActions } from "@react-navigation/native";
 import ContentScreen from "../screens/ContentScreen";
 import { useState } from "react";
 import SavedHeaderButton from "../components/SavedHeaderButton";
+import DrawerScreen from "../screens/DrawerScreen";
+import Auth from "@aws-amplify/auth";
+
+export const Navigation = ({
+	colorScheme,
+}: {
+	colorScheme: ColorSchemeName;
+}) => {
+	return (
+		<NavigationContainer
+			linking={LinkingConfiguration}
+			theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
+		>
+			<RootNavigator />
+		</NavigationContainer>
+	);
+};
+////////////////////
+
 const Stack = createStackNavigator<RootStackParamList>();
 
 type RootNavigatorProps = {
-	navigation: StackNavigationProp<DrawerParamList, "Menu">;
+	// navigation: StackNavigationProp<DrawerParamList, "Menu">;
 };
 export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 	// const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 
+	const [modalVisible, setModalVisible] = useState(false);
+
+	const signOut = async () => {
+		try {
+			await Auth.signOut({ global: true });
+		} catch (error) {
+			console.log("error signing out: ", error);
+		}
+	};
+
 	return (
 		<>
+			{/* {modalVisible && (
+				<DrawerScreen
+					modalVisible={modalVisible}
+					setModalVisible={setModalVisible}
+				/>
+			)} */}
 			<Stack.Navigator
 				screenOptions={{
 					headerShown: true,
@@ -52,23 +88,16 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 					component={BottomTabNavigator}
 					options={{
 						title: "",
-
 						headerRight: () => (
-							<View
+							<Pressable
 								style={{
 									paddingHorizontal: 20,
 								}}
+								// onPress={() => setModalVisible(!modalVisible)}
+								onPress={signOut}
 							>
-								<MaterialIcons
-									name='menu'
-									size={30}
-									onPress={() =>
-										props.navigation.dispatch(
-											DrawerActions.toggleDrawer()
-										)
-									}
-								/>
-							</View>
+								<AntDesign name='logout' size={20} />
+							</Pressable>
 						),
 						headerLeft: () => (
 							<View
@@ -139,7 +168,6 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 							/>
 						),
 					})}
-					// options={{ headerShown: false }}
 				/>
 
 				<Stack.Screen
