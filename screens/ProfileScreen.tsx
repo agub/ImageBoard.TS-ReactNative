@@ -7,12 +7,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import EditButton from "../components/EditButton/EditButton";
 import ProfileHeader from "../components/ProfileHeader";
-import {
-	BottomTabParamList,
-	ProfileTabParamList,
-	RootStackParamList,
-	UserData,
-} from "../types";
+import { ProfileTabParamList, RootStackParamList } from "../types";
 
 import FeedItem from "../components/FeedItem";
 import Tab from "../components/Tab/Tab";

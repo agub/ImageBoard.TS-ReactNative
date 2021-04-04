@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
 	View,
 	Text,
@@ -28,6 +28,7 @@ import {
 	updatePost,
 } from "../../src/graphql/mutations";
 import Modal from "react-native-modal";
+import useIsMounted from "../custom/useIsMounted";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -42,69 +43,28 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	const [showComment, setShowComment] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
-
 	const [isModalVisible, setModalVisible] = useState(false);
+
+	const isMounted = useIsMounted();
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible);
-	};
-
-	const deleteHandler = async () => {
-		try {
-			//Deleting Saved
-			if (allData?.getPost?.saved?.items?.length > 0) {
-				await allData?.getPost?.saved?.items?.forEach((savedObj) =>
-					// console.log(save.id)
-					API.graphql(
-						graphqlOperation(deleteSaved, {
-							input: { id: savedObj.id },
-						})
-					)
-				);
-			}
-			//Deleting Comments
-			if (allData?.getPost?.comments?.items?.length > 0) {
-				await allData?.getPost?.comments?.items?.forEach(
-					(commentsObj) => {
-						API.graphql(
-							graphqlOperation(deleteComment, {
-								input: { id: commentsObj.id },
-							})
-						);
-					}
-				);
-			}
-			//Deleting actual post
-			await API.graphql(
-				graphqlOperation(deletePost, {
-					input: {
-						id: allData?.getPost?.id,
-					},
-				})
-			);
-		} catch (e) {
-			console.log(e);
-		}
-		// navigation?.canGoBack();
-		setModalVisible(false);
 	};
 
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
 			try {
-				setLoading(true);
+				// setLoading(true);
 				const postData = await API.graphql(
 					graphqlOperation(getPost, { id: posts?.id })
 				);
 				if ("data" in postData) {
-					if (mounted) {
+					if (isMounted.current) {
 						setAllData(postData.data);
 					}
-
-					// console.log(postData.data);
 				}
-				setLoading(false);
+				// setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}
@@ -115,12 +75,12 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		};
 	}, []);
 
-	let mount = true;
-	useEffect(() => {
-		return () => {
-			mount = false;
-		};
-	}, []);
+	// let mount = true;
+	// useEffect(() => {
+	// 	return () => {
+	// 		mount = false;
+	// 	};
+	// }, []);
 
 	const voteUp = async () => {
 		try {
@@ -175,6 +135,50 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		} catch (e) {
 			console.log(e);
 		}
+	};
+
+	const deleteHandler = async () => {
+		try {
+			if (allData?.getPost?.saved?.items?.length > 0) {
+				if (isMounted.current) {
+					await allData?.getPost?.saved?.items?.forEach((savedObj) =>
+						// console.log(save.id)
+						API.graphql(
+							graphqlOperation(deleteSaved, {
+								input: { id: savedObj.id },
+							})
+						)
+					);
+				}
+			}
+
+			if (allData?.getPost?.comments?.items?.length > 0) {
+				if (isMounted.current) {
+					await allData?.getPost?.comments?.items?.forEach(
+						(commentsObj) => {
+							API.graphql(
+								graphqlOperation(deleteComment, {
+									input: { id: commentsObj.id },
+								})
+							);
+						}
+					);
+				}
+			}
+			//Deleting actual post
+
+			await API.graphql(
+				graphqlOperation(deletePost, {
+					input: {
+						id: allData?.getPost?.id,
+					},
+				})
+			);
+		} catch (e) {
+			console.log(e);
+		}
+
+		setModalVisible(false);
 	};
 
 	const onPress = async () => {
@@ -240,19 +244,22 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 								{" "}
 								{moment(posts?.createdAt).fromNow()}{" "}
 							</Text>
-
-							<TouchableOpacity
-								style={{
-									justifyContent: "center",
-								}}
-								onPress={() => setModalVisible(!isModalVisible)}
-							>
-								<Entypo
-									name='dots-three-vertical'
-									color={Colors.light.textLight}
-									size={15}
-								/>
-							</TouchableOpacity>
+							{!clickable && (
+								<TouchableOpacity
+									style={{
+										justifyContent: "center",
+									}}
+									onPress={() =>
+										setModalVisible(!isModalVisible)
+									}
+								>
+									<Entypo
+										name='dots-three-vertical'
+										color={Colors.light.textLight}
+										size={15}
+									/>
+								</TouchableOpacity>
+							)}
 						</View>
 					</View>
 

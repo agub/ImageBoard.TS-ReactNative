@@ -11,6 +11,7 @@ import {
 	onCreateSaved,
 	onDeleteSaved,
 } from "../../src/graphql/subscriptions";
+import useIsMounted from "../custom/useIsMounted";
 //@ts-ignore
 
 type SavedPostsProps = {
@@ -22,32 +23,33 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const [savedPosts, setSavedPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
 
-	let mount = true;
-	const fetchPosts = async () => {
-		try {
-			const userData = await Auth.currentAuthenticatedUser();
-
-			const savedData = await API.graphql(graphqlOperation(listSaveds));
-			const mainData = savedData.data.listSaveds.items.map(
-				(spreadData) => {
-					if (spreadData.userID === userData.attributes.sub) {
-						return spreadData;
-					}
-				}
-			);
-			console.log(mainData);
-
-			if (mount) {
-				setSavedPosts(mainData);
-				setUserID(userData.attributes.sub);
-			}
-			// }
-		} catch (e) {
-			console.log(e);
-		}
-	};
+	const isMounted = useIsMounted();
 
 	useEffect(() => {
+		let mount = true;
+		const fetchPosts = async () => {
+			try {
+				const userData = await Auth.currentAuthenticatedUser();
+
+				const savedData = await API.graphql(
+					graphqlOperation(listSaveds)
+				);
+				const mainData = savedData.data.listSaveds.items.map(
+					(spreadData) => {
+						if (spreadData.userID === userData.attributes.sub) {
+							return spreadData;
+						}
+					}
+				);
+				if (mount) {
+					setSavedPosts(mainData);
+					setUserID(userData.attributes.sub);
+				}
+				// }
+			} catch (e) {
+				console.log(e);
+			}
+		};
 		fetchPosts();
 		return () => {
 			mount = false;
@@ -59,18 +61,15 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 			graphqlOperation(onCreateSaved)
 		).subscribe({
 			next: (data) => {
-				console.log(data.value.data.onCreateSaved);
-
-				// setPosts([data.value.data.onCreatePost, ...posts]);
-				// console.log(userID);
-
 				if (data.value.data.onCreateSaved.userID !== userID) {
 					return;
 				} else {
-					setSavedPosts([
-						data.value.data.onCreateSaved,
-						...savedPosts,
-					]);
+					if (isMounted.current) {
+						setSavedPosts([
+							data.value.data.onCreateSaved,
+							...savedPosts,
+						]);
+					}
 				}
 			},
 		});
@@ -89,7 +88,12 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 				if (data.value.data.onDeleteSaved.userID !== userID) {
 					return;
 				} else {
-					fetchPosts();
+					const newData = savedPosts.filter(
+						(obj) => obj.id !== data.value.data.onDeleteSaved.id
+					);
+					if (isMounted.current) {
+						setSavedPosts([...newData]);
+					}
 				}
 			},
 		});

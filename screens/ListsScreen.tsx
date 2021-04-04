@@ -6,7 +6,8 @@ import FeedItem from "../components/FeedItem";
 import { listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
-import { onCreatePost } from "../src/graphql/subscriptions";
+import { onCreatePost, onDeletePost } from "../src/graphql/subscriptions";
+import useIsMounted from "../components/custom/useIsMounted";
 
 type ListsScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -15,6 +16,8 @@ type ListsScreenProps = {
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
+
+	const isMounted = useIsMounted();
 
 	useEffect(() => {
 		let mount = true;
@@ -39,33 +42,69 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			mount = false;
 		};
 	}, []);
+	// [setPosts]
 
 	useEffect(() => {
+		let mount = true;
 		const subscription = API.graphql(
 			graphqlOperation(onCreatePost)
 		).subscribe({
 			next: (data) => {
-				console.log(data.value.data.onCreatePost);
+				// console.log(data.value.data.onCreatePost);
+				if (mount) {
+					setPosts([data.value.data.onCreatePost, ...posts]);
+				}
+			},
+		});
+		return () => {
+			subscription.unsubscribe();
+			mount = false;
+		};
+	});
+	// [posts, setPosts];
 
-				setPosts([data.value.data.onCreatePost, ...posts]);
+	useEffect(() => {
+		const subscription = API.graphql(
+			graphqlOperation(onDeletePost)
+		).subscribe({
+			next: (data) => {
+				const newData = posts.filter(
+					(obj) => obj.id !== data.value.data.onDeletePost.id
+				);
+
+				if (isMounted.current) {
+					setPosts([...newData]);
+					// fetchPosts();
+				}
 			},
 		});
 		return () => subscription.unsubscribe();
-	}, [posts]);
-	// console.log(posts?.listPosts?.items);
+	});
+
+	// useEffect(() => {
+	// 	const subscription = API.graphql(
+	// 		graphqlOperation(onDeletePost)
+	// 	).subscribe({
+	// 		next: (data) => {
+	// 			fetchPosts();
+	// 		},
+	// 	});
+	// 	return () => subscription.unsubscribe();
+	// }, [posts]);
 
 	return (
-		// <ScrollView style={styles.container}>
-		<FlatList
-			data={posts}
-			renderItem={({ item }) => (
-				<FeedItem
-					navigation={navigation}
-					clickable={true}
-					posts={item}
-				/>
-			)}
-		/>
+		<>
+			<FlatList
+				data={posts}
+				renderItem={({ item }) => (
+					<FeedItem
+						navigation={navigation}
+						clickable={true}
+						posts={item}
+					/>
+				)}
+			/>
+		</>
 	);
 };
 
