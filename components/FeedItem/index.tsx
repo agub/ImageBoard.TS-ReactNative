@@ -47,7 +47,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isModalVisible, setModalVisible] = useState(false);
 
-	const isMounted = useIsMounted();
+	// const isMounted = useIsMounted();
+	const isMounted = useRef(true);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible);
@@ -55,7 +56,10 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const onPress = async () => {
 		// fetchCommentData();
-		await navigation?.navigate("Content", {
+
+		// await
+
+		navigation?.navigate("Content", {
 			data: allData,
 			//wontuse!!!
 		});
@@ -68,7 +72,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
-			// Do something when the screen is focused
 			const fetchCommentData = async () => {
 				try {
 					setLoading(true);
@@ -81,13 +84,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						}
 					}
 					setLoading(false);
-					console.log("fetchCommentfired");
 				} catch (e) {
 					console.log(e);
 				}
 			};
 			fetchCommentData();
 			return () => {
+				isMounted.current = false;
 				// Do something when the screen is unfocused
 				// Useful for cleanup functions
 			};
@@ -154,7 +157,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			if (allData?.getPost?.saved?.items?.length > 0) {
 				if (isMounted.current) {
 					await allData?.getPost?.saved?.items?.forEach((savedObj) =>
-						// console.log(save.id)
 						API.graphql(
 							graphqlOperation(deleteSaved, {
 								input: { id: savedObj.id },
@@ -192,49 +194,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 		setModalVisible(false);
 	};
-
-	// useFocusEffect(
-	// 	React.useCallback(() => {
-	// 		const subscription = API.graphql(
-	// 			graphqlOperation(onCreateComment)
-	// 			//@ts-ignore
-	// 		).subscribe({
-	// 			next: (data) => {
-	// 				if (data.value.data.onCreateComment.postID !== posts?.id) {
-	// 					return;
-	// 				} else {
-	// 					// fetchCommentData();
-	// 					console.log(123123123);
-	// 				}
-	// 			},
-	// 		});
-	// 		return () => subscription.unsubscribe();
-	// 	}, [])
-	// );
-
-	// useState(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onCreateComment)
-	// 		//@ts-ignore
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			if (data.value.data.onCreateComment.postID !== posts?.id) {
-	// 				return;
-	// 				// } else {
-	// 				// 	const newData = usersPosts.filter(
-	// 				// 		(obj) => obj.id !== data.value.data.onDeletePost.id
-	// 				// 	);
-	// 				// 	if (isMounted.current) {
-	// 				// 		setUsersPosts([...newData]);
-	// 				// 	}
-	// 				// }
-	// 			} else {
-	// 				fetchCommentData();
-	// 			}
-	// 		},
-	// 	});
-	// 	return () => subscription.unsubscribe();
-	// }, []);
 
 	return (
 		<>

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		borderRadius: 20,
-		padding: 10,
+		padding: 12,
 		elevation: 2,
 		alignItems: "center",
 		flexDirection: "row",

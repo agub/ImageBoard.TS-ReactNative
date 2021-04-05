@@ -28,12 +28,13 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
+	const [loading, setLoading] = useState(false);
 
-	let input: any;
+	// let input: any;
 
-	const focus = () => {
-		input.focus();
-	};
+	// const focus = () => {
+	// 	input.focus();
+	// };
 	const closeTab = () => {
 		setModalVisible(!modalVisible);
 		navigation.navigate("Lists");
@@ -45,6 +46,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const submit = async () => {
 		try {
 			if (title !== "" && content !== "") {
+				setLoading(true);
 				const userData = await API.Auth.currentAuthenticatedUser();
 				// console.log(userData.attributes.sub);
 				await API.graphql(
@@ -59,6 +61,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 				);
 				setTitle("");
 				setContent("");
+				setLoading(false);
 				closeTab();
 			} else {
 				Alert.alert("タイトルか投稿内容を記入してください");
@@ -124,14 +127,15 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 								/>
 								{/* <Text style={styles.textStyle}>x</Text> */}
 							</Pressable>
-							<View style={[styles.button, styles.buttonClose]}>
-								<TouchableWithoutFeedback
-									style={[styles.button, styles.buttonClose]}
-									onPress={submit}
-								>
-									<Text style={styles.textStyle}>投稿</Text>
-								</TouchableWithoutFeedback>
-							</View>
+							{/* <View style={[styles.button, styles.buttonClose]}> */}
+							<TouchableOpacity
+								style={[styles.button, styles.buttonClose]}
+								onPress={submit}
+								disabled={loading}
+							>
+								<Text style={styles.textStyle}>投稿</Text>
+							</TouchableOpacity>
+							{/* </View> */}
 						</View>
 						<View style={styles.textAreaBox}>
 							<View style={styles.title}>

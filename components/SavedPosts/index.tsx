@@ -12,6 +12,7 @@ import {
 	onDeleteSaved,
 } from "../../src/graphql/subscriptions";
 import useIsMounted from "../custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
 
 type SavedPostsProps = {
@@ -25,33 +26,66 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 
 	const isMounted = useIsMounted();
 
-	useEffect(() => {
-		let mount = true;
-		const fetchPosts = async () => {
-			try {
-				const userData = await Auth.currentAuthenticatedUser();
+	// useEffect(() => {
+	// 	let mount = true;
+	// 	const fetchPosts = async () => {
+	// 		try {
+	// 			const userData = await Auth.currentAuthenticatedUser();
 
-				const savedData = await API.graphql(
-					graphqlOperation(listSaveds)
-				);
-				const mainData = savedData.data.listSaveds.items.map(
-					(spreadData) => {
-						if (spreadData.userID === userData.attributes.sub) {
-							return spreadData;
+	// 			const savedData = await API.graphql(
+	// 				graphqlOperation(listSaveds)
+	// 			);
+	// 			const mainData = savedData.data.listSaveds.items.map(
+	// 				(spreadData) => {
+	// 					if (spreadData.userID === userData.attributes.sub) {
+	// 						return spreadData;
+	// 					}
+	// 				}
+	// 			);
+	// 			if (isMounted) {
+	// 				setSavedPosts(mainData);
+	// 				setUserID(userData.attributes.sub);
+	// 			}
+	// 			// }
+	// 		} catch (e) {
+	// 			console.log(e);
+	// 		}
+	// 	};
+	// 	fetchPosts();
+	// }, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
+			const fetchPosts = async () => {
+				try {
+					const userData = await Auth.currentAuthenticatedUser();
+
+					const savedData = await API.graphql(
+						graphqlOperation(listSaveds)
+					);
+					const mainData = savedData.data.listSaveds.items.map(
+						(spreadData) => {
+							if (spreadData.userID === userData.attributes.sub) {
+								return spreadData;
+							}
 						}
+					);
+					if (isMounted) {
+						setSavedPosts(mainData);
+						setUserID(userData.attributes.sub);
 					}
-				);
-				if (isMounted) {
-					setSavedPosts(mainData);
-					setUserID(userData.attributes.sub);
+					// }
+				} catch (e) {
+					console.log(e);
 				}
-				// }
-			} catch (e) {
-				console.log(e);
-			}
-		};
-		fetchPosts();
-	}, []);
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+			};
+		}, [])
+	);
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -77,11 +111,6 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 			graphqlOperation(onDeleteSaved)
 		).subscribe({
 			next: (data) => {
-				console.log(data.value.data.onDeleteSaved);
-
-				// setPosts([data.value.data.onCreatePost, ...posts]);
-				// console.log(userID);
-
 				if (data.value.data.onDeleteSaved.userID !== userID) {
 					return;
 				} else {
@@ -97,10 +126,7 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 		return () => subscription.unsubscribe();
 	});
 
-	// console.log(savedPosts);
-
 	return (
-		// <ScrollView style={styles.container}>
 		<View>
 			{savedPosts.length > 0 && (
 				<FlatList
