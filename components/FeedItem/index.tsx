@@ -33,9 +33,7 @@ import useIsMounted from "../custom/useIsMounted";
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
 	posts: PostData;
-
-	/////!!!!
-	addComment: (value: React.SetStateAction<boolean>) => void;
+	addComment: () => void;
 	clickable: boolean | null;
 };
 
@@ -53,6 +51,18 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(!isModalVisible);
 	};
 
+	const onPress = async () => {
+		await navigation?.navigate("Content", {
+			data: allData,
+			//wontuse!!!
+		});
+	};
+	console.log(isMounted.current);
+
+	const onCommentPress = () => {
+		setShowComment(!showComment);
+		addComment();
+	};
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
@@ -75,14 +85,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		return () => {
 			mounted = false;
 		};
-	}, []);
-
-	// let mount = true;
-	// useEffect(() => {
-	// 	return () => {
-	// 		mount = false;
-	// 	};
-	// }, []);
+	}, [setLoading]);
 
 	const voteUp = async () => {
 		try {
@@ -183,17 +186,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(false);
 	};
 
-	const onPress = async () => {
-		await navigation?.navigate("Content", {
-			data: allData,
-			//wontuse!!!
-		});
-	};
-
-	const onCommentPress = () => {
-		setShowComment(!showComment);
-		addComment();
-	};
 	return (
 		<>
 			<Modal

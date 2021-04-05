@@ -12,6 +12,7 @@ import {
 	KeyboardAvoidingView,
 	TouchableHighlight,
 	TextInput,
+	Alert,
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -27,23 +28,49 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
 
+	// const submitComment = async () => {
+	// 	try {
+	// 		const commentData = await API.graphql(
+	// 			graphqlOperation(createComment, {
+	// 				input: {
+	// 					userID: data?.getPost?.userID,
+	// 					postID: data?.getPost?.id,
+	// 					vote: 0,
+	// 					title,
+	// 					content,
+	// 				},
+	// 			})
+	// 		);
+	// 		setTitle("");
+	// 		setContent("");
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 	}
+	// };
+
 	const submitComment = async () => {
-		try {
-			const commentData = await API.graphql(
-				graphqlOperation(createComment, {
-					input: {
-						userID: data?.getPost?.userID,
-						postID: data?.getPost?.id,
-						vote: 0,
-						title,
-						content,
-					},
-				})
-			);
-			setTitle("");
-			setContent("");
-		} catch (e) {
-			console.log(e);
+		if (content !== "" && title !== "") {
+			try {
+				const commentData = await API.graphql(
+					graphqlOperation(createComment, {
+						input: {
+							userID: data?.getPost?.userID,
+							postID: data?.getPost?.id,
+							vote: 0,
+							title,
+							content,
+						},
+					})
+				);
+				setTitle("");
+				setContent("");
+			} catch (e) {
+				console.log(e);
+			}
+		}
+
+		if (content === "" && title === "") {
+			Alert.alert("タイトル又は本文を記入してください");
 		}
 	};
 
@@ -52,13 +79,14 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 			style={styles.container}
 			// onPress={navigation.navigate("Content")}
 		>
-			<TouchableHighlight style={styles.logo} onPress={submitComment}>
+			<TouchableOpacity style={styles.logo} onPress={submitComment}>
 				<Entypo
 					name='new-message'
 					size={24}
 					color={Colors.light.Primary}
 				/>
-			</TouchableHighlight>
+			</TouchableOpacity>
+
 			<View style={styles.content}>
 				<KeyboardAvoidingView behavior='height' style={{ height: 49 }}>
 					<View style={{ justifyContent: "flex-start" }}>

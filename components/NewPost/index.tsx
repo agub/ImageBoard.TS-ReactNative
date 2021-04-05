@@ -30,7 +30,6 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [content, setContent] = useState<string>("");
 
 	let input: any;
-	// console.log(navigation);
 
 	const focus = () => {
 		input.focus();

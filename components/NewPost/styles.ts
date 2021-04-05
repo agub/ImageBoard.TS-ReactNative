@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
 		textAlign: "center",
 	},
 	goBackHistory: {
+		elevation: 10,
 		width: 40,
 		height: 40,
 		borderRadius: 50,
