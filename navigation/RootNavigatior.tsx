@@ -1,38 +1,21 @@
-import {
-	Ionicons,
-	MaterialIcons,
-	Octicons,
-	Feather,
-	FontAwesome,
-	AntDesign,
-} from "@expo/vector-icons";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import {
 	NavigationContainer,
 	DefaultTheme,
 	DarkTheme,
 } from "@react-navigation/native";
-import {
-	createStackNavigator,
-	StackNavigationProp,
-} from "@react-navigation/stack";
-import { StatusBar } from "expo-status-bar";
-import * as React from "react";
-import { Button, ColorSchemeName, Pressable, Text, View } from "react-native";
-import NewPost from "../components/NewPost";
-import Colors from "../constants/Colors";
+import { createStackNavigator } from "@react-navigation/stack";
 
+import * as React from "react";
+import { Alert, ColorSchemeName, Pressable, Text, View } from "react-native";
+import Colors from "../constants/Colors";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import PostsScreen from "../screens/PostsScreen";
 import UserEditScreen from "../screens/UserEditScreen";
-import { DrawerParamList, RootStackParamList } from "../types";
+import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { DrawerActions } from "@react-navigation/native";
 import ContentScreen from "../screens/ContentScreen";
-import { useState } from "react";
 import SavedHeaderButton from "../components/SavedHeaderButton";
-import DrawerScreen from "../screens/DrawerScreen";
 import Auth from "@aws-amplify/auth";
 
 export const Navigation = ({
@@ -49,24 +32,38 @@ export const Navigation = ({
 		</NavigationContainer>
 	);
 };
-////////////////////
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-type RootNavigatorProps = {
-	// navigation: StackNavigationProp<DrawerParamList, "Menu">;
-};
+type RootNavigatorProps = {};
 export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 	// const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 
-	const [modalVisible, setModalVisible] = useState(false);
+	// const [modalVisible, setModalVisible] = useState(false);
 
 	const signOut = async () => {
-		try {
-			await Auth.signOut({ global: true });
-		} catch (error) {
-			console.log("error signing out: ", error);
-		}
+		await Alert.alert("お知らせ", "ログアウトいたしますか？", [
+			{
+				text: "Cancel",
+				style: "cancel",
+			},
+			{
+				text: "OK",
+				onPress: () => {
+					try {
+						Auth.signOut({ global: true });
+						Alert.alert("ログアウトいたしました");
+					} catch (error) {
+						console.log("error signing out: ", error);
+					}
+				},
+			},
+		]);
+		// try {
+		// 	await Auth.signOut({ global: true });
+		// } catch (error) {
+		// 	console.log("error signing out: ", error);
+		// }
 	};
 
 	return (
@@ -143,12 +140,9 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 								style={{
 									paddingHorizontal: 20,
 								}}
-							>
-								{/* <Text>Submit</Text> */}
-							</View>
+							></View>
 						),
 					}}
-					// options={{ headerShown: false }}
 				/>
 				<Stack.Screen
 					name='Content'

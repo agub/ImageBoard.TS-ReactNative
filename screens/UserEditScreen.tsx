@@ -1,24 +1,44 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Alert, Button, StyleSheet, Text, View } from "react-native";
 
-import { BottomTabParamList, RootStackParamList } from "../types";
+import { RootStackParamList } from "../types";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../constants/Colors";
-import { Auth } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
+import SettingButton from "../components/SettingButton";
+import useIsMounted from "../components/custom/useIsMounted";
 
 type UserEditScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "UserEdit">;
 };
 
-type SettingButtonButtonProps = {
-	text: string;
-	additional?: string;
-};
-
 const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 	const { navigation } = props;
+	const [userData, setUserData] = useState();
+
+	const [currentUserName, setCurrentUserName] = useState<string>("");
+	const [currentEmail, setCurrentEmail] = useState<string>("");
+
+	const [changePassword, setChangePassword] = useState(false);
+	const [currentPassword, setCurrentPassword] = useState<string>("");
+	const [newPassword, setNewPassword] = useState<string>("");
+
+	const isMounted = useIsMounted();
+
+	// console.log(currentUserName, currentEmail);
+
+	useEffect(() => {
+		(async () => {
+			const userData = await API.Auth.currentAuthenticatedUser();
+			if (isMounted) {
+				setUserData(userData);
+				setCurrentEmail(userData.attributes.email);
+				setCurrentUserName(userData.username);
+			}
+		})();
+	}, []);
 
 	const onPress = () => {
 		navigation.goBack();
@@ -32,54 +52,21 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 			.then((user) => {
 				return Auth.changePassword(user, oldPassword, newPassword);
 			})
-			.then((data) => console.log(data))
-			.catch((err) => console.log(err));
+			.then((data) => {
+				console.log(data);
+				setCurrentPassword("");
+				setNewPassword("");
+				setChangePassword(!changePassword);
+				alertMessage("パスワードが変更されました", "");
+			})
+			.catch((err) => {
+				console.log(err);
+				alertMessage("エラー", "現在のパスワードが一致しません");
+			});
 	};
 
-	const [changePassword, sethangePassword] = useState(false);
-	const [currentPassword, setCurrentPassword] = useState("");
-	const [newPassword, setNewPassword] = useState("");
-
-	const SettingButton: React.FC<SettingButtonButtonProps> = (props) => {
-		return (
-			<TouchableOpacity
-				onPress={() => sethangePassword(!changePassword)}
-				style={styles.buttonBox}
-			>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						height: 40,
-					}}
-				>
-					<Feather
-						name='settings'
-						size={20}
-						style={{ paddingRight: 10 }}
-					/>
-					<View
-						style={{
-							alignItems: "flex-start",
-							flexDirection: "column",
-						}}
-					>
-						<Text style={styles.ButtonText}>{props.text}</Text>
-						{props.additional && (
-							<Text
-								style={[
-									styles.ButtonText,
-									{ color: Colors.light.textLight },
-								]}
-							>
-								{props.additional}
-							</Text>
-						)}
-					</View>
-				</View>
-				<AntDesign name='arrowright' size={25} />
-			</TouchableOpacity>
-		);
+	const alertMessage = (msg: string, sub: string) => {
+		Alert.alert(msg, sub, [{ text: "OK" }]);
 	};
 
 	return (
@@ -88,7 +75,7 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 				<Text style={styles.text}>基本設定</Text>
 				<View>
 					{/* <Text style={styles.text}>基本設定</Text> */}
-					<SettingButton
+					{/* <SettingButton
 						text='emailの変更'
 						additional='email@gmail.com'
 					/>
@@ -96,8 +83,12 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 					<SettingButton
 						text='ユーザーネームを変更'
 						additional='agub1994'
+					/> */}
+					<SettingButton
+						text='パスワードの変更'
+						setState={setChangePassword}
+						currentState={changePassword}
 					/>
-					<SettingButton text='パスワードの変更' />
 					{changePassword && (
 						<View
 							style={{
@@ -118,12 +109,15 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 									placeholderTextColor={
 										Colors.light.textLight
 									}
-									style={{ paddingVertical: 10 }}
 									value={currentPassword}
 									onChangeText={setCurrentPassword}
+									style={{ paddingVertical: 10 }}
 								/>
 								<TextInput
 									blurOnSubmit={false}
+									secureTextEntry={true}
+									value={newPassword}
+									onChangeText={setNewPassword}
 									placeholder='新しいパスワード'
 									placeholderTextColor={
 										Colors.light.textLight
@@ -133,14 +127,17 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 									}}
 								/>
 							</View>
-							<View
-								style={
-									{
-										// paddingVertical: 20,
+							<View>
+								<Button
+									color='red'
+									onPress={() =>
+										changePasswordHandler(
+											currentPassword,
+											newPassword
+										)
 									}
-								}
-							>
-								<Text>変更する</Text>
+									title='変更する'
+								/>
 							</View>
 						</View>
 					)}
@@ -159,11 +156,6 @@ export default UserEditScreen;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// padding: 20,
-		// backgroundColor: "white",
-	},
-	ButtonText: {
-		// paddingHorizontal: 20,
 	},
 	text: {
 		paddingVertical: 20,

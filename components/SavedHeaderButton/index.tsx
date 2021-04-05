@@ -1,14 +1,11 @@
 import { FontAwesome, Feather } from "@expo/vector-icons";
 import { API, graphqlOperation } from "aws-amplify";
-import React, { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, StyleSheet } from "react-native";
 
 import Colors from "../../constants/Colors";
-import {
-	createSaved,
-	deleteSaved,
-	updateSaved,
-} from "../../src/graphql/mutations";
+
+import { createSaved, deleteSaved } from "../../src/graphql/mutations";
 import { getPost } from "../../src/graphql/queries";
 import useIsMounted from "../custom/useIsMounted";
 
@@ -19,7 +16,7 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 	const { postID } = props;
 	const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 	const [loading, setLoading] = useState(false);
-	const [userData, setUserData] = useState();
+	const [userData, setUserData] = useState<any>();
 	const [savedID, setSavedID] = useState("");
 
 	const isMounted = useIsMounted();
@@ -28,7 +25,7 @@ const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 		try {
 			setLoading(true);
 			const fetchUserData = await API.Auth.currentAuthenticatedUser();
-			const postData = await API.graphql(
+			const postData: any = await API.graphql(
 				graphqlOperation(getPost, { id: postID })
 			);
 			if (isMounted.current) {
@@ -130,11 +127,9 @@ const styles = StyleSheet.create({
 		width: "100%",
 		flexDirection: "row",
 		height: 110,
-
-		// backgroundColor: "green",
 		paddingHorizontal: 10,
 		paddingVertical: 15,
-		// justifyContent: "center",
+
 		justifyContent: "space-between",
 		alignItems: "flex-start",
 		borderBottomWidth: 2,

@@ -14,12 +14,7 @@ import { getUser } from "./src/graphql/queries";
 import { createUser } from "./src/graphql/mutations";
 Amplify.configure(config);
 
-const randomImages = [
-	"https://source.unsplash.com/random",
-	"https://source.unsplash.com/random",
-	"https://source.unsplash.com/random",
-	"https://source.unsplash.com/random",
-];
+const randomImages = ["https://source.unsplash.com/random"];
 
 function App() {
 	const isLoadingComplete = useCachedResources();
@@ -65,7 +60,7 @@ function App() {
 		return (
 			<SafeAreaProvider>
 				<Navigation colorScheme={colorScheme} />
-				<StatusBar style='light' />
+				<StatusBar style='auto' />
 			</SafeAreaProvider>
 		);
 	}
