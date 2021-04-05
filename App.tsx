@@ -12,7 +12,13 @@ import { withAuthenticator } from "aws-amplify-react-native";
 import config from "./src/aws-exports.js";
 import { getUser } from "./src/graphql/queries";
 import { createUser } from "./src/graphql/mutations";
-Amplify.configure(config);
+// Amplify.configure(config);
+Amplify.configure({
+	...config,
+	Analytics: {
+		disabled: true,
+	},
+});
 
 const randomImages = ["https://source.unsplash.com/random"];
 

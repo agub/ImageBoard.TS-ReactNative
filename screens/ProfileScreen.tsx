@@ -33,7 +33,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 
 	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
 	const isMounted = useIsMounted();
-	// console.log(isMounted.current);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -59,23 +58,19 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 				navigateTo='UserEdit'
 				color={Colors.light.secondary}
 			/>
-			{/* <Tab title='ユーザー投稿記事' BarColor={Colors.light.Primary} /> */}
-
-			{/* <NavigationContainer independent={true}> */}
 
 			<Tab.Navigator>
 				<Tab.Screen
 					name='Users'
-					// options={{ navigation: navigation }}
 					options={{ title: "投稿履歴" }}
 					component={PostHistoryList}
 				/>
-				<Tab.Screen name='Liked' component={SavedPosts} />
+				<Tab.Screen
+					name='Liked'
+					options={{ title: "保存済み" }}
+					component={SavedPosts}
+				/>
 			</Tab.Navigator>
-
-			{/* </NavigationContainer> */}
-
-			{/* <FeedItem /> */}
 		</View>
 	);
 };

@@ -29,6 +29,8 @@ import {
 } from "../../src/graphql/mutations";
 import Modal from "react-native-modal";
 import useIsMounted from "../custom/useIsMounted";
+import { onCreateComment } from "../../src/graphql/subscriptions";
+import { useFocusEffect } from "@react-navigation/native";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -52,40 +54,45 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	};
 
 	const onPress = async () => {
+		// fetchCommentData();
 		await navigation?.navigate("Content", {
 			data: allData,
 			//wontuse!!!
 		});
 	};
-	console.log(isMounted.current);
 
 	const onCommentPress = () => {
 		setShowComment(!showComment);
 		addComment();
 	};
-	useEffect(() => {
-		let mounted = true;
-		const fetchCommentData = async () => {
-			try {
-				setLoading(true);
-				const postData = await API.graphql(
-					graphqlOperation(getPost, { id: posts?.id })
-				);
-				if ("data" in postData) {
-					if (isMounted.current) {
-						setAllData(postData.data);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			// Do something when the screen is focused
+			const fetchCommentData = async () => {
+				try {
+					setLoading(true);
+					const postData = await API.graphql(
+						graphqlOperation(getPost, { id: posts?.id })
+					);
+					if ("data" in postData) {
+						if (isMounted.current) {
+							setAllData(postData.data);
+						}
 					}
+					setLoading(false);
+					console.log("fetchCommentfired");
+				} catch (e) {
+					console.log(e);
 				}
-				setLoading(false);
-			} catch (e) {
-				console.log(e);
-			}
-		};
-		fetchCommentData();
-		return () => {
-			mounted = false;
-		};
-	}, [setLoading]);
+			};
+			fetchCommentData();
+			return () => {
+				// Do something when the screen is unfocused
+				// Useful for cleanup functions
+			};
+		}, [])
+	);
 
 	const voteUp = async () => {
 		try {
@@ -185,6 +192,49 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 		setModalVisible(false);
 	};
+
+	// useFocusEffect(
+	// 	React.useCallback(() => {
+	// 		const subscription = API.graphql(
+	// 			graphqlOperation(onCreateComment)
+	// 			//@ts-ignore
+	// 		).subscribe({
+	// 			next: (data) => {
+	// 				if (data.value.data.onCreateComment.postID !== posts?.id) {
+	// 					return;
+	// 				} else {
+	// 					// fetchCommentData();
+	// 					console.log(123123123);
+	// 				}
+	// 			},
+	// 		});
+	// 		return () => subscription.unsubscribe();
+	// 	}, [])
+	// );
+
+	// useState(() => {
+	// 	const subscription = API.graphql(
+	// 		graphqlOperation(onCreateComment)
+	// 		//@ts-ignore
+	// 	).subscribe({
+	// 		next: (data) => {
+	// 			if (data.value.data.onCreateComment.postID !== posts?.id) {
+	// 				return;
+	// 				// } else {
+	// 				// 	const newData = usersPosts.filter(
+	// 				// 		(obj) => obj.id !== data.value.data.onDeletePost.id
+	// 				// 	);
+	// 				// 	if (isMounted.current) {
+	// 				// 		setUsersPosts([...newData]);
+	// 				// 	}
+	// 				// }
+	// 			} else {
+	// 				fetchCommentData();
+	// 			}
+	// 		},
+	// 	});
+	// 	return () => subscription.unsubscribe();
+	// }, []);
 
 	return (
 		<>

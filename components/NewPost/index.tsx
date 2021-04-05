@@ -7,6 +7,7 @@ import {
 	TextInput,
 	TouchableWithoutFeedback,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import styles from "./styles";
 
@@ -18,7 +19,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { createPost } from "../../src/graphql/mutations";
 
-// import { TextInput } from "react-native-gesture-handler";
 type NewPostProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
@@ -61,7 +61,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 				setContent("");
 				closeTab();
 			} else {
-				console.log("title or content is missing");
+				Alert.alert("タイトルか投稿内容を記入してください");
 			}
 		} catch (e) {
 			console.log(e);
@@ -136,17 +136,15 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 						<View style={styles.textAreaBox}>
 							<View style={styles.title}>
 								<TextInput
-									placeholder='タイトル'
+									placeholder='*タイトル'
 									placeholderTextColor={
 										Colors.light.textLight
 									}
 									blurOnSubmit={false}
 									autoFocus={true}
-									// editable={true}
 									style={styles.modalSubText}
 									value={title}
 									onChangeText={(e) => setTitle(e)}
-									// onEndEditing={(e) => setTitle(e)}
 								/>
 							</View>
 							<KeyboardAvoidingView
@@ -156,14 +154,13 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 							>
 								<View style={styles.mainText}>
 									<TextInput
-										placeholder='投稿内容'
+										placeholder='*投稿内容'
 										placeholderTextColor={
 											Colors.light.textLight
 										}
 										multiline
 										blurOnSubmit={false}
 										style={styles.modalText}
-										// editable={true}
 										value={content}
 										onChangeText={(text) =>
 											setContent(text)
@@ -171,7 +168,6 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 										autoFocus={true}
 									/>
 								</View>
-								{/* </TouchableWithoutFeedback> */}
 							</KeyboardAvoidingView>
 						</View>
 					</View>
