@@ -35,45 +35,44 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
-
-	// console.log(route.params.data.getPost);
-
-	// const useIsMounted = () => {
-	// 	const isMounted = useRef(false);
-	// 	useEffect(() => {
-	// 		isMounted.current = true;
-	// 		return () => {
-	// 			isMounted.current = false;
-	// 		};
-	// 	}, []);
-	// 	return isMounted;
-	// };
+	const [postData, setPostData] = useState<GetPostQuery>();
 
 	const isMounted = useIsMounted();
 
 	const addComment = () => {
 		setClicked(!clicked);
 	};
-	useEffect(() => {
-		const routeData: CommentData[] =
-			route.params.data.getPost?.comments?.items;
-		if (isMounted.current) {
-			setCommentData(routeData);
-		}
-	}, []);
+	// console.log(route.params.data.getPost?.comments?.items);
 
 	useEffect(() => {
+		let mount = true;
+		const routeData: CommentData[] =
+			route.params.data.getPost?.comments?.items;
+		if (mount) {
+			setCommentData(routeData);
+			setPostData(route.params.data);
+		}
+		return () => {
+			mount = false;
+		};
+	}, []);
+	// console.log(route);
+
+	//
+
+	useEffect(() => {
+		let mount = true;
 		const subscription = API.graphql(
 			graphqlOperation(onCreateComment)
 		).subscribe({
 			next: (data) => {
 				if (
 					data.value.data.onCreateComment.postID !==
-					route.params.data.getPost.id
+					postData?.getPost?.id
 				) {
 					return;
 				} else {
-					if (isMounted.current) {
+					if (mount) {
 						setCommentData([
 							data.value.data.onCreateComment,
 							...commentData,
@@ -82,8 +81,12 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 				}
 			},
 		});
-		return () => subscription.unsubscribe();
-	}, [commentData]);
+
+		return () => {
+			mount = false;
+			subscription.unsubscribe();
+		};
+	});
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -109,7 +112,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 				addComment={addComment}
 				clickable={false}
 			/>
-			{clicked && <ReplyPost data={route.params.data} />}
+			{clicked && <ReplyPost data={postData} />}
 			<FlatList
 				data={commentData}
 				renderItem={({ item }) => <ReplyFeedItem data={item} />}

@@ -31,6 +31,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 				}
 			} catch (e) {
 				console.log(e);
+				// console.log("this too?");
 			}
 		};
 		fetchPosts();
@@ -73,6 +74,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		});
 		return () => subscription.unsubscribe();
 	});
+	console.log(posts);
 
 	return (
 		<>
@@ -82,7 +84,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					<FeedItem
 						navigation={navigation}
 						clickable={true}
-						posts={item}
+						postsData={item}
 					/>
 				)}
 			/>

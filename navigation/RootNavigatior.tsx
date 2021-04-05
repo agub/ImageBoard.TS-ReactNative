@@ -7,7 +7,14 @@ import {
 import { createStackNavigator } from "@react-navigation/stack";
 
 import * as React from "react";
-import { Alert, ColorSchemeName, Pressable, Text, View } from "react-native";
+import {
+	Alert,
+	ColorSchemeName,
+	Pressable,
+	Text,
+	View,
+	StyleSheet,
+} from "react-native";
 import Colors from "../constants/Colors";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import UserEditScreen from "../screens/UserEditScreen";
@@ -38,7 +45,6 @@ const Stack = createStackNavigator<RootStackParamList>();
 type RootNavigatorProps = {};
 export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 	// const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
-
 	// const [modalVisible, setModalVisible] = useState(false);
 
 	const signOut = async () => {
@@ -77,7 +83,6 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 			<Stack.Navigator
 				screenOptions={{
 					headerShown: true,
-					// headerTitleAlign: "left",
 				}}
 			>
 				<Stack.Screen
@@ -87,9 +92,7 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 						title: "",
 						headerRight: () => (
 							<Pressable
-								style={{
-									paddingHorizontal: 20,
-								}}
+								style={styles.headerIcon}
 								// onPress={() => setModalVisible(!modalVisible)}
 								onPress={signOut}
 							>
@@ -97,33 +100,15 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 							</Pressable>
 						),
 						headerLeft: () => (
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									padding: 20,
-								}}
-							>
-								<View
-									style={{
-										width: 30,
-										height: 30,
-										backgroundColor: Colors.light.secondary,
-									}}
-								>
+							<View style={styles.mainHeaderWrap}>
+								<View style={styles.mainHeaderIcon}>
 									<Ionicons
 										name='ios-logo-vk'
 										color={"white"}
 										size={30}
 									/>
 								</View>
-								<Text
-									style={{
-										fontWeight: "bold",
-										fontSize: 20,
-										marginLeft: 10,
-									}}
-								>
+								<Text style={styles.mainHeaderTitle}>
 									My FEEDER
 								</Text>
 							</View>
@@ -134,13 +119,12 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 					name='UserEdit'
 					component={UserEditScreen}
 					options={{
+						headerStyle: {
+							backgroundColor: Colors.light.secondary,
+						},
 						title: "ユーザー設定",
 						headerRight: () => (
-							<View
-								style={{
-									paddingHorizontal: 20,
-								}}
-							></View>
+							<View style={styles.headerIcon}></View>
 						),
 					}}
 				/>
@@ -173,3 +157,24 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	mainHeaderWrap: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 20,
+	},
+	mainHeaderIcon: {
+		width: 30,
+		height: 30,
+		backgroundColor: Colors.light.secondary,
+	},
+	mainHeaderTitle: {
+		fontWeight: "bold",
+		fontSize: 20,
+		marginLeft: 10,
+	},
+	headerIcon: {
+		paddingHorizontal: 20,
+	},
+});

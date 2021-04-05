@@ -12,6 +12,7 @@ import {
 	KeyboardAvoidingView,
 	TouchableHighlight,
 	TextInput,
+	Alert,
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -28,37 +29,44 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const [content, setContent] = useState<string>("");
 
 	const submitComment = async () => {
-		try {
-			const commentData = await API.graphql(
-				graphqlOperation(createComment, {
-					input: {
-						userID: data?.getPost?.userID,
-						postID: data?.getPost?.id,
-						vote: 0,
-						title,
-						content,
-					},
-				})
-			);
-			setTitle("");
-			setContent("");
-		} catch (e) {
-			console.log(e);
+		if (content !== "" && title !== "") {
+			try {
+				const commentData = await API.graphql(
+					graphqlOperation(createComment, {
+						input: {
+							userID: data?.getPost?.userID,
+							postID: data?.getPost?.id,
+							vote: 0,
+							title,
+							content,
+						},
+					})
+				);
+				setTitle("");
+				setContent("");
+			} catch (e) {
+				console.log(e);
+			}
+		}
+
+		if (content === "" && title === "") {
+			Alert.alert("タイトル又は本文を記入してください");
 		}
 	};
 
 	return (
-		<View
-			style={styles.container}
-			// onPress={navigation.navigate("Content")}
-		>
-			<TouchableHighlight style={styles.logo} onPress={submitComment}>
+		<View style={styles.container}>
+			<TouchableOpacity style={styles.logo} onPress={submitComment}>
 				<Entypo
 					name='new-message'
 					size={24}
-					color={Colors.light.Primary}
+					color={
+						content !== "" && title !== ""
+							? Colors.light.Primary
+							: Colors.light.textLight
+					}
 				/>
-			</TouchableHighlight>
+			</TouchableOpacity>
 			<View style={styles.content}>
 				<KeyboardAvoidingView behavior='height' style={{ height: 49 }}>
 					<View style={{ justifyContent: "flex-start" }}>
@@ -66,7 +74,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 							<View style={styles.replyBox}>
 								<TextInput
 									style={styles.titleText}
-									placeholder='title'
+									placeholder='*タイトル'
 									autoFocus={true}
 									placeholderTextColor={
 										Colors.light.textLight
@@ -80,7 +88,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 						<View style={styles.content}>
 							<TextInput
 								style={styles.mainTextBox}
-								placeholder='content'
+								placeholder='*本文'
 								placeholderTextColor={Colors.light.textLight}
 								multiline
 								maxLength={100}
