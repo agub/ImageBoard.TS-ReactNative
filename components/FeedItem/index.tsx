@@ -91,8 +91,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			fetchCommentData();
 			return () => {
 				isMounted.current = false;
-				// Do something when the screen is unfocused
-				// Useful for cleanup functions
 			};
 		}, [])
 	);

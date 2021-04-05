@@ -10,6 +10,7 @@ import { onCreatePost, onDeletePost } from "../../src/graphql/subscriptions";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import useIsMounted from "../custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
 
 type PostHistoryListProps = {
@@ -23,6 +24,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const [userID, setUserID] = useState("");
 
 	const isMounted = useIsMounted();
+	// const isMounted = useRef(true);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
@@ -46,7 +48,43 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 			}
 		};
 		fetchPosts();
+		return () => {
+			isMounted.current = false;
+		};
+		// 			isMounted.current = false;
+		// 		};
 	}, []);
+
+	// useFocusEffect(
+	// 	React.useCallback(() => {
+	// 		const fetchPosts = async () => {
+	// 			try {
+	// 				const userData = await Auth.currentAuthenticatedUser();
+	// 				const postData = await API.graphql(
+	// 					graphqlOperation(listPosts)
+	// 				);
+	// 				const mainData = postData.data.listPosts.items.map(
+	// 					//@ts-ignore
+	// 					(spreadData) => {
+	// 						if (spreadData.userID === userData.attributes.sub) {
+	// 							return spreadData;
+	// 						}
+	// 					}
+	// 				);
+	// 				if (isMounted.current) {
+	// 					setUserID(userData.attributes.sub);
+	// 					setUsersPosts(mainData);
+	// 				}
+	// 			} catch (e) {
+	// 				console.log(e);
+	// 			}
+	// 		};
+	// 		fetchPosts();
+	// 		return () => {
+	// 			isMounted.current = false;
+	// 		};
+	// 	}, [])
+	// );
 
 	// setUsersPosts, isMounted
 

@@ -1,13 +1,22 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	ScrollView,
+	FlatList,
+	SafeAreaView,
+	RefreshControl,
+} from "react-native";
 import FeedItem from "../components/FeedItem";
 import { listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
 import { onCreatePost, onDeletePost } from "../src/graphql/subscriptions";
 import useIsMounted from "../components/custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 
 type ListsScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -16,25 +25,43 @@ type ListsScreenProps = {
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
+	const [refreshing, setRefreshing] = React.useState(false);
 
-	const isMounted = useIsMounted();
+	const isMounted = useRef(true);
 
-	useEffect(() => {
-		const fetchPosts = async () => {
-			try {
-				const postData = await API.graphql(graphqlOperation(listPosts));
+	const wait = (timeout) => {
+		return new Promise((resolve) => setTimeout(resolve, timeout));
+	};
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		wait(800).then(() => {
+			setRefreshing(false);
+		});
+	}, []);
 
-				if ("data" in postData) {
-					if (isMounted.current) {
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
+			const fetchPosts = async () => {
+				try {
+					const postData = await API.graphql(
+						graphqlOperation(listPosts)
+					);
+
+					if (mount) {
 						setPosts(postData.data.listPosts?.items);
 					}
+				} catch (e) {
+					console.log(e);
 				}
-			} catch (e) {
-				console.log(e);
-			}
-		};
-		fetchPosts();
-	}, []);
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+				isMounted.current = false;
+			};
+		}, [])
+	);
 	// [setPosts]
 
 	useEffect(() => {
@@ -76,8 +103,16 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
+			{/* <SafeAreaView style={styles.container}> */}
+
 			<FlatList
 				data={posts}
+				refreshControl={
+					<RefreshControl
+						refreshing={refreshing}
+						onRefresh={onRefresh}
+					/>
+				}
 				renderItem={({ item }) => (
 					<FeedItem
 						navigation={navigation}
@@ -86,6 +121,8 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					/>
 				)}
 			/>
+
+			{/* </SafeAreaView> */}
 		</>
 	);
 };

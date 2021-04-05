@@ -58,8 +58,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 			return () => {
 				mount = false;
-				// Do something when the screen is unfocused
-				// Useful for cleanup functions
 			};
 		}, [])
 	);
