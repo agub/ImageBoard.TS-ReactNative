@@ -49,6 +49,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	// const isMounted = useIsMounted();
 	const isMounted = useRef(true);
+	console.log(posts);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible);
@@ -78,11 +79,11 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					const postData = await API.graphql(
 						graphqlOperation(getPost, { id: posts?.id })
 					);
-					if ("data" in postData) {
-						if (isMounted.current) {
-							setAllData(postData.data);
-						}
+
+					if (isMounted.current) {
+						setAllData(postData.data);
 					}
+
 					setLoading(false);
 				} catch (e) {
 					console.log(e);
@@ -192,6 +193,23 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 		setModalVisible(false);
 	};
+
+	// useEffect(() => {
+	// 	const subscription = API.graphql(
+	// 		graphqlOperation(onCreateComment)
+	// 	).subscribe({
+	// 		next: (data) => {
+	// 			console.log(data.value.data.onCreateComment.id);
+
+	// 			// if (
+	// 			// 	allData?.getPost?.id === data.value.data.onCreateComment.id
+	// 			// ) {
+	// 			// 	console.log("this is the one ");
+	// 			// }
+	// 		},
+	// 	});
+	// 	return () => subscription.unsubscribe();
+	// });
 
 	return (
 		<>

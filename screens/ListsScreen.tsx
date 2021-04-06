@@ -29,12 +29,28 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	const isMounted = useRef(true);
 
-	const wait = (timeout) => {
-		return new Promise((resolve) => setTimeout(resolve, timeout));
+	const fetchPosts = async () => {
+		try {
+			const postData = await API.graphql(graphqlOperation(listPosts));
+
+			if (isMounted.current) {
+				setPosts(postData.data.listPosts?.items);
+			}
+			console.log("did!");
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	const wait = (timeOut: number) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, timeOut);
+		});
 	};
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		wait(800).then(() => {
+			fetchPosts();
 			setRefreshing(false);
 		});
 	}, []);
@@ -62,7 +78,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			};
 		}, [])
 	);
-	// [setPosts]
 
 	useEffect(() => {
 		let mount = true;
@@ -81,7 +96,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			mount = false;
 		};
 	});
-	// [posts, setPosts];
 
 	useEffect(() => {
 		const subscription = API.graphql(

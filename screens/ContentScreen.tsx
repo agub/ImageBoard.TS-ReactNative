@@ -23,6 +23,8 @@ import {
 	RootStackParamList,
 } from "../types";
 import useIsMounted from "../components/custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
+import { getPost } from "../src/graphql/queries";
 
 type ContentScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -48,19 +50,49 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	// 	}, []);
 	// 	return isMounted;
 	// };
+	// console.log(route.params.data.getPost?.id);
 
 	const isMounted = useIsMounted();
 
 	const addComment = () => {
 		setClicked(!clicked);
 	};
-	useEffect(() => {
-		const routeData: CommentData[] =
-			route.params.data.getPost?.comments?.items;
-		if (isMounted.current) {
-			setCommentData(routeData);
-		}
-	}, []);
+	// useEffect(() => {
+	// 	const routeData: CommentData[] =
+	// 		route.params.data.getPost?.comments?.items;
+	// 	if (isMounted.current) {
+	// 		setCommentData(routeData);
+	// 	}
+	// }, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
+			const fetchPosts = async () => {
+				try {
+					const postData = await API.graphql(
+						graphqlOperation(getPost, {
+							id: route.params.data.getPost?.id,
+						})
+					);
+					// console.log(postData.data);
+					if (isMounted.current) {
+						setCommentData(postData.data.getPost.comments.items);
+					}
+					// if (mount) {
+					// 	setPosts(postData.data.listPosts?.items);
+					// }
+				} catch (e) {
+					console.log(e);
+				}
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+				isMounted.current = false;
+			};
+		}, [])
+	);
 
 	useEffect(() => {
 		const subscription = API.graphql(
