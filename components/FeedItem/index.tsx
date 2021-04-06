@@ -77,7 +77,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					if (isMounted.current) {
 						setAllData(postData.data);
 					}
-
 					setLoading(false);
 				} catch (e) {
 					console.log(e);

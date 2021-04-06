@@ -57,13 +57,6 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	const addComment = () => {
 		setClicked(!clicked);
 	};
-	// useEffect(() => {
-	// 	const routeData: CommentData[] =
-	// 		route.params.data.getPost?.comments?.items;
-	// 	if (isMounted.current) {
-	// 		setCommentData(routeData);
-	// 	}
-	// }, []);
 
 	useFocusEffect(
 		React.useCallback(() => {

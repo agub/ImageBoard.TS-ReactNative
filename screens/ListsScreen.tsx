@@ -11,7 +11,7 @@ import {
 	RefreshControl,
 } from "react-native";
 import FeedItem from "../components/FeedItem";
-import { listPosts } from "../src/graphql/queries";
+import { getPost, listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
 import {
@@ -29,6 +29,7 @@ type ListsScreenProps = {
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
+	const [mainPosts, setMainPosts] = useState([]);
 	const [refreshing, setRefreshing] = React.useState(false);
 
 	const isMounted = useRef(true);
@@ -40,7 +41,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			if (isMounted.current) {
 				setPosts(postData.data.listPosts?.items);
 			}
-			console.log("did!");
 		} catch (e) {
 			console.log(e);
 		}
@@ -67,7 +67,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					const postData = await API.graphql(
 						graphqlOperation(listPosts)
 					);
-
+					// console.log(postData.data.listPosts?.items);
 					if (mount) {
 						setPosts(postData.data.listPosts?.items);
 					}
@@ -89,7 +89,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			graphqlOperation(onCreatePost)
 		).subscribe({
 			next: (data) => {
-				// console.log(data.value.data.onCreatePost);
 				if (isMounted.current) {
 					setPosts([data.value.data.onCreatePost, ...posts]);
 				}
@@ -121,8 +120,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
-			{/* <SafeAreaView style={styles.container}> */}
-
 			<FlatList
 				data={posts}
 				refreshControl={
@@ -139,8 +136,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					/>
 				)}
 			/>
-
-			{/* </SafeAreaView> */}
 		</>
 	);
 };
