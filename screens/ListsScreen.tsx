@@ -11,7 +11,9 @@ import {
 	RefreshControl,
 } from "react-native";
 import FeedItem from "../components/FeedItem";
-import { getPost, listPosts } from "../src/graphql/queries";
+import { getPost } from "../src/graphql/queries";
+
+import { listPosts } from "../assets/customGraphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
 import {
@@ -67,7 +69,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					const postData = await API.graphql(
 						graphqlOperation(listPosts)
 					);
-					// console.log(postData.data.listPosts?.items);
+
 					if (mount) {
 						setPosts(postData.data.listPosts?.items);
 					}

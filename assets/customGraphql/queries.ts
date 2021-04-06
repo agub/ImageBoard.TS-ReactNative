@@ -1,33 +1,3 @@
-export const getUserWithSavedPost = /* GraphQL */ `
-	query GetUser($id: ID!) {
-		getUser(id: $id) {
-			id
-			name
-			imageUri
-			status
-			posts {
-				items {
-					id
-					title
-					content
-					userID
-					imageUri
-					vote
-					createdAt
-					updatedAt
-					saved {
-						items {
-							postID
-						}
-					}
-				}
-				nextToken
-			}
-			createdAt
-			updatedAt
-		}
-	}
-`;
 export const listPosts = /* GraphQL */ `
 	query ListPosts(
 		$filter: ModelPostFilterInput
@@ -51,6 +21,16 @@ export const listPosts = /* GraphQL */ `
 					updatedAt
 				}
 				comments {
+					items {
+						id
+						postID
+						createdAt
+						title
+						content
+						vote
+						userID
+						updatedAt
+					}
 					nextToken
 				}
 				saved {
@@ -63,6 +43,72 @@ export const listPosts = /* GraphQL */ `
 		}
 	}
 `;
+
+// export const getUserWithSavedPost = /* GraphQL */ `
+// 	query GetUser($id: ID!) {
+// 		getUser(id: $id) {
+// 			id
+// 			name
+// 			imageUri
+// 			status
+// 			posts {
+// 				items {
+// 					id
+// 					title
+// 					content
+// 					userID
+// 					imageUri
+// 					vote
+// 					createdAt
+// 					updatedAt
+// 					saved {
+// 						items {
+// 							postID
+// 						}
+// 					}
+// 				}
+// 				nextToken
+// 			}
+// 			createdAt
+// 			updatedAt
+// 		}
+// 	}
+// `;
+// export const listPosts = /* GraphQL */ `
+// 	query ListPosts(
+// 		$filter: ModelPostFilterInput
+// 		$limit: Int
+// 		$nextToken: String
+// 	) {
+// 		listPosts(filter: $filter, limit: $limit, nextToken: $nextToken) {
+// 			items {
+// 				id
+// 				title
+// 				content
+// 				userID
+// 				imageUri
+// 				vote
+// 				user {
+// 					id
+// 					name
+// 					imageUri
+// 					status
+// 					createdAt
+// 					updatedAt
+// 				}
+// 				comments {
+// 					nextToken
+// 				}
+// 				saved {
+// 					nextToken
+// 				}
+// 				createdAt
+// 				updatedAt
+// 			}
+// 			nextToken
+// 		}
+// 	}
+// `;
 
 export const listSaveds = /* GraphQL */ `
 	query ListSaveds(

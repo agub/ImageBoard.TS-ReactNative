@@ -75,7 +75,9 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					);
 
 					if (isMounted.current) {
-						setAllData(postData.data);
+						setAllData(postData.data.getPost);
+						// console.log(postData.data.getPost);
+						// console.log(posts);
 					}
 					setLoading(false);
 				} catch (e) {
@@ -291,8 +293,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 							)}
 
 							<Text style={styles.commentText}>
-								{allData?.getPost?.comments?.items?.length}{" "}
-								Comments
+								{posts?.comments?.items.length} Comments
 							</Text>
 						</TouchableOpacity>
 						<View style={styles.voteBox}>

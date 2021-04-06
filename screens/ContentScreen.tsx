@@ -37,6 +37,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
+	const [postData, setPostData] = useState([]);
 
 	// console.log(route.params.data.getPost);
 
@@ -65,12 +66,13 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 				try {
 					const postData = await API.graphql(
 						graphqlOperation(getPost, {
-							id: route.params.data.getPost?.id,
+							id: route.params.data.id,
 						})
 					);
 					// console.log(postData.data);
 					if (isMounted.current) {
 						setCommentData(postData.data.getPost.comments.items);
+						setPostData(postData.data.getPost);
 					}
 					// if (mount) {
 					// 	setPosts(postData.data.listPosts?.items);
@@ -94,7 +96,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			next: (data) => {
 				if (
 					data.value.data.onCreateComment.postID !==
-					route.params.data.getPost.id
+					route.params.data.id
 				) {
 					return;
 				} else {
@@ -115,10 +117,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			graphqlOperation(onDeletePost)
 		).subscribe({
 			next: (data) => {
-				if (
-					route.params.data.getPost.id ===
-					data.value.data.onDeletePost.id
-				) {
+				if (route.params.data.id === data.value.data.onDeletePost.id) {
 					navigation?.goBack();
 				}
 			},
@@ -129,7 +128,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	return (
 		<View style={styles.container}>
 			<FeedItem
-				posts={route.params.data.getPost}
+				posts={postData}
 				navigation={navigation}
 				addComment={addComment}
 				clickable={false}

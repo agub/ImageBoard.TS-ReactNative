@@ -56,8 +56,8 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 				const commentData = await API.graphql(
 					graphqlOperation(createComment, {
 						input: {
-							userID: data?.getPost?.userID,
-							postID: data?.getPost?.id,
+							userID: data?.userID,
+							postID: data?.id,
 							vote: 0,
 							title,
 							content,
