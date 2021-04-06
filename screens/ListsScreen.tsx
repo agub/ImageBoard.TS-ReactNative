@@ -14,7 +14,11 @@ import FeedItem from "../components/FeedItem";
 import { listPosts } from "../src/graphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
-import { onCreatePost, onDeletePost } from "../src/graphql/subscriptions";
+import {
+	onCreateComment,
+	onCreatePost,
+	onDeletePost,
+} from "../src/graphql/subscriptions";
 import useIsMounted from "../components/custom/useIsMounted";
 import { useFocusEffect } from "@react-navigation/native";
 

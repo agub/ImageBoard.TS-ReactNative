@@ -27,6 +27,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
+	const [loading, setLoading] = useState(false);
 
 	// const submitComment = async () => {
 	// 	try {
@@ -51,6 +52,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const submitComment = async () => {
 		if (content !== "" && title !== "") {
 			try {
+				setLoading(true);
 				const commentData = await API.graphql(
 					graphqlOperation(createComment, {
 						input: {
@@ -64,6 +66,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 				);
 				setTitle("");
 				setContent("");
+				setLoading(false);
 			} catch (e) {
 				console.log(e);
 			}
@@ -79,11 +82,19 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 			style={styles.container}
 			// onPress={navigation.navigate("Content")}
 		>
-			<TouchableOpacity style={styles.logo} onPress={submitComment}>
+			<TouchableOpacity
+				style={styles.logo}
+				disabled={loading}
+				onPress={submitComment}
+			>
 				<Entypo
 					name='new-message'
 					size={24}
-					color={Colors.light.Primary}
+					color={
+						content !== "" && title !== ""
+							? Colors.light.Primary
+							: "black"
+					}
 				/>
 			</TouchableOpacity>
 

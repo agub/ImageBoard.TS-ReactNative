@@ -47,19 +47,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isModalVisible, setModalVisible] = useState(false);
 
-	// const isMounted = useIsMounted();
 	const isMounted = useRef(true);
-	console.log(posts);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible);
 	};
 
 	const onPress = async () => {
-		// fetchCommentData();
-
-		// await
-
 		navigation?.navigate("Content", {
 			data: allData,
 			//wontuse!!!
@@ -194,23 +188,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(false);
 	};
 
-	// useEffect(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onCreateComment)
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			console.log(data.value.data.onCreateComment.id);
-
-	// 			// if (
-	// 			// 	allData?.getPost?.id === data.value.data.onCreateComment.id
-	// 			// ) {
-	// 			// 	console.log("this is the one ");
-	// 			// }
-	// 		},
-	// 	});
-	// 	return () => subscription.unsubscribe();
-	// });
-
 	return (
 		<>
 			<Modal
@@ -315,7 +292,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 							)}
 
 							<Text style={styles.commentText}>
-								{allData?.getPost?.comments?.items?.length}
+								{allData?.getPost?.comments?.items?.length}{" "}
 								Comments
 							</Text>
 						</TouchableOpacity>
