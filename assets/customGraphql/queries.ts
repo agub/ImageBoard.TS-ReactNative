@@ -34,8 +34,66 @@ export const listPosts = /* GraphQL */ `
 					nextToken
 				}
 				saved {
+					items {
+						id
+						postID
+						userID
+						createdAt
+						updatedAt
+					}
 					nextToken
 				}
+				createdAt
+				updatedAt
+			}
+			nextToken
+		}
+	}
+`;
+
+export const listSaveds = /* GraphQL */ `
+	query ListSaveds(
+		$filter: ModelSavedFilterInput
+		$limit: Int
+		$nextToken: String
+	) {
+		listSaveds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+			items {
+				id
+				postID
+				post {
+					id
+					title
+					content
+					userID
+					imageUri
+					vote
+					createdAt
+					updatedAt
+					comments {
+						items {
+							id
+							postID
+							createdAt
+							title
+							content
+							vote
+							userID
+							updatedAt
+						}
+						nextToken
+					}
+				}
+				userID
+				user {
+					id
+					name
+					imageUri
+					status
+					createdAt
+					updatedAt
+				}
+
 				createdAt
 				updatedAt
 			}
@@ -110,39 +168,39 @@ export const listPosts = /* GraphQL */ `
 // 	}
 // `;
 
-export const listSaveds = /* GraphQL */ `
-	query ListSaveds(
-		$filter: ModelSavedFilterInput
-		$limit: Int
-		$nextToken: String
-	) {
-		listSaveds(filter: $filter, limit: $limit, nextToken: $nextToken) {
-			items {
-				id
-				postID
-				post {
-					id
-					title
-					content
-					userID
-					imageUri
-					vote
-					createdAt
-					updatedAt
-				}
-				userID
-				user {
-					id
-					name
-					imageUri
-					status
-					createdAt
-					updatedAt
-				}
-				createdAt
-				updatedAt
-			}
-			nextToken
-		}
-	}
-`;
+// export const listSaveds = /* GraphQL */ `
+// 	query ListSaveds(
+// 		$filter: ModelSavedFilterInput
+// 		$limit: Int
+// 		$nextToken: String
+// 	) {
+// 		listSaveds(filter: $filter, limit: $limit, nextToken: $nextToken) {
+// 			items {
+// 				id
+// 				postID
+// 				post {
+// 					id
+// 					title
+// 					content
+// 					userID
+// 					imageUri
+// 					vote
+// 					createdAt
+// 					updatedAt
+// 				}
+// 				userID
+// 				user {
+// 					id
+// 					name
+// 					imageUri
+// 					status
+// 					createdAt
+// 					updatedAt
+// 				}
+// 				createdAt
+// 				updatedAt
+// 			}
+// 			nextToken
+// 		}
+// 	}
+// `;

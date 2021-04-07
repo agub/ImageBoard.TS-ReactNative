@@ -14,6 +14,7 @@ type SavedHeaderButtonProps = {
 };
 const SavedHeaderButton: React.FC<SavedHeaderButtonProps> = (props) => {
 	const { postID } = props;
+
 	const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 	const [loading, setLoading] = useState(false);
 	const [userData, setUserData] = useState<any>();

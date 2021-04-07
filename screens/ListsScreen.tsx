@@ -9,6 +9,7 @@ import {
 	FlatList,
 	SafeAreaView,
 	RefreshControl,
+	ActivityIndicator,
 } from "react-native";
 import FeedItem from "../components/FeedItem";
 import { getPost } from "../src/graphql/queries";
@@ -32,21 +33,21 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
 	const [mainPosts, setMainPosts] = useState([]);
-	const [refreshing, setRefreshing] = React.useState(false);
-
+	const [refreshing, setRefreshing] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const isMounted = useRef(true);
 
-	const fetchPosts = async () => {
-		try {
-			const postData = await API.graphql(graphqlOperation(listPosts));
+	// const fetchPosts = async () => {
+	// 	try {
+	// 		const postData = await API.graphql(graphqlOperation(listPosts));
 
-			if (isMounted.current) {
-				setPosts(postData.data.listPosts?.items);
-			}
-		} catch (e) {
-			console.log(e);
-		}
-	};
+	// 		if (isMounted.current) {
+	// 			setPosts(postData.data.listPosts?.items);
+	// 		}
+	// 	} catch (e) {
+	// 		console.log(e);
+	// 	}
+	// };
 
 	const wait = (timeOut: number) => {
 		return new Promise((resolve) => {
@@ -56,7 +57,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const onRefresh = React.useCallback(() => {
 		setRefreshing(true);
 		wait(800).then(() => {
-			fetchPosts();
 			setRefreshing(false);
 		});
 	}, []);
@@ -75,6 +75,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					}
 				} catch (e) {
 					console.log(e);
+					console.log("this error");
 				}
 			};
 			fetchPosts();
@@ -122,6 +123,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
+			<ActivityIndicator size='large' />
 			<FlatList
 				data={posts}
 				refreshControl={

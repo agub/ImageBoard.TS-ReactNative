@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
-import { listSaveds } from "../../src/graphql/queries";
+import { listSaveds } from "../../assets/customGraphql/queries";
 import {
 	onCreatePost,
 	onCreateSaved,
@@ -25,34 +25,6 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const [userID, setUserID] = useState("");
 
 	const isMounted = useIsMounted();
-
-	// useEffect(() => {
-	// 	let mount = true;
-	// 	const fetchPosts = async () => {
-	// 		try {
-	// 			const userData = await Auth.currentAuthenticatedUser();
-
-	// 			const savedData = await API.graphql(
-	// 				graphqlOperation(listSaveds)
-	// 			);
-	// 			const mainData = savedData.data.listSaveds.items.map(
-	// 				(spreadData) => {
-	// 					if (spreadData.userID === userData.attributes.sub) {
-	// 						return spreadData;
-	// 					}
-	// 				}
-	// 			);
-	// 			if (isMounted) {
-	// 				setSavedPosts(mainData);
-	// 				setUserID(userData.attributes.sub);
-	// 			}
-	// 			// }
-	// 		} catch (e) {
-	// 			console.log(e);
-	// 		}
-	// 	};
-	// 	fetchPosts();
-	// }, []);
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -87,59 +59,57 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 		}, [])
 	);
 
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onCreateSaved)
-		).subscribe({
-			next: (data) => {
-				if (data.value.data.onCreateSaved.userID !== userID) {
-					return;
-				} else {
-					if (isMounted.current) {
-						setSavedPosts([
-							data.value.data.onCreateSaved,
-							...savedPosts,
-						]);
-					}
-				}
-			},
-		});
-		return () => subscription.unsubscribe();
-	});
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onDeleteSaved)
-		).subscribe({
-			next: (data) => {
-				if (data.value.data.onDeleteSaved.userID !== userID) {
-					return;
-				} else {
-					const newData = savedPosts.filter(
-						(obj) => obj.id !== data.value.data.onDeleteSaved.id
-					);
-					if (isMounted.current) {
-						setSavedPosts([...newData]);
-					}
-				}
-			},
-		});
-		return () => subscription.unsubscribe();
-	});
+	// useEffect(() => {
+	// 	const subscription = API.graphql(
+	// 		graphqlOperation(onCreateSaved)
+	// 	).subscribe({
+	// 		next: (data) => {
+	// 			if (data.value.data.onCreateSaved.userID !== userID) {
+	// 				return;
+	// 			} else {
+	// 				if (isMounted.current) {
+	// 					setSavedPosts([
+	// 						data.value.data.onCreateSaved,
+	// 						...savedPosts,
+	// 					]);
+	// 				}
+	// 			}
+	// 		},
+	// 	});
+	// 	return () => subscription.unsubscribe();
+	// });
+	// useEffect(() => {
+	// 	const subscription = API.graphql(
+	// 		graphqlOperation(onDeleteSaved)
+	// 	).subscribe({
+	// 		next: (data) => {
+	// 			if (data.value.data.onDeleteSaved.userID !== userID) {
+	// 				return;
+	// 			} else {
+	// 				const newData = savedPosts.filter(
+	// 					(obj) => obj.id !== data.value.data.onDeleteSaved.id
+	// 				);
+	// 				if (isMounted.current) {
+	// 					setSavedPosts([...newData]);
+	// 				}
+	// 			}
+	// 		},
+	// 	});
+	// 	return () => subscription.unsubscribe();
+	// });
 
 	return (
 		<View>
-			{savedPosts.length > 0 && (
-				<FlatList
-					data={savedPosts}
-					renderItem={({ item }) => (
-						<FeedItem
-							clickable={true}
-							navigation={navigation}
-							posts={item.post}
-						/>
-					)}
-				/>
-			)}
+			<FlatList
+				data={savedPosts}
+				renderItem={({ item }) => (
+					<FeedItem
+						clickable={true}
+						navigation={navigation}
+						posts={item.post}
+					/>
+				)}
+			/>
 		</View>
 	);
 };

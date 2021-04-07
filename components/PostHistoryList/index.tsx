@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { ListPostsQuery } from "../../src/API";
 import { deletePost } from "../../src/graphql/mutations";
-import { listPosts } from "../../src/graphql/queries";
+import { listPosts } from "../../assets/customGraphql/queries";
 import { onCreatePost, onDeletePost } from "../../src/graphql/subscriptions";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";

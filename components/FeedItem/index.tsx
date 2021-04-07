@@ -54,10 +54,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	};
 
 	const onPress = async () => {
+		// if (allData !== undefined) {
 		navigation?.navigate("Content", {
-			data: allData,
+			// data: allData,
+			data: posts,
 			//wontuse!!!
 		});
+		// }
 	};
 
 	const onCommentPress = () => {
@@ -65,31 +68,32 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		addComment();
 	};
 
-	useFocusEffect(
-		React.useCallback(() => {
-			const fetchCommentData = async () => {
-				try {
-					setLoading(true);
-					const postData = await API.graphql(
-						graphqlOperation(getPost, { id: posts?.id })
-					);
+	// useFocusEffect(
+	// 	React.useCallback(() => {
+	// 		const fetchCommentData = async () => {
+	// 			try {
+	// 				setLoading(true);
+	// 				const postData = await API.graphql(
+	// 					graphqlOperation(getPost, { id: posts?.id })
+	// 				);
 
-					if (isMounted.current) {
-						setAllData(postData.data.getPost);
-						// console.log(postData.data.getPost);
-						// console.log(posts);
-					}
-					setLoading(false);
-				} catch (e) {
-					console.log(e);
-				}
-			};
-			fetchCommentData();
-			return () => {
-				isMounted.current = false;
-			};
-		}, [])
-	);
+	// 				if (isMounted.current) {
+	// 					setAllData(postData.data.getPost);
+	// 					// console.log(postData.data.getPost);
+	// 					// console.log(posts);
+	// 				}
+
+	// 				setLoading(false);
+	// 			} catch (e) {
+	// 				console.log(e);
+	// 			}
+	// 		};
+	// 		fetchCommentData();
+	// 		return () => {
+	// 			isMounted.current = false;
+	// 		};
+	// 	}, [])
+	// );
 
 	const voteUp = async () => {
 		try {
@@ -148,9 +152,9 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const deleteHandler = async () => {
 		try {
-			if (allData?.getPost?.saved?.items?.length > 0) {
+			if (posts?.comments?.items?.length > 0) {
 				if (isMounted.current) {
-					await allData?.getPost?.saved?.items?.forEach((savedObj) =>
+					await posts?.saved.items?.forEach((savedObj) =>
 						API.graphql(
 							graphqlOperation(deleteSaved, {
 								input: { id: savedObj.id },
@@ -160,17 +164,15 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				}
 			}
 
-			if (allData?.getPost?.comments?.items?.length > 0) {
+			if (posts?.comments?.items?.length > 0) {
 				if (isMounted.current) {
-					await allData?.getPost?.comments?.items?.forEach(
-						(commentsObj) => {
-							API.graphql(
-								graphqlOperation(deleteComment, {
-									input: { id: commentsObj.id },
-								})
-							);
-						}
-					);
+					await posts?.comments?.items?.forEach((commentsObj) => {
+						API.graphql(
+							graphqlOperation(deleteComment, {
+								input: { id: commentsObj.id },
+							})
+						);
+					});
 				}
 			}
 			//Deleting actual post
@@ -178,7 +180,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			await API.graphql(
 				graphqlOperation(deletePost, {
 					input: {
-						id: allData?.getPost?.id,
+						id: posts?.id,
 					},
 				})
 			);
@@ -299,7 +301,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						<View style={styles.voteBox}>
 							{!loading && (
 								<Text style={styles.voteText}>
-									{allData?.getPost?.vote + voteNumber}
+									{posts.vote}
 								</Text>
 							)}
 
