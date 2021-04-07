@@ -37,21 +37,8 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
-	const [postData, setPostData] = useState([]);
-
-	// console.log(route.params.data.getPost);
-
-	// const useIsMounted = () => {
-	// 	const isMounted = useRef(false);
-	// 	useEffect(() => {
-	// 		isMounted.current = true;
-	// 		return () => {
-	// 			isMounted.current = false;
-	// 		};
-	// 	}, []);
-	// 	return isMounted;
-	// };
-	// console.log(route.params.data.getPost?.id);
+	//THIS IS FIXEDDDDDDDDDDD
+	const [postData, setPostData] = useState();
 
 	const isMounted = useIsMounted();
 

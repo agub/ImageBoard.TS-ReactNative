@@ -25,35 +25,67 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 
 	const isMounted = useRef(true);
 
-	useEffect(() => {
-		const fetchPosts = async () => {
-			try {
-				const userData = await Auth.currentAuthenticatedUser();
-				const postData = await API.graphql(graphqlOperation(listPosts));
+	// useEffect(() => {
+	// 	const fetchPosts = async () => {
+	// 		try {
+	// 			const userData = await Auth.currentAuthenticatedUser();
+	// 			const postData = await API.graphql(graphqlOperation(listPosts));
 
-				const mainData = postData.data.listPosts.items.filter(
-					//@ts-ignore
-					(spreadData) => {
-						if (spreadData.userID === userData.attributes.sub) {
-							return spreadData;
+	// 			const mainData = postData.data.listPosts.items.filter(
+	// 				//@ts-ignore
+	// 				(spreadData) => {
+	// 					if (spreadData.userID === userData.attributes.sub) {
+	// 						return spreadData;
+	// 					}
+	// 				}
+	// 			);
+	// 			if (isMounted.current) {
+	// 				console.log(mainData);
+
+	// 				setUserID(userData.attributes.sub);
+	// 				setUsersPosts(mainData);
+	// 			}
+	// 		} catch (e) {
+	// 			console.log(e);
+	// 		}
+	// 	};
+	// 	fetchPosts();
+	// 	return () => {
+	// 		isMounted.current = false;
+	// 	};
+	// }, []);
+
+	useFocusEffect(
+		React.useCallback(() => {
+			const fetchPosts = async () => {
+				try {
+					const userData = await Auth.currentAuthenticatedUser();
+					const postData = await API.graphql(
+						graphqlOperation(listPosts)
+					);
+
+					const mainData = postData.data.listPosts.items.filter(
+						//@ts-ignore
+						(spreadData) => {
+							if (spreadData.userID === userData.attributes.sub) {
+								return spreadData;
+							}
 						}
+					);
+					if (isMounted.current) {
+						setUserID(userData.attributes.sub);
+						setUsersPosts(mainData);
 					}
-				);
-				if (isMounted.current) {
-					console.log(mainData);
-
-					setUserID(userData.attributes.sub);
-					setUsersPosts(mainData);
+				} catch (e) {
+					console.log(e);
 				}
-			} catch (e) {
-				console.log(e);
-			}
-		};
-		fetchPosts();
-		return () => {
-			isMounted.current = false;
-		};
-	}, []);
+			};
+			fetchPosts();
+			return () => {
+				isMounted.current = false;
+			};
+		}, [])
+	);
 
 	useEffect(() => {
 		const subscription = API.graphql(

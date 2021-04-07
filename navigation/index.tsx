@@ -1,32 +1,29 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import {
 	NavigationContainer,
 	DefaultTheme,
 	DarkTheme,
 } from "@react-navigation/native";
-import { HeaderTitle, StackNavigationProp } from "@react-navigation/stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import * as React from "react";
-import { Button, ColorSchemeName, Text, View } from "react-native";
-import NewPost from "../components/NewPost";
+import {
+	Alert,
+	ColorSchemeName,
+	Pressable,
+	Text,
+	View,
+	StyleSheet,
+} from "react-native";
 import Colors from "../constants/Colors";
-import DrawerScreen from "../screens/DrawerScreen";
-
 import NotFoundScreen from "../screens/NotFoundScreen";
-import PostsScreen from "../screens/PostsScreen";
 import UserEditScreen from "../screens/UserEditScreen";
-import { DrawerParamList, RootStackParamList } from "../types";
+import { RootStackParamList } from "../types";
 import BottomTabNavigator from "./BottomTabNavigator";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { RootNavigator } from "./RootNavigatior";
-
-// If you are not familiar with React Navigation, we recommend going through the
-// "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
-
-// interface Navigation {
-// 	navigation: StackNavigationProp<DrawerParamList, "Menu">;
-// }
+import ContentScreen from "../screens/ContentScreen";
+import SavedHeaderButton from "../components/SavedHeaderButton";
+import Auth from "@aws-amplify/auth";
 
 export const Navigation = ({
 	colorScheme,
@@ -36,31 +33,142 @@ export const Navigation = ({
 	return (
 		<NavigationContainer
 			linking={LinkingConfiguration}
-			theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
+			// theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
 		>
-			<DrawerComp />
+			<RootNavigator />
 		</NavigationContainer>
 	);
 };
 
-const Drawer = createDrawerNavigator<DrawerParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
-// interface DrawerCompProps {
-// 	navigation: StackNavigationProp<DrawerParamList, "Menu">;
-// }: React.FC<DrawerCompProps>
+type RootNavigatorProps = {};
+export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
+	// const [isUserSaved, setIsUserSaved] = useState<boolean>(false);
 
-export const DrawerComp = () => {
+	// const [modalVisible, setModalVisible] = useState(false);
+
+	const signOut = async () => {
+		await Alert.alert("お知らせ", "ログアウトいたしますか？", [
+			{
+				text: "Cancel",
+				style: "cancel",
+			},
+			{
+				text: "OK",
+				onPress: () => {
+					try {
+						Auth.signOut({ global: true });
+						Alert.alert("ログアウトいたしました");
+					} catch (error) {
+						console.log("error signing out: ", error);
+					}
+				},
+			},
+		]);
+	};
+
 	return (
-		// <NavigationContainer>
-		<Drawer.Navigator initialRouteName='Menu'>
-			<Drawer.Screen
-				name='Menu'
-				component={RootNavigator}
-				options={{
-					title: "戻る",
+		<>
+			{/* {modalVisible && (
+				<DrawerScreen
+					modalVisible={modalVisible}
+					setModalVisible={setModalVisible}
+				/>
+			)} */}
+			<Stack.Navigator
+				screenOptions={{
+					headerShown: true,
 				}}
-			/>
-		</Drawer.Navigator>
-		// </NavigationContainer>
+			>
+				<Stack.Screen
+					name='Root'
+					component={BottomTabNavigator}
+					options={{
+						title: "",
+						headerRight: () => (
+							<Pressable
+								style={styles.headerIcon}
+								// onPress={() => setModalVisible(!modalVisible)}
+								onPress={signOut}
+							>
+								<AntDesign name='logout' size={20} />
+							</Pressable>
+						),
+						headerLeft: () => (
+							<View style={styles.mainHeaderWrap}>
+								<View style={styles.mainHeaderIcon}>
+									<Ionicons
+										name='ios-logo-vk'
+										color={"white"}
+										size={30}
+									/>
+								</View>
+								<Text style={styles.mainHeaderTitle}>
+									My FEEDER
+								</Text>
+							</View>
+						),
+					}}
+				/>
+				<Stack.Screen
+					name='UserEdit'
+					component={UserEditScreen}
+					options={{
+						headerStyle: {
+							backgroundColor: Colors.light.secondary,
+						},
+						title: "ユーザー設定",
+						headerRight: () => (
+							<View style={styles.headerIcon}></View>
+						),
+					}}
+				/>
+				<Stack.Screen
+					name='Content'
+					component={ContentScreen}
+					options={({ route }: any) => ({
+						title: route.params.data.title,
+						headerStyle: {
+							backgroundColor: Colors.light.secondary,
+						},
+						headerTitleStyle: {
+							fontWeight: "bold",
+						},
+
+						headerRight: () => (
+							<SavedHeaderButton postID={route.params.data.id} />
+						),
+					})}
+				/>
+
+				<Stack.Screen
+					name='NotFound'
+					component={NotFoundScreen}
+					options={{ title: "Oops!" }}
+				/>
+			</Stack.Navigator>
+		</>
 	);
 };
+
+const styles = StyleSheet.create({
+	mainHeaderWrap: {
+		flexDirection: "row",
+		alignItems: "center",
+		padding: 20,
+	},
+	mainHeaderIcon: {
+		width: 30,
+		height: 30,
+		backgroundColor: Colors.light.secondary,
+	},
+	mainHeaderTitle: {
+		fontWeight: "bold",
+		fontSize: 20,
+		marginLeft: 10,
+	},
+	headerIcon: {
+		paddingHorizontal: 20,
+	},
+});
