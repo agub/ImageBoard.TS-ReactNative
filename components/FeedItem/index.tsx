@@ -164,9 +164,9 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				}
 			}
 
-			if (posts?.comments?.items?.length > 0) {
+			if (posts?.saved?.items?.length > 0) {
 				if (isMounted.current) {
-					await posts?.comments?.items?.forEach((commentsObj) => {
+					await posts?.saved?.items?.forEach((commentsObj) => {
 						API.graphql(
 							graphqlOperation(deleteComment, {
 								input: { id: commentsObj.id },
@@ -301,7 +301,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						<View style={styles.voteBox}>
 							{!loading && (
 								<Text style={styles.voteText}>
-									{posts.vote}
+									{posts?.vote}
 								</Text>
 							)}
 
