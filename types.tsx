@@ -27,14 +27,6 @@ export type BottomTabParamList = {
 	Profile: undefined;
 };
 
-export type TabOneParamList = {
-	TabOneScreen: undefined;
-};
-
-export type TabTwoParamList = {
-	TabTwoScreen: undefined;
-};
-
 export type UserData = {
 	createdAt: string;
 	id: string;

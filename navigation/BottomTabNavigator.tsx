@@ -15,7 +15,7 @@ import ListsScreen from "../screens/ListsScreen";
 import PostsScreen from "../screens/PostsScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from "../types";
+import { BottomTabParamList } from "../types";
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 

@@ -37,10 +37,8 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
-<<<<<<< HEAD
-	const [postData, setPostData] = useState<GetPostQuery>();
-=======
-	const [postData, setPostData] = useState([]);
+
+	// const [postData, setPostData] = useState<GetPostQuery>();
 
 	// console.log(route.params.data.getPost);
 
@@ -55,32 +53,31 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	// 	return isMounted;
 	// };
 	// console.log(route.params.data.getPost?.id);
->>>>>>> mainlyAllFixed
+
+	//THIS IS FIXEDDDDDDDDDDD
+	const [postData, setPostData] = useState();
 
 	const isMounted = useIsMounted();
 
 	const addComment = () => {
 		setClicked(!clicked);
 	};
-<<<<<<< HEAD
-	// console.log(route.params.data.getPost?.comments?.items);
 
-	useEffect(() => {
-		let mount = true;
-		const routeData: CommentData[] =
-			route.params.data.getPost?.comments?.items;
-		if (mount) {
-			setCommentData(routeData);
-			setPostData(route.params.data);
-		}
-		return () => {
-			mount = false;
-		};
-	}, []);
-	// console.log(route);
+	// useEffect(() => {
+	// 	let mount = true;
+	// 	const routeData: CommentData[] =
+	// 		route.params.data.getPost?.comments?.items;
+	// 	if (mount) {
+	// 		setCommentData(routeData);
+	// 		setPostData(route.params.data);
+	// 	}
+	// 	return () => {
+	// 		mount = false;
+	// 	};
+	// }, []);
+	// // console.log(route);
 
-	//
-=======
+	// //
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -111,7 +108,6 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			};
 		}, [])
 	);
->>>>>>> mainlyAllFixed
 
 	useEffect(() => {
 		let mount = true;
@@ -121,11 +117,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			next: (data) => {
 				if (
 					data.value.data.onCreateComment.postID !==
-<<<<<<< HEAD
-					postData?.getPost?.id
-=======
 					route.params.data.id
->>>>>>> mainlyAllFixed
 				) {
 					return;
 				} else {

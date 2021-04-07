@@ -31,20 +31,15 @@ import { onCreateComment } from "../../src/graphql/subscriptions";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
-<<<<<<< HEAD
-	postsData: PostData;
 
-	/////!!!!
-	addComment: (value: React.SetStateAction<boolean>) => void;
-=======
 	posts: PostData;
 	addComment?: () => void;
->>>>>>> mainlyAllFixed
+
 	clickable: boolean | null;
 };
 
 const FeedItem: React.FC<FeedItemProps> = (props) => {
-	const { navigation, postsData, addComment, clickable } = props;
+	const { navigation, posts, addComment, clickable } = props;
 	const [allData, setAllData] = useState();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
 	const [showComment, setShowComment] = useState<boolean>(false);
@@ -57,52 +52,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(!isModalVisible);
 	};
 
-<<<<<<< HEAD
-	useEffect(() => {
-		let mounted = true;
-		const fetchCommentData = async () => {
-			try {
-				setLoading(true);
-				if (postsData.id !== undefined) {
-					const fetchPostData = await API.graphql(
-						graphqlOperation(getPost, { id: postsData.id })
-					);
-					console.log(fetchPostData);
-
-					if (mounted) {
-						setAllData(fetchPostData.data);
-					}
-				}
-				setLoading(false);
-			} catch (e) {
-				console.log(e);
-				console.log("this");
-			}
-		};
-		fetchCommentData();
-		return () => {
-			mounted = false;
-		};
-	}, []);
-
-	// useEffect(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onCreateComment)
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			if (
-	// 				data.value.data.onCreateComment.postID !==
-	// 				allData.getPost.id
-	// 			) {
-	// 				fetchCommentData();
-	// 			}
-	// 		},
-	// 	});
-	// 	return () => {
-	// 		subscription.unsubscribe();
-	// 	};
-	// });
-=======
 	const onPress = async () => {
 		navigation?.navigate("Content", {
 			data: posts,
@@ -113,7 +62,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setShowComment(!showComment);
 		addComment();
 	};
->>>>>>> mainlyAllFixed
 
 	const voteUp = async () => {
 		try {
@@ -122,8 +70,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				await API.graphql(
 					graphqlOperation(updatePost, {
 						input: {
-							id: postsData?.id,
-							vote: postsData?.vote - 1,
+							id: posts?.id,
+							vote: posts?.vote - 1,
 						},
 					})
 				);
@@ -132,8 +80,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				await API.graphql(
 					graphqlOperation(updatePost, {
 						input: {
-							id: postsData?.id,
-							vote: postsData?.vote + 1,
+							id: posts?.id,
+							vote: posts?.vote + 1,
 						},
 					})
 				);
@@ -149,8 +97,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				await API.graphql(
 					graphqlOperation(updatePost, {
 						input: {
-							id: postsData?.id,
-							vote: postsData?.vote + 1,
+							id: posts?.id,
+							vote: posts?.vote + 1,
 						},
 					})
 				);
@@ -159,8 +107,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				await API.graphql(
 					graphqlOperation(updatePost, {
 						input: {
-							id: postsData?.id,
-							vote: postsData?.vote - 1,
+							id: posts?.id,
+							vote: posts?.vote - 1,
 						},
 					})
 				);
@@ -211,19 +159,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(false);
 	};
 
-<<<<<<< HEAD
-	const onPress = async () => {
-		await navigation?.navigate("Content", {
-			data: allData,
-		});
-	};
-
-	const onCommentPress = () => {
-		setShowComment(!showComment);
-		addComment();
-	};
-=======
->>>>>>> mainlyAllFixed
 	return (
 		<>
 			<Modal
@@ -265,7 +200,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				</View>
 				<View style={styles.content}>
 					<View style={styles.header}>
-						<Text style={styles.titleText}>{postsData?.title}</Text>
+						<Text style={styles.titleText}>{posts?.title}</Text>
 						<View
 							style={{
 								flexDirection: "row",
@@ -274,7 +209,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 						>
 							<Text style={styles.timestampText}>
 								{" "}
-								{moment(postsData?.createdAt).fromNow()}{" "}
+								{moment(posts?.createdAt).fromNow()}{" "}
 							</Text>
 							{!clickable && (
 								<TouchableOpacity
@@ -296,16 +231,16 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					</View>
 
 					<View style={styles.mainTextBox}>
-						<Text>{postsData?.content}</Text>
+						<Text>{posts?.content}</Text>
 					</View>
 					<View style={styles.profileBox}>
-						{postsData?.user?.imageUri && (
+						{posts?.user?.imageUri && (
 							<Image
 								style={styles.profile}
-								source={{ uri: postsData?.user?.imageUri }}
+								source={{ uri: posts?.user?.imageUri }}
 							/>
 						)}
-						<Text>{postsData?.user?.name}</Text>
+						<Text>{posts?.user?.name}</Text>
 					</View>
 					<View style={styles.bottomBtn}>
 						<TouchableOpacity

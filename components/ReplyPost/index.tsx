@@ -50,20 +50,13 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const submitComment = async () => {
 		if (content !== "" && title !== "") {
 			try {
-<<<<<<< HEAD
-				const commentData = await API.graphql(
-					graphqlOperation(createComment, {
-						input: {
-							userID: data?.getPost?.userID,
-							postID: data?.getPost?.id,
-=======
 				setLoading(true);
 				const commentData = await API.graphql(
 					graphqlOperation(createComment, {
 						input: {
 							userID: userID,
 							postID: data?.id,
->>>>>>> mainlyAllFixed
+
 							vote: 0,
 							title,
 							content,
@@ -72,10 +65,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 				);
 				setTitle("");
 				setContent("");
-<<<<<<< HEAD
-=======
 				setLoading(false);
->>>>>>> mainlyAllFixed
 			} catch (e) {
 				console.log(e);
 			}
@@ -88,33 +78,22 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 
 	return (
 		<View style={styles.container}>
-<<<<<<< HEAD
-			<TouchableOpacity style={styles.logo} onPress={submitComment}>
-=======
 			<TouchableOpacity
 				style={styles.logo}
 				disabled={loading}
 				onPress={submitComment}
 			>
->>>>>>> mainlyAllFixed
 				<Entypo
 					name='new-message'
 					size={24}
 					color={
 						content !== "" && title !== ""
 							? Colors.light.Primary
-<<<<<<< HEAD
-							: Colors.light.textLight
-					}
-				/>
-			</TouchableOpacity>
-=======
 							: "black"
 					}
 				/>
 			</TouchableOpacity>
 
->>>>>>> mainlyAllFixed
 			<View style={styles.content}>
 				<KeyboardAvoidingView behavior='height' style={{ height: 49 }}>
 					<View style={{ justifyContent: "flex-start" }}>

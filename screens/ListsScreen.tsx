@@ -65,16 +65,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					console.log(e);
 					console.log("this error");
 				}
-<<<<<<< HEAD
-			} catch (e) {
-				console.log(e);
-				// console.log("this too?");
-			}
-		};
-		fetchPosts();
-	}, []);
-	// [setPosts]
-=======
 			};
 			fetchPosts();
 			return () => {
@@ -83,7 +73,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 			};
 		}, [])
 	);
->>>>>>> mainlyAllFixed
 
 	useEffect(() => {
 		let mount = true;
@@ -125,18 +114,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
-<<<<<<< HEAD
-			<FlatList
-				data={posts}
-				renderItem={({ item }) => (
-					<FeedItem
-						navigation={navigation}
-						clickable={true}
-						postsData={item}
-					/>
-				)}
-			/>
-=======
 			{loading ? (
 				<ActivityIndicator size='large' />
 			) : (
@@ -157,7 +134,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					)}
 				/>
 			)}
->>>>>>> mainlyAllFixed
 		</>
 	);
 };
