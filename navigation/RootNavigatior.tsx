@@ -33,7 +33,7 @@ export const Navigation = ({
 	return (
 		<NavigationContainer
 			linking={LinkingConfiguration}
-			theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
+			// theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
 		>
 			<RootNavigator />
 		</NavigationContainer>

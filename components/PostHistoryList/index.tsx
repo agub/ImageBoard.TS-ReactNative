@@ -23,15 +23,15 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
 
-	const isMounted = useIsMounted();
-	// const isMounted = useRef(true);
+	// const isMounted = useIsMounted();
+	const isMounted = useRef(true);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
 			try {
 				const userData = await Auth.currentAuthenticatedUser();
 				const postData = await API.graphql(graphqlOperation(listPosts));
-				const mainData = postData.data.listPosts.items.map(
+				const mainData = postData.data.listPosts.items.filter(
 					//@ts-ignore
 					(spreadData) => {
 						if (spreadData.userID === userData.attributes.sub) {
@@ -40,6 +40,8 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 					}
 				);
 				if (isMounted.current) {
+					console.log(mainData);
+
 					setUserID(userData.attributes.sub);
 					setUsersPosts(mainData);
 				}
@@ -54,6 +56,9 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		// 			isMounted.current = false;
 		// 		};
 	}, []);
+
+	// console.log(userID);
+	// console.log(usersPosts);
 
 	// useFocusEffect(
 	// 	React.useCallback(() => {
@@ -106,11 +111,11 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 				}
 			},
 		});
+
 		return () => {
 			subscription.unsubscribe();
 		};
 	});
-	// , [usersPosts, setUsersPosts]
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -135,17 +140,19 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	return (
 		// <ScrollView style={styles.container}>
 		<View>
-			<FlatList
-				data={usersPosts}
-				renderItem={({ item }) => (
-					<FeedItem
-						// addComment={undefined}
-						clickable={true}
-						navigation={navigation}
-						posts={item}
-					/>
-				)}
-			/>
+			{usersPosts !== undefined && (
+				<FlatList
+					data={usersPosts}
+					renderItem={({ item }) => (
+						<FeedItem
+							// addComment={undefined}
+							clickable={true}
+							navigation={navigation}
+							posts={item}
+						/>
+					)}
+				/>
+			)}
 		</View>
 	);
 };

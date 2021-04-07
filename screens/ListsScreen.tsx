@@ -37,18 +37,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const [loading, setLoading] = useState(false);
 	const isMounted = useRef(true);
 
-	// const fetchPosts = async () => {
-	// 	try {
-	// 		const postData = await API.graphql(graphqlOperation(listPosts));
-
-	// 		if (isMounted.current) {
-	// 			setPosts(postData.data.listPosts?.items);
-	// 		}
-	// 	} catch (e) {
-	// 		console.log(e);
-	// 	}
-	// };
-
 	const wait = (timeOut: number) => {
 		return new Promise((resolve) => {
 			setTimeout(resolve, timeOut);
@@ -88,6 +76,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	useEffect(() => {
 		let mount = true;
+		setLoading(true);
 		const subscription = API.graphql(
 			graphqlOperation(onCreatePost)
 		).subscribe({
@@ -97,6 +86,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 				}
 			},
 		});
+		setLoading(false);
 		return () => {
 			subscription.unsubscribe();
 			mount = false;
@@ -123,23 +113,26 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
-			<ActivityIndicator size='large' />
-			<FlatList
-				data={posts}
-				refreshControl={
-					<RefreshControl
-						refreshing={refreshing}
-						onRefresh={onRefresh}
-					/>
-				}
-				renderItem={({ item }) => (
-					<FeedItem
-						navigation={navigation}
-						clickable={true}
-						posts={item}
-					/>
-				)}
-			/>
+			{loading ? (
+				<ActivityIndicator size='large' />
+			) : (
+				<FlatList
+					data={posts}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+						/>
+					}
+					renderItem={({ item }) => (
+						<FeedItem
+							navigation={navigation}
+							clickable={true}
+							posts={item}
+						/>
+					)}
+				/>
+			)}
 		</>
 	);
 };

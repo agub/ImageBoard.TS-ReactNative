@@ -28,6 +28,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
 	const [loading, setLoading] = useState(false);
+	const [userID, setUserID] = useState("");
 
 	// const submitComment = async () => {
 	// 	try {
@@ -49,6 +50,22 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	// 	}
 	// };
 
+	useEffect(() => {
+		let mount = true;
+		const fetchUserData = async () => {
+			const userData = await API.Auth.currentAuthenticatedUser();
+
+			if (mount) {
+				setUserID(userData.attributes.sub);
+			}
+		};
+
+		fetchUserData();
+		return () => {
+			mount = false;
+		};
+	}, []);
+
 	const submitComment = async () => {
 		if (content !== "" && title !== "") {
 			try {
@@ -56,7 +73,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 				const commentData = await API.graphql(
 					graphqlOperation(createComment, {
 						input: {
-							userID: data?.userID,
+							userID: userID,
 							postID: data?.id,
 							vote: 0,
 							title,
@@ -78,10 +95,7 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	};
 
 	return (
-		<View
-			style={styles.container}
-			// onPress={navigation.navigate("Content")}
-		>
+		<View style={styles.container}>
 			<TouchableOpacity
 				style={styles.logo}
 				disabled={loading}
@@ -130,18 +144,6 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 						</View>
 					</View>
 				</KeyboardAvoidingView>
-
-				{/* {commentUser?.getUser?.imageUri && (
-							<View style={styles.profileBox}>
-								<Image
-									style={styles.profile}
-									source={{
-										uri: commentUser?.getUser?.imageUri,
-									}}
-								/>
-								<Text>{commentUser?.getUser?.name}</Text>
-							</View>
-						)} */}
 			</View>
 		</View>
 	);

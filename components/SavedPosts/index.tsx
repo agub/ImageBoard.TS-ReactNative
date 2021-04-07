@@ -2,7 +2,14 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import Auth from "@aws-amplify/auth";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import {
+	StyleSheet,
+	Text,
+	View,
+	ScrollView,
+	FlatList,
+	ActivityIndicator,
+} from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import { listSaveds } from "../../assets/customGraphql/queries";
@@ -23,20 +30,23 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const { navigation } = props;
 	const [savedPosts, setSavedPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const isMounted = useIsMounted();
 
 	useFocusEffect(
 		React.useCallback(() => {
 			let mount = true;
+
 			const fetchPosts = async () => {
+				setLoading(true);
 				try {
 					const userData = await Auth.currentAuthenticatedUser();
 
 					const savedData = await API.graphql(
 						graphqlOperation(listSaveds)
 					);
-					const mainData = savedData.data.listSaveds.items.map(
+					const mainData = savedData.data.listSaveds.items.filter(
 						(spreadData) => {
 							if (spreadData.userID === userData.attributes.sub) {
 								return spreadData;
@@ -51,6 +61,7 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 				} catch (e) {
 					console.log(e);
 				}
+				setLoading(false);
 			};
 			fetchPosts();
 			return () => {
@@ -100,16 +111,23 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 
 	return (
 		<View>
-			<FlatList
-				data={savedPosts}
-				renderItem={({ item }) => (
-					<FeedItem
-						clickable={true}
-						navigation={navigation}
-						posts={item.post}
-					/>
-				)}
-			/>
+			{loading ? (
+				<ActivityIndicator
+					style={{ alignItems: "center" }}
+					size='large'
+				/>
+			) : (
+				<FlatList
+					data={savedPosts}
+					renderItem={({ item }) => (
+						<FeedItem
+							clickable={true}
+							navigation={navigation}
+							posts={item.post}
+						/>
+					)}
+				/>
+			)}
 		</View>
 	);
 };
