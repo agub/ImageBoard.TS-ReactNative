@@ -3,9 +3,7 @@ import { View, Text, TouchableOpacity, Pressable, Image } from "react-native";
 import styles from "./styles";
 import { FontAwesome, Entypo } from "@expo/vector-icons";
 import Colors from "../../constants/Colors";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { CommentData, RootStackParamList } from "../../types";
-import PostsScreen from "../../screens/PostsScreen";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { getUser } from "../../src/graphql/queries";
 import { GetUserQuery } from "../../src/API";
@@ -22,24 +20,6 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const [commentUser, setCommentUser] = useState<GetUserQuery>();
 	const [voteNumber, setVoteNumber] = useState<number>(0);
-
-	// useEffect(() => {
-	// 	let mount = true;
-	// 	const fetchUserData = async () => {
-	// 		const userData = await API.graphql(
-	// 			graphqlOperation(getUser, { id: data?.userID })
-	// 		);
-	// 		if ("data" in userData) {
-	// 			if (mount) {
-	// 				setCommentUser(userData.data);
-	// 			}
-	// 		}
-	// 	};
-	// 	fetchUserData();
-	// 	return () => {
-	// 		mount = false;
-	// 	};
-	// }, []);
 
 	useFocusEffect(
 		React.useCallback(() => {

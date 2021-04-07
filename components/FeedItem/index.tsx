@@ -16,9 +16,7 @@ import {
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PostData, RootStackParamList } from "../../types";
-
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
 import moment from "moment";
 import {
@@ -29,13 +27,11 @@ import {
 } from "../../src/graphql/mutations";
 import Modal from "react-native-modal";
 import useIsMounted from "../custom/useIsMounted";
-import { onCreateComment } from "../../src/graphql/subscriptions";
-import { useFocusEffect } from "@react-navigation/native";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
 	posts: PostData;
-	addComment: () => void;
+	addComment?: () => void;
 	clickable: boolean | null;
 };
 
@@ -54,46 +50,15 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	};
 
 	const onPress = async () => {
-		// if (allData !== undefined) {
 		navigation?.navigate("Content", {
-			// data: allData,
 			data: posts,
-			//wontuse!!!
 		});
-		// }
 	};
 
 	const onCommentPress = () => {
 		setShowComment(!showComment);
 		addComment();
 	};
-
-	// useFocusEffect(
-	// 	React.useCallback(() => {
-	// 		const fetchCommentData = async () => {
-	// 			try {
-	// 				setLoading(true);
-	// 				const postData = await API.graphql(
-	// 					graphqlOperation(getPost, { id: posts?.id })
-	// 				);
-
-	// 				if (isMounted.current) {
-	// 					setAllData(postData.data.getPost);
-	// 					// console.log(postData.data.getPost);
-	// 					// console.log(posts);
-	// 				}
-
-	// 				setLoading(false);
-	// 			} catch (e) {
-	// 				console.log(e);
-	// 			}
-	// 		};
-	// 		fetchCommentData();
-	// 		return () => {
-	// 			isMounted.current = false;
-	// 		};
-	// 	}, [])
-	// );
 
 	const voteUp = async () => {
 		try {
@@ -154,10 +119,10 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		try {
 			if (posts?.comments?.items?.length > 0) {
 				if (isMounted.current) {
-					await posts?.saved.items?.forEach((savedObj) =>
+					await posts?.saved?.items?.forEach((savedObj) =>
 						API.graphql(
 							graphqlOperation(deleteSaved, {
-								input: { id: savedObj.id },
+								input: { id: savedObj?.id },
 							})
 						)
 					);
@@ -169,7 +134,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 					await posts?.saved?.items?.forEach((commentsObj) => {
 						API.graphql(
 							graphqlOperation(deleteComment, {
-								input: { id: commentsObj.id },
+								input: { id: commentsObj?.id },
 							})
 						);
 					});

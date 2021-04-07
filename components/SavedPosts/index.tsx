@@ -2,22 +2,10 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import Auth from "@aws-amplify/auth";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import {
-	StyleSheet,
-	Text,
-	View,
-	ScrollView,
-	FlatList,
-	ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import { listSaveds } from "../../assets/customGraphql/queries";
-import {
-	onCreatePost,
-	onCreateSaved,
-	onDeleteSaved,
-} from "../../src/graphql/subscriptions";
 import useIsMounted from "../custom/useIsMounted";
 import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
@@ -69,45 +57,6 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 			};
 		}, [])
 	);
-
-	// useEffect(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onCreateSaved)
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			if (data.value.data.onCreateSaved.userID !== userID) {
-	// 				return;
-	// 			} else {
-	// 				if (isMounted.current) {
-	// 					setSavedPosts([
-	// 						data.value.data.onCreateSaved,
-	// 						...savedPosts,
-	// 					]);
-	// 				}
-	// 			}
-	// 		},
-	// 	});
-	// 	return () => subscription.unsubscribe();
-	// });
-	// useEffect(() => {
-	// 	const subscription = API.graphql(
-	// 		graphqlOperation(onDeleteSaved)
-	// 	).subscribe({
-	// 		next: (data) => {
-	// 			if (data.value.data.onDeleteSaved.userID !== userID) {
-	// 				return;
-	// 			} else {
-	// 				const newData = savedPosts.filter(
-	// 					(obj) => obj.id !== data.value.data.onDeleteSaved.id
-	// 				);
-	// 				if (isMounted.current) {
-	// 					setSavedPosts([...newData]);
-	// 				}
-	// 			}
-	// 		},
-	// 	});
-	// 	return () => subscription.unsubscribe();
-	// });
 
 	return (
 		<View>

@@ -16,14 +16,13 @@ import { useFocusEffect } from "@react-navigation/native";
 type PostHistoryListProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
-// UserFeedItem
+
 const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState<ListPostsQuery>();
 	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
 
-	// const isMounted = useIsMounted();
 	const isMounted = useRef(true);
 
 	useEffect(() => {
@@ -31,6 +30,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 			try {
 				const userData = await Auth.currentAuthenticatedUser();
 				const postData = await API.graphql(graphqlOperation(listPosts));
+
 				const mainData = postData.data.listPosts.items.filter(
 					//@ts-ignore
 					(spreadData) => {
@@ -53,45 +53,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		return () => {
 			isMounted.current = false;
 		};
-		// 			isMounted.current = false;
-		// 		};
 	}, []);
-
-	// console.log(userID);
-	// console.log(usersPosts);
-
-	// useFocusEffect(
-	// 	React.useCallback(() => {
-	// 		const fetchPosts = async () => {
-	// 			try {
-	// 				const userData = await Auth.currentAuthenticatedUser();
-	// 				const postData = await API.graphql(
-	// 					graphqlOperation(listPosts)
-	// 				);
-	// 				const mainData = postData.data.listPosts.items.map(
-	// 					//@ts-ignore
-	// 					(spreadData) => {
-	// 						if (spreadData.userID === userData.attributes.sub) {
-	// 							return spreadData;
-	// 						}
-	// 					}
-	// 				);
-	// 				if (isMounted.current) {
-	// 					setUserID(userData.attributes.sub);
-	// 					setUsersPosts(mainData);
-	// 				}
-	// 			} catch (e) {
-	// 				console.log(e);
-	// 			}
-	// 		};
-	// 		fetchPosts();
-	// 		return () => {
-	// 			isMounted.current = false;
-	// 		};
-	// 	}, [])
-	// );
-
-	// setUsersPosts, isMounted
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -138,14 +100,12 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		return () => subscription.unsubscribe();
 	});
 	return (
-		// <ScrollView style={styles.container}>
 		<View>
 			{usersPosts !== undefined && (
 				<FlatList
 					data={usersPosts}
 					renderItem={({ item }) => (
 						<FeedItem
-							// addComment={undefined}
 							clickable={true}
 							navigation={navigation}
 							posts={item}
@@ -161,7 +121,6 @@ export default PostHistoryList;
 
 const styles = StyleSheet.create({
 	container: {
-		// width: "100%",
 		flex: 1,
 		backgroundColor: "white",
 	},

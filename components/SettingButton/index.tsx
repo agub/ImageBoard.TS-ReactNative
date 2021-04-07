@@ -36,14 +36,9 @@ const SettingButton: React.FC<SettingButtonButtonProps> = (props) => {
 						flexDirection: "column",
 					}}
 				>
-					<Text style={styles.ButtonText}>{text}</Text>
+					<Text>{text}</Text>
 					{additional && (
-						<Text
-							style={[
-								styles.ButtonText,
-								{ color: Colors.light.textLight },
-							]}
-						>
+						<Text style={[{ color: Colors.light.textLight }]}>
 							{additional}
 						</Text>
 					)}
@@ -59,11 +54,6 @@ export default SettingButton;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// padding: 20,
-		// backgroundColor: "white",
-	},
-	ButtonText: {
-		// paddingHorizontal: 20,
 	},
 	text: {
 		paddingVertical: 20,

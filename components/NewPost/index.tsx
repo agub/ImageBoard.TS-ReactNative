@@ -5,7 +5,6 @@ import {
 	Modal,
 	Pressable,
 	TextInput,
-	TouchableWithoutFeedback,
 	KeyboardAvoidingView,
 	Alert,
 } from "react-native";
@@ -30,11 +29,6 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [content, setContent] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 
-	// let input: any;
-
-	// const focus = () => {
-	// 	input.focus();
-	// };
 	const closeTab = () => {
 		setModalVisible(!modalVisible);
 		navigation.navigate("Lists");

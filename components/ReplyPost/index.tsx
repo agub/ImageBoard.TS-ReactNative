@@ -3,6 +3,7 @@ import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import styles from "./styles";
 import {
 	StyleSheet,
 	Text,
@@ -16,11 +17,11 @@ import {
 } from "react-native";
 
 import Colors from "../../constants/Colors";
-import { GetPostQuery } from "../../src/API";
 import { createComment } from "../../src/graphql/mutations";
+import { PostData } from "../../types";
 
 type ContentScreenProps = {
-	data: GetPostQuery | null;
+	data: PostData | null;
 };
 const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const { data } = props;
@@ -29,26 +30,6 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const [content, setContent] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const [userID, setUserID] = useState("");
-
-	// const submitComment = async () => {
-	// 	try {
-	// 		const commentData = await API.graphql(
-	// 			graphqlOperation(createComment, {
-	// 				input: {
-	// 					userID: data?.getPost?.userID,
-	// 					postID: data?.getPost?.id,
-	// 					vote: 0,
-	// 					title,
-	// 					content,
-	// 				},
-	// 			})
-	// 		);
-	// 		setTitle("");
-	// 		setContent("");
-	// 	} catch (e) {
-	// 		console.log(e);
-	// 	}
-	// };
 
 	useEffect(() => {
 		let mount = true;
@@ -150,64 +131,3 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 };
 
 export default ReplyPost;
-
-const styles = StyleSheet.create({
-	container: {
-		width: "100%",
-		flexDirection: "row",
-		height: 110,
-
-		// backgroundColor: "green",
-		paddingHorizontal: 10,
-		paddingVertical: 15,
-		// justifyContent: "center",
-		justifyContent: "space-between",
-		alignItems: "flex-start",
-		borderBottomWidth: 2,
-		borderBottomColor: Colors.light.background,
-	},
-	logo: {
-		marginLeft: 20,
-	},
-	mainTextBox: {
-		paddingVertical: 5,
-		width: "100%",
-		fontSize: 16,
-		marginLeft: 28,
-	},
-
-	content: {
-		width: "100%",
-	},
-	replyBox: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-	titleText: {
-		// fontWeight: "bold",
-		width: "100%",
-		marginLeft: 27,
-		fontSize: 16,
-		// color: Colors.light.textLight,
-		// borderBottomColor: Colors.light.textLight,
-		// borderBottomWidth: 3,
-	},
-
-	bottomBtn: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		marginTop: 10,
-	},
-	comment: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	commentText: {
-		marginLeft: 10,
-		color: Colors.light.textLight,
-	},
-});
