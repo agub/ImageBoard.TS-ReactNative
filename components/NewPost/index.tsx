@@ -5,8 +5,8 @@ import {
 	Modal,
 	Pressable,
 	TextInput,
-	TouchableWithoutFeedback,
 	KeyboardAvoidingView,
+	Alert,
 } from "react-native";
 import styles from "./styles";
 
@@ -18,7 +18,6 @@ import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { createPost } from "../../src/graphql/mutations";
 
-// import { TextInput } from "react-native-gesture-handler";
 type NewPostProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
@@ -28,13 +27,8 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const [modalVisible, setModalVisible] = useState(false);
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
+	const [loading, setLoading] = useState(false);
 
-	let input: any;
-	// console.log(navigation);
-
-	const focus = () => {
-		input.focus();
-	};
 	const closeTab = () => {
 		setModalVisible(!modalVisible);
 		navigation.navigate("Lists");
@@ -46,6 +40,7 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 	const submit = async () => {
 		try {
 			if (title !== "" && content !== "") {
+				setLoading(true);
 				const userData = await API.Auth.currentAuthenticatedUser();
 				// console.log(userData.attributes.sub);
 				await API.graphql(
@@ -60,9 +55,10 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 				);
 				setTitle("");
 				setContent("");
+				setLoading(false);
 				closeTab();
 			} else {
-				console.log("title or content is missing");
+				Alert.alert("タイトルか投稿内容を記入してください");
 			}
 		} catch (e) {
 			console.log(e);
@@ -125,29 +121,28 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 								/>
 								{/* <Text style={styles.textStyle}>x</Text> */}
 							</Pressable>
-							<View style={[styles.button, styles.buttonClose]}>
-								<TouchableWithoutFeedback
-									style={[styles.button, styles.buttonClose]}
-									onPress={submit}
-								>
-									<Text style={styles.textStyle}>投稿</Text>
-								</TouchableWithoutFeedback>
-							</View>
+							{/* <View style={[styles.button, styles.buttonClose]}> */}
+							<TouchableOpacity
+								style={[styles.button, styles.buttonClose]}
+								onPress={submit}
+								disabled={loading}
+							>
+								<Text style={styles.textStyle}>投稿</Text>
+							</TouchableOpacity>
+							{/* </View> */}
 						</View>
 						<View style={styles.textAreaBox}>
 							<View style={styles.title}>
 								<TextInput
-									placeholder='タイトル'
+									placeholder='*タイトル'
 									placeholderTextColor={
 										Colors.light.textLight
 									}
 									blurOnSubmit={false}
 									autoFocus={true}
-									// editable={true}
 									style={styles.modalSubText}
 									value={title}
 									onChangeText={(e) => setTitle(e)}
-									// onEndEditing={(e) => setTitle(e)}
 								/>
 							</View>
 							<KeyboardAvoidingView
@@ -157,14 +152,13 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 							>
 								<View style={styles.mainText}>
 									<TextInput
-										placeholder='投稿内容'
+										placeholder='*投稿内容'
 										placeholderTextColor={
 											Colors.light.textLight
 										}
 										multiline
 										blurOnSubmit={false}
 										style={styles.modalText}
-										// editable={true}
 										value={content}
 										onChangeText={(text) =>
 											setContent(text)
@@ -172,7 +166,6 @@ const NewPost: React.FC<NewPostProps> = (props) => {
 										autoFocus={true}
 									/>
 								</View>
-								{/* </TouchableWithoutFeedback> */}
 							</KeyboardAvoidingView>
 						</View>
 					</View>

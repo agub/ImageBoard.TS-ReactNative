@@ -16,7 +16,11 @@ const HomeScreen: React.FC<HomeScreenProps> = (props) => {
 	return (
 		<View style={styles.container}>
 			<Tab.Navigator initialRouteName='Liked'>
-				<Tab.Screen name='Liked' component={SavedPosts} />
+				<Tab.Screen
+					name='Liked'
+					options={{ title: "保存済み" }}
+					component={SavedPosts}
+				/>
 				<Tab.Screen
 					name='Users'
 					// options={{ navigation: navigation }}

@@ -16,9 +16,7 @@ import {
 import Colors from "../../constants/Colors";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PostData, RootStackParamList } from "../../types";
-
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { getPost } from "../../src/graphql/queries";
 import { GetPostQuery } from "../../src/API";
 import moment from "moment";
 import {
@@ -33,10 +31,15 @@ import { onCreateComment } from "../../src/graphql/subscriptions";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
+<<<<<<< HEAD
 	postsData: PostData;
 
 	/////!!!!
 	addComment: (value: React.SetStateAction<boolean>) => void;
+=======
+	posts: PostData;
+	addComment?: () => void;
+>>>>>>> mainlyAllFixed
 	clickable: boolean | null;
 };
 
@@ -48,12 +51,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [isModalVisible, setModalVisible] = useState(false);
 
-	const isMounted = useIsMounted();
+	const isMounted = useRef(true);
 
 	const toggleModal = () => {
 		setModalVisible(!isModalVisible);
 	};
 
+<<<<<<< HEAD
 	useEffect(() => {
 		let mounted = true;
 		const fetchCommentData = async () => {
@@ -98,6 +102,18 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 	// 		subscription.unsubscribe();
 	// 	};
 	// });
+=======
+	const onPress = async () => {
+		navigation?.navigate("Content", {
+			data: posts,
+		});
+	};
+
+	const onCommentPress = () => {
+		setShowComment(!showComment);
+		addComment();
+	};
+>>>>>>> mainlyAllFixed
 
 	const voteUp = async () => {
 		try {
@@ -156,30 +172,27 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const deleteHandler = async () => {
 		try {
-			if (allData?.getPost?.saved?.items?.length > 0) {
+			if (posts?.comments?.items?.length > 0) {
 				if (isMounted.current) {
-					await allData?.getPost?.saved?.items?.forEach((savedObj) =>
-						// console.log(save.id)
+					await posts?.saved?.items?.forEach((savedObj) =>
 						API.graphql(
 							graphqlOperation(deleteSaved, {
-								input: { id: savedObj.id },
+								input: { id: savedObj?.id },
 							})
 						)
 					);
 				}
 			}
 
-			if (allData?.getPost?.comments?.items?.length > 0) {
+			if (posts?.saved?.items?.length > 0) {
 				if (isMounted.current) {
-					await allData?.getPost?.comments?.items?.forEach(
-						(commentsObj) => {
-							API.graphql(
-								graphqlOperation(deleteComment, {
-									input: { id: commentsObj.id },
-								})
-							);
-						}
-					);
+					await posts?.saved?.items?.forEach((commentsObj) => {
+						API.graphql(
+							graphqlOperation(deleteComment, {
+								input: { id: commentsObj?.id },
+							})
+						);
+					});
 				}
 			}
 			//Deleting actual post
@@ -187,7 +200,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 			await API.graphql(
 				graphqlOperation(deletePost, {
 					input: {
-						id: allData?.getPost?.id,
+						id: posts?.id,
 					},
 				})
 			);
@@ -198,6 +211,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setModalVisible(false);
 	};
 
+<<<<<<< HEAD
 	const onPress = async () => {
 		await navigation?.navigate("Content", {
 			data: allData,
@@ -208,6 +222,8 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 		setShowComment(!showComment);
 		addComment();
 	};
+=======
+>>>>>>> mainlyAllFixed
 	return (
 		<>
 			<Modal
@@ -312,14 +328,13 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 							)}
 
 							<Text style={styles.commentText}>
-								{allData?.getPost?.comments?.items?.length}
-								Comments
+								{posts?.comments?.items.length} Comments
 							</Text>
 						</TouchableOpacity>
 						<View style={styles.voteBox}>
 							{!loading && (
 								<Text style={styles.voteText}>
-									{allData?.getPost?.vote + voteNumber}
+									{posts?.vote}
 								</Text>
 							)}
 

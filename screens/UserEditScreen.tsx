@@ -53,7 +53,6 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 				return Auth.changePassword(user, oldPassword, newPassword);
 			})
 			.then((data) => {
-				console.log(data);
 				setCurrentPassword("");
 				setNewPassword("");
 				setChangePassword(!changePassword);

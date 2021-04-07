@@ -23,6 +23,8 @@ import {
 	RootStackParamList,
 } from "../types";
 import useIsMounted from "../components/custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
+import { getPost } from "../src/graphql/queries";
 
 type ContentScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
@@ -35,13 +37,32 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
+<<<<<<< HEAD
 	const [postData, setPostData] = useState<GetPostQuery>();
+=======
+	const [postData, setPostData] = useState([]);
+
+	// console.log(route.params.data.getPost);
+
+	// const useIsMounted = () => {
+	// 	const isMounted = useRef(false);
+	// 	useEffect(() => {
+	// 		isMounted.current = true;
+	// 		return () => {
+	// 			isMounted.current = false;
+	// 		};
+	// 	}, []);
+	// 	return isMounted;
+	// };
+	// console.log(route.params.data.getPost?.id);
+>>>>>>> mainlyAllFixed
 
 	const isMounted = useIsMounted();
 
 	const addComment = () => {
 		setClicked(!clicked);
 	};
+<<<<<<< HEAD
 	// console.log(route.params.data.getPost?.comments?.items);
 
 	useEffect(() => {
@@ -59,6 +80,38 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	// console.log(route);
 
 	//
+=======
+
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
+			const fetchPosts = async () => {
+				try {
+					const postData = await API.graphql(
+						graphqlOperation(getPost, {
+							id: route.params.data.id,
+						})
+					);
+					// console.log(postData.data);
+					if (isMounted.current) {
+						setCommentData(postData.data.getPost.comments.items);
+						setPostData(postData.data.getPost);
+					}
+					// if (mount) {
+					// 	setPosts(postData.data.listPosts?.items);
+					// }
+				} catch (e) {
+					console.log(e);
+				}
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+				isMounted.current = false;
+			};
+		}, [])
+	);
+>>>>>>> mainlyAllFixed
 
 	useEffect(() => {
 		let mount = true;
@@ -68,7 +121,11 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			next: (data) => {
 				if (
 					data.value.data.onCreateComment.postID !==
+<<<<<<< HEAD
 					postData?.getPost?.id
+=======
+					route.params.data.id
+>>>>>>> mainlyAllFixed
 				) {
 					return;
 				} else {
@@ -93,10 +150,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 			graphqlOperation(onDeletePost)
 		).subscribe({
 			next: (data) => {
-				if (
-					route.params.data.getPost.id ===
-					data.value.data.onDeletePost.id
-				) {
+				if (route.params.data.id === data.value.data.onDeletePost.id) {
 					navigation?.goBack();
 				}
 			},
@@ -107,7 +161,7 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	return (
 		<View style={styles.container}>
 			<FeedItem
-				posts={route.params.data.getPost}
+				posts={postData}
 				navigation={navigation}
 				addComment={addComment}
 				clickable={false}

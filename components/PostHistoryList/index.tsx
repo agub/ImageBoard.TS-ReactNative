@@ -5,31 +5,33 @@ import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
 import { ListPostsQuery } from "../../src/API";
 import { deletePost } from "../../src/graphql/mutations";
-import { listPosts } from "../../src/graphql/queries";
+import { listPosts } from "../../assets/customGraphql/queries";
 import { onCreatePost, onDeletePost } from "../../src/graphql/subscriptions";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import useIsMounted from "../custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
 
 type PostHistoryListProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
 };
-// UserFeedItem
+
 const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState<ListPostsQuery>();
 	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
 
-	const isMounted = useIsMounted();
+	const isMounted = useRef(true);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
 			try {
 				const userData = await Auth.currentAuthenticatedUser();
 				const postData = await API.graphql(graphqlOperation(listPosts));
-				const mainData = postData.data.listPosts.items.map(
+
+				const mainData = postData.data.listPosts.items.filter(
 					//@ts-ignore
 					(spreadData) => {
 						if (spreadData.userID === userData.attributes.sub) {
@@ -38,6 +40,8 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 					}
 				);
 				if (isMounted.current) {
+					console.log(mainData);
+
 					setUserID(userData.attributes.sub);
 					setUsersPosts(mainData);
 				}
@@ -46,9 +50,10 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 			}
 		};
 		fetchPosts();
+		return () => {
+			isMounted.current = false;
+		};
 	}, []);
-
-	// setUsersPosts, isMounted
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -68,11 +73,11 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 				}
 			},
 		});
+
 		return () => {
 			subscription.unsubscribe();
 		};
 	});
-	// , [usersPosts, setUsersPosts]
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -95,19 +100,19 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		return () => subscription.unsubscribe();
 	});
 	return (
-		// <ScrollView style={styles.container}>
 		<View>
-			<FlatList
-				data={usersPosts}
-				renderItem={({ item }) => (
-					<FeedItem
-						// addComment={undefined}
-						clickable={true}
-						navigation={navigation}
-						posts={item}
-					/>
-				)}
-			/>
+			{usersPosts !== undefined && (
+				<FlatList
+					data={usersPosts}
+					renderItem={({ item }) => (
+						<FeedItem
+							clickable={true}
+							navigation={navigation}
+							posts={item}
+						/>
+					)}
+				/>
+			)}
 		</View>
 	);
 };
@@ -116,7 +121,6 @@ export default PostHistoryList;
 
 const styles = StyleSheet.create({
 	container: {
-		// width: "100%",
 		flex: 1,
 		backgroundColor: "white",
 	},

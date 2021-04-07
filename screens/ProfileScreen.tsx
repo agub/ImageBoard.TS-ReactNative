@@ -1,24 +1,15 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-	createStackNavigator,
-	StackNavigationProp,
-} from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import EditButton from "../components/EditButton/EditButton";
 import ProfileHeader from "../components/ProfileHeader";
 import { ProfileTabParamList, RootStackParamList } from "../types";
-
-import FeedItem from "../components/FeedItem";
-import Tab from "../components/Tab/Tab";
 import Colors from "../constants/Colors";
-import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Auth from "@aws-amplify/auth";
 import { API, graphqlOperation } from "aws-amplify";
 import { getUser } from "../src/graphql/queries";
 import { GetUserQuery } from "../src/API";
-
 import PostHistoryList from "../components/PostHistoryList";
 import SavedPosts from "../components/SavedPosts";
 import useIsMounted from "../components/custom/useIsMounted";
@@ -33,7 +24,6 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 
 	const Tab = createMaterialTopTabNavigator<ProfileTabParamList>();
 	const isMounted = useIsMounted();
-	// console.log(isMounted.current);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -59,23 +49,19 @@ const ProfileScreen: React.FC<ProfileScreenProps> = (props) => {
 				navigateTo='UserEdit'
 				color={Colors.light.secondary}
 			/>
-			{/* <Tab title='ユーザー投稿記事' BarColor={Colors.light.Primary} /> */}
-
-			{/* <NavigationContainer independent={true}> */}
 
 			<Tab.Navigator>
 				<Tab.Screen
 					name='Users'
-					// options={{ navigation: navigation }}
 					options={{ title: "投稿履歴" }}
 					component={PostHistoryList}
 				/>
-				<Tab.Screen name='Liked' component={SavedPosts} />
+				<Tab.Screen
+					name='Liked'
+					options={{ title: "保存済み" }}
+					component={SavedPosts}
+				/>
 			</Tab.Navigator>
-
-			{/* </NavigationContainer> */}
-
-			{/* <FeedItem /> */}
 		</View>
 	);
 };

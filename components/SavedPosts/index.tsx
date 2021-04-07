@@ -2,16 +2,12 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import Auth from "@aws-amplify/auth";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
-import { listSaveds } from "../../src/graphql/queries";
-import {
-	onCreatePost,
-	onCreateSaved,
-	onDeleteSaved,
-} from "../../src/graphql/subscriptions";
+import { listSaveds } from "../../assets/customGraphql/queries";
 import useIsMounted from "../custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 //@ts-ignore
 
 type SavedPostsProps = {
@@ -22,87 +18,54 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 	const { navigation } = props;
 	const [savedPosts, setSavedPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const isMounted = useIsMounted();
 
-	useEffect(() => {
-		let mount = true;
-		const fetchPosts = async () => {
-			try {
-				const userData = await Auth.currentAuthenticatedUser();
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
 
-				const savedData = await API.graphql(
-					graphqlOperation(listSaveds)
-				);
-				const mainData = savedData.data.listSaveds.items.map(
-					(spreadData) => {
-						if (spreadData.userID === userData.attributes.sub) {
-							return spreadData;
-						}
-					}
-				);
-				if (isMounted) {
-					setSavedPosts(mainData);
-					setUserID(userData.attributes.sub);
-				}
-				// }
-			} catch (e) {
-				console.log(e);
-			}
-		};
-		fetchPosts();
-	}, []);
+			const fetchPosts = async () => {
+				setLoading(true);
+				try {
+					const userData = await Auth.currentAuthenticatedUser();
 
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onCreateSaved)
-		).subscribe({
-			next: (data) => {
-				if (data.value.data.onCreateSaved.userID !== userID) {
-					return;
-				} else {
-					if (isMounted.current) {
-						setSavedPosts([
-							data.value.data.onCreateSaved,
-							...savedPosts,
-						]);
-					}
-				}
-			},
-		});
-		return () => subscription.unsubscribe();
-	});
-	useEffect(() => {
-		const subscription = API.graphql(
-			graphqlOperation(onDeleteSaved)
-		).subscribe({
-			next: (data) => {
-				console.log(data.value.data.onDeleteSaved);
-
-				// setPosts([data.value.data.onCreatePost, ...posts]);
-				// console.log(userID);
-
-				if (data.value.data.onDeleteSaved.userID !== userID) {
-					return;
-				} else {
-					const newData = savedPosts.filter(
-						(obj) => obj.id !== data.value.data.onDeleteSaved.id
+					const savedData = await API.graphql(
+						graphqlOperation(listSaveds)
 					);
-					if (isMounted.current) {
-						setSavedPosts([...newData]);
+					const mainData = savedData.data.listSaveds.items.filter(
+						(spreadData) => {
+							if (spreadData.userID === userData.attributes.sub) {
+								return spreadData;
+							}
+						}
+					);
+					if (isMounted) {
+						setSavedPosts(mainData);
+						setUserID(userData.attributes.sub);
 					}
+					// }
+				} catch (e) {
+					console.log(e);
 				}
-			},
-		});
-		return () => subscription.unsubscribe();
-	});
-
-	// console.log(savedPosts);
+				setLoading(false);
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+			};
+		}, [])
+	);
 
 	return (
-		// <ScrollView style={styles.container}>
 		<View>
-			{savedPosts.length > 0 && (
+			{loading ? (
+				<ActivityIndicator
+					style={{ alignItems: "center" }}
+					size='large'
+				/>
+			) : (
 				<FlatList
 					data={savedPosts}
 					renderItem={({ item }) => (

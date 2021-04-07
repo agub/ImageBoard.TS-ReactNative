@@ -33,7 +33,7 @@ export const Navigation = ({
 	return (
 		<NavigationContainer
 			linking={LinkingConfiguration}
-			theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
+			// theme={colorScheme === "light" ? DarkTheme : DefaultTheme}
 		>
 			<RootNavigator />
 		</NavigationContainer>
@@ -65,11 +65,6 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 				},
 			},
 		]);
-		// try {
-		// 	await Auth.signOut({ global: true });
-		// } catch (error) {
-		// 	console.log("error signing out: ", error);
-		// }
 	};
 
 	return (
@@ -132,7 +127,7 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 					name='Content'
 					component={ContentScreen}
 					options={({ route }: any) => ({
-						title: route.params.data.getPost.title,
+						title: route.params.data.title,
 						headerStyle: {
 							backgroundColor: Colors.light.secondary,
 						},
@@ -141,9 +136,7 @@ export const RootNavigator: React.FC<RootNavigatorProps> = (props) => {
 						},
 
 						headerRight: () => (
-							<SavedHeaderButton
-								postID={route.params.data.getPost.id}
-							/>
+							<SavedHeaderButton postID={route.params.data.id} />
 						),
 					})}
 				/>

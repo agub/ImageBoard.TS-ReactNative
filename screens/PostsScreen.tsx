@@ -21,12 +21,6 @@ type PostScreenProps = {
 
 const PostsScreen: React.FC<PostScreenProps> = (props) => {
 	const { navigation } = props;
-	// useEffect(() => {
-	// 	const fetchUserData = async () => {
-	// 		const userInfo = await Auth.currentAuthenticatedUser();
-	// 	};
-	// 	fetchUserData();
-	// }, []);
 
 	return (
 		<View style={styles.container}>

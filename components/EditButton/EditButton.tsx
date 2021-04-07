@@ -3,6 +3,7 @@ import React from "react";
 import { Pressable } from "react-native";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import Colors from "../../constants/Colors";
+import styles from "./styles";
 import { DrawerParamList, RootStackParamList } from "../../types";
 
 type EditButtonProps = {
@@ -32,29 +33,3 @@ const EditButton: React.FC<EditButtonProps> = (props) => {
 };
 
 export default EditButton;
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "white",
-	},
-	buttonBox: {
-		// width: "100%",
-		flexDirection: "row",
-		justifyContent: "center",
-		paddingHorizontal: 20,
-	},
-	button: {
-		width: "100%",
-		// backgroundColor: Colors.light.secondary,
-		alignItems: "center",
-
-		// justifyContent: "center",
-		padding: 10,
-		borderRadius: 50,
-	},
-	buttonText: {
-		color: "white",
-		fontWeight: "bold",
-	},
-});

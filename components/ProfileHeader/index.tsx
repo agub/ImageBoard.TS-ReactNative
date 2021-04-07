@@ -18,16 +18,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = (props) => {
 	return (
 		<View style={styles.container}>
 			<View style={styles.profilePic}>
-				{/* <Ionicons name='person' size={50} /> */}
-				{userData?.getUser?.imageUri && (
+				{userData?.getUser?.imageUri ? (
 					<Image
 						source={{
 							uri: userData.getUser.imageUri,
 						}}
 						style={styles.profilePic}
 					/>
+				) : (
+					<Ionicons name='person' size={50} />
 				)}
-				{/* <Text>Picture</Text> */}
 			</View>
 
 			<View style={styles.userNameBox}>

@@ -3,6 +3,7 @@ import { FontAwesome, Entypo } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
+import styles from "./styles";
 import {
 	StyleSheet,
 	Text,
@@ -16,26 +17,53 @@ import {
 } from "react-native";
 
 import Colors from "../../constants/Colors";
-import { GetPostQuery } from "../../src/API";
 import { createComment } from "../../src/graphql/mutations";
+import { PostData } from "../../types";
 
 type ContentScreenProps = {
-	data: GetPostQuery | null;
+	data: PostData | null;
 };
 const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 	const { data } = props;
 
 	const [title, setTitle] = useState<string>("");
 	const [content, setContent] = useState<string>("");
+	const [loading, setLoading] = useState(false);
+	const [userID, setUserID] = useState("");
+
+	useEffect(() => {
+		let mount = true;
+		const fetchUserData = async () => {
+			const userData = await API.Auth.currentAuthenticatedUser();
+
+			if (mount) {
+				setUserID(userData.attributes.sub);
+			}
+		};
+
+		fetchUserData();
+		return () => {
+			mount = false;
+		};
+	}, []);
 
 	const submitComment = async () => {
 		if (content !== "" && title !== "") {
 			try {
+<<<<<<< HEAD
 				const commentData = await API.graphql(
 					graphqlOperation(createComment, {
 						input: {
 							userID: data?.getPost?.userID,
 							postID: data?.getPost?.id,
+=======
+				setLoading(true);
+				const commentData = await API.graphql(
+					graphqlOperation(createComment, {
+						input: {
+							userID: userID,
+							postID: data?.id,
+>>>>>>> mainlyAllFixed
 							vote: 0,
 							title,
 							content,
@@ -44,6 +72,10 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 				);
 				setTitle("");
 				setContent("");
+<<<<<<< HEAD
+=======
+				setLoading(false);
+>>>>>>> mainlyAllFixed
 			} catch (e) {
 				console.log(e);
 			}
@@ -56,17 +88,33 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 
 	return (
 		<View style={styles.container}>
+<<<<<<< HEAD
 			<TouchableOpacity style={styles.logo} onPress={submitComment}>
+=======
+			<TouchableOpacity
+				style={styles.logo}
+				disabled={loading}
+				onPress={submitComment}
+			>
+>>>>>>> mainlyAllFixed
 				<Entypo
 					name='new-message'
 					size={24}
 					color={
 						content !== "" && title !== ""
 							? Colors.light.Primary
+<<<<<<< HEAD
 							: Colors.light.textLight
 					}
 				/>
 			</TouchableOpacity>
+=======
+							: "black"
+					}
+				/>
+			</TouchableOpacity>
+
+>>>>>>> mainlyAllFixed
 			<View style={styles.content}>
 				<KeyboardAvoidingView behavior='height' style={{ height: 49 }}>
 					<View style={{ justifyContent: "flex-start" }}>
@@ -99,82 +147,9 @@ const ReplyPost: React.FC<ContentScreenProps> = (props) => {
 						</View>
 					</View>
 				</KeyboardAvoidingView>
-
-				{/* {commentUser?.getUser?.imageUri && (
-							<View style={styles.profileBox}>
-								<Image
-									style={styles.profile}
-									source={{
-										uri: commentUser?.getUser?.imageUri,
-									}}
-								/>
-								<Text>{commentUser?.getUser?.name}</Text>
-							</View>
-						)} */}
 			</View>
 		</View>
 	);
 };
 
 export default ReplyPost;
-
-const styles = StyleSheet.create({
-	container: {
-		width: "100%",
-		flexDirection: "row",
-		height: 110,
-
-		// backgroundColor: "green",
-		paddingHorizontal: 10,
-		paddingVertical: 15,
-		// justifyContent: "center",
-		justifyContent: "space-between",
-		alignItems: "flex-start",
-		borderBottomWidth: 2,
-		borderBottomColor: Colors.light.background,
-	},
-	logo: {
-		marginLeft: 20,
-	},
-	mainTextBox: {
-		paddingVertical: 5,
-		width: "100%",
-		fontSize: 16,
-		marginLeft: 28,
-	},
-
-	content: {
-		width: "100%",
-	},
-	replyBox: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	header: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-	titleText: {
-		// fontWeight: "bold",
-		width: "100%",
-		marginLeft: 27,
-		fontSize: 16,
-		// color: Colors.light.textLight,
-		// borderBottomColor: Colors.light.textLight,
-		// borderBottomWidth: 3,
-	},
-
-	bottomBtn: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		marginTop: 10,
-	},
-	comment: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	commentText: {
-		marginLeft: 10,
-		color: Colors.light.textLight,
-	},
-});

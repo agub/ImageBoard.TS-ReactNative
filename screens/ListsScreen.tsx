@@ -1,13 +1,29 @@
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	StyleSheet,
+	Text,
+	View,
+	ScrollView,
+	FlatList,
+	SafeAreaView,
+	RefreshControl,
+	ActivityIndicator,
+} from "react-native";
 import FeedItem from "../components/FeedItem";
-import { listPosts } from "../src/graphql/queries";
+import { getPost } from "../src/graphql/queries";
+
+import { listPosts } from "../assets/customGraphql/queries";
 import { RootStackParamList } from "../types";
 import { ListPostsQuery } from "../src/API";
-import { onCreatePost, onDeletePost } from "../src/graphql/subscriptions";
+import {
+	onCreateComment,
+	onCreatePost,
+	onDeletePost,
+} from "../src/graphql/subscriptions";
 import useIsMounted from "../components/custom/useIsMounted";
+import { useFocusEffect } from "@react-navigation/native";
 
 type ListsScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -16,19 +32,40 @@ type ListsScreenProps = {
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
+	const [mainPosts, setMainPosts] = useState([]);
+	const [refreshing, setRefreshing] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const isMounted = useRef(true);
 
-	const isMounted = useIsMounted();
+	const wait = (timeOut: number) => {
+		return new Promise((resolve) => {
+			setTimeout(resolve, timeOut);
+		});
+	};
+	const onRefresh = React.useCallback(() => {
+		setRefreshing(true);
+		wait(800).then(() => {
+			setRefreshing(false);
+		});
+	}, []);
 
-	useEffect(() => {
-		const fetchPosts = async () => {
-			try {
-				const postData = await API.graphql(graphqlOperation(listPosts));
+	useFocusEffect(
+		React.useCallback(() => {
+			let mount = true;
+			const fetchPosts = async () => {
+				try {
+					const postData = await API.graphql(
+						graphqlOperation(listPosts)
+					);
 
-				if ("data" in postData) {
-					if (isMounted.current) {
+					if (mount) {
 						setPosts(postData.data.listPosts?.items);
 					}
+				} catch (e) {
+					console.log(e);
+					console.log("this error");
 				}
+<<<<<<< HEAD
 			} catch (e) {
 				console.log(e);
 				// console.log("this too?");
@@ -37,25 +74,35 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		fetchPosts();
 	}, []);
 	// [setPosts]
+=======
+			};
+			fetchPosts();
+			return () => {
+				mount = false;
+				isMounted.current = false;
+			};
+		}, [])
+	);
+>>>>>>> mainlyAllFixed
 
 	useEffect(() => {
 		let mount = true;
+		setLoading(true);
 		const subscription = API.graphql(
 			graphqlOperation(onCreatePost)
 		).subscribe({
 			next: (data) => {
-				// console.log(data.value.data.onCreatePost);
 				if (isMounted.current) {
 					setPosts([data.value.data.onCreatePost, ...posts]);
 				}
 			},
 		});
+		setLoading(false);
 		return () => {
 			subscription.unsubscribe();
 			mount = false;
 		};
 	});
-	// [posts, setPosts];
 
 	useEffect(() => {
 		const subscription = API.graphql(
@@ -78,6 +125,7 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 
 	return (
 		<>
+<<<<<<< HEAD
 			<FlatList
 				data={posts}
 				renderItem={({ item }) => (
@@ -88,6 +136,28 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 					/>
 				)}
 			/>
+=======
+			{loading ? (
+				<ActivityIndicator size='large' />
+			) : (
+				<FlatList
+					data={posts}
+					refreshControl={
+						<RefreshControl
+							refreshing={refreshing}
+							onRefresh={onRefresh}
+						/>
+					}
+					renderItem={({ item }) => (
+						<FeedItem
+							navigation={navigation}
+							clickable={true}
+							posts={item}
+						/>
+					)}
+				/>
+			)}
+>>>>>>> mainlyAllFixed
 		</>
 	);
 };
