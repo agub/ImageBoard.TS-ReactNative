@@ -57,6 +57,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 
 	useFocusEffect(
 		React.useCallback(() => {
+			let mount = true;
 			const fetchPosts = async () => {
 				try {
 					const userData = await Auth.currentAuthenticatedUser();
@@ -72,7 +73,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 							}
 						}
 					);
-					if (isMounted.current) {
+					if (mount) {
 						setUserID(userData.attributes.sub);
 						setUsersPosts(mainData);
 					}
@@ -82,6 +83,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 			};
 			fetchPosts();
 			return () => {
+				mount = false;
 				isMounted.current = false;
 			};
 		}, [])
