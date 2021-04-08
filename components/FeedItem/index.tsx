@@ -118,7 +118,7 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 
 	const deleteHandler = async () => {
 		try {
-			if (posts?.comments?.items?.length > 0) {
+			if (posts?.saved?.items?.length > 0) {
 				if (isMounted.current) {
 					await posts?.saved?.items?.forEach((savedObj) =>
 						API.graphql(
@@ -130,9 +130,9 @@ const FeedItem: React.FC<FeedItemProps> = (props) => {
 				}
 			}
 
-			if (posts?.saved?.items?.length > 0) {
+			if (posts?.comments?.items?.length > 0) {
 				if (isMounted.current) {
-					await posts?.saved?.items?.forEach((commentsObj) => {
+					await posts?.comments?.items?.forEach((commentsObj) => {
 						API.graphql(
 							graphqlOperation(deleteComment, {
 								input: { id: commentsObj?.id },
