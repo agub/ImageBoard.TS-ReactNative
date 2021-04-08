@@ -1,9 +1,9 @@
 import React from "react";
-import { View, Text, Button, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image } from "react-native";
 import styles from "./styles";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { BottomTabParamList, RootStackParamList, UserData } from "../../types";
+import { RootStackParamList, UserData } from "../../types";
 import moment from "moment";
 import { GetUserQuery } from "../../src/API";
 
@@ -13,7 +13,6 @@ type ProfileHeaderProps = {
 };
 const ProfileHeader: React.FC<ProfileHeaderProps> = (props) => {
 	const { navigation, userData } = props;
-	// console.log(userData?.getUser?.posts?.items);
 
 	return (
 		<View style={styles.container}>

@@ -2,7 +2,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import FeedItem from "../components/FeedItem";
 import PostHistoryList from "../components/PostHistoryList";
 import SavedPosts from "../components/SavedPosts";
 import { ProfileTabParamList, RootStackParamList } from "../types";

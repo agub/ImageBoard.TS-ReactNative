@@ -60,23 +60,23 @@ const SavedPosts: React.FC<SavedPostsProps> = (props) => {
 
 	return (
 		<View>
-			{loading ? (
+			{/* {loading ? (
 				<ActivityIndicator
 					style={{ alignItems: "center" }}
 					size='large'
 				/>
-			) : (
-				<FlatList
-					data={savedPosts}
-					renderItem={({ item }) => (
-						<FeedItem
-							clickable={true}
-							navigation={navigation}
-							posts={item.post}
-						/>
-					)}
-				/>
-			)}
+			) : ( */}
+			<FlatList
+				data={savedPosts}
+				renderItem={({ item }) => (
+					<FeedItem
+						clickable={true}
+						navigation={navigation}
+						posts={item.post}
+					/>
+				)}
+			/>
+			{/* )} */}
 		</View>
 	);
 };

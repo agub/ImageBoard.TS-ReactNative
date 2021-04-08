@@ -1,19 +1,8 @@
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
-
 import NewPost from "../components/NewPost";
-
-import {
-	NavigationContainer,
-	DefaultTheme,
-	DarkTheme,
-} from "@react-navigation/native";
-import {
-	createStackNavigator,
-	StackNavigationProp,
-} from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../types";
-import { API, Auth, graphqlOperation } from "aws-amplify";
 
 type PostScreenProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;

@@ -2,16 +2,13 @@ import API, { graphqlOperation } from "@aws-amplify/api";
 import Auth from "@aws-amplify/auth";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
-import { ListPostsQuery } from "../../src/API";
-import { deletePost } from "../../src/graphql/mutations";
+import { StyleSheet, View, FlatList, ActivityIndicator } from "react-native";
 import { listPosts } from "../../assets/customGraphql/queries";
 import { onCreatePost, onDeletePost } from "../../src/graphql/subscriptions";
 import { PostData, RootStackParamList } from "../../types";
 import FeedItem from "../FeedItem";
 import useIsMounted from "../custom/useIsMounted";
 import { useFocusEffect } from "@react-navigation/native";
-//@ts-ignore
 
 type PostHistoryListProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root">;
@@ -19,46 +16,18 @@ type PostHistoryListProps = {
 
 const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 	const { navigation } = props;
-	const [posts, setPosts] = useState<ListPostsQuery>();
 	const [usersPosts, setUsersPosts] = useState<PostData[]>([]);
 	const [userID, setUserID] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const isMounted = useRef(true);
-
-	// useEffect(() => {
-	// 	const fetchPosts = async () => {
-	// 		try {
-	// 			const userData = await Auth.currentAuthenticatedUser();
-	// 			const postData = await API.graphql(graphqlOperation(listPosts));
-
-	// 			const mainData = postData.data.listPosts.items.filter(
-	// 				//@ts-ignore
-	// 				(spreadData) => {
-	// 					if (spreadData.userID === userData.attributes.sub) {
-	// 						return spreadData;
-	// 					}
-	// 				}
-	// 			);
-	// 			if (isMounted.current) {
-	// 				console.log(mainData);
-
-	// 				setUserID(userData.attributes.sub);
-	// 				setUsersPosts(mainData);
-	// 			}
-	// 		} catch (e) {
-	// 			console.log(e);
-	// 		}
-	// 	};
-	// 	fetchPosts();
-	// 	return () => {
-	// 		isMounted.current = false;
-	// 	};
-	// }, []);
 
 	useFocusEffect(
 		React.useCallback(() => {
 			let mount = true;
+
 			const fetchPosts = async () => {
+				setLoading(true);
 				try {
 					const userData = await Auth.currentAuthenticatedUser();
 					const postData = await API.graphql(
@@ -80,6 +49,7 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 				} catch (e) {
 					console.log(e);
 				}
+				setLoading(false);
 			};
 			fetchPosts();
 			return () => {
@@ -134,6 +104,13 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 		return () => subscription.unsubscribe();
 	});
 	return (
+		// <View>
+		// 	{loading ? (
+		// 		<ActivityIndicator
+		// 			style={{ alignItems: "center" }}
+		// 			size='large'
+		// 		/>
+		// 	) : (
 		<View>
 			{usersPosts !== undefined && (
 				<FlatList
@@ -148,6 +125,8 @@ const PostHistoryList: React.FC<PostHistoryListProps> = (props) => {
 				/>
 			)}
 		</View>
+		// 	)}
+		// </View>
 	);
 };
 

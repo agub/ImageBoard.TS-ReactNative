@@ -2,9 +2,7 @@ import { FontAwesome, Feather } from "@expo/vector-icons";
 import { API, graphqlOperation } from "aws-amplify";
 import React, { useEffect, useState } from "react";
 import { Pressable, StyleSheet } from "react-native";
-
 import Colors from "../../constants/Colors";
-
 import { createSaved, deleteSaved } from "../../src/graphql/mutations";
 import { getPost } from "../../src/graphql/queries";
 import useIsMounted from "../custom/useIsMounted";

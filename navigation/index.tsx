@@ -1,9 +1,5 @@
 import { Ionicons, AntDesign } from "@expo/vector-icons";
-import {
-	NavigationContainer,
-	DefaultTheme,
-	DarkTheme,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import * as React from "react";

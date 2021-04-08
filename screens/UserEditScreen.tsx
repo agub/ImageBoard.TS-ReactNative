@@ -27,8 +27,6 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 
 	const isMounted = useIsMounted();
 
-	// console.log(currentUserName, currentEmail);
-
 	useEffect(() => {
 		(async () => {
 			const userData = await API.Auth.currentAuthenticatedUser();
@@ -81,7 +79,7 @@ const UserEditScreen: React.FC<UserEditScreenProps> = (props) => {
 
 					<SettingButton
 						text='ユーザーネームを変更'
-						additional='agub1994'
+						additional='ag1994'
 					/> */}
 					<SettingButton
 						text='パスワードの変更'

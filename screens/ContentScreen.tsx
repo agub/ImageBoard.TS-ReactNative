@@ -20,6 +20,7 @@ import { onCreateComment, onDeletePost } from "../src/graphql/subscriptions";
 import {
 	CommentData,
 	ContentRouteParamList,
+	PostData,
 	RootStackParamList,
 } from "../types";
 import useIsMounted from "../components/custom/useIsMounted";
@@ -34,50 +35,14 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 	const route = useRoute<ContentRouteParamList>();
 
 	const { navigation } = props;
-
 	const [clicked, setClicked] = useState<boolean>(false);
 	const [commentData, setCommentData] = useState<CommentData[]>([]);
-
-	// const [postData, setPostData] = useState<GetPostQuery>();
-
-	// console.log(route.params.data.getPost);
-
-	// const useIsMounted = () => {
-	// 	const isMounted = useRef(false);
-	// 	useEffect(() => {
-	// 		isMounted.current = true;
-	// 		return () => {
-	// 			isMounted.current = false;
-	// 		};
-	// 	}, []);
-	// 	return isMounted;
-	// };
-	// console.log(route.params.data.getPost?.id);
-
-	//THIS IS FIXEDDDDDDDDDDD
-	const [postData, setPostData] = useState();
-
+	const [postData, setPostData] = useState<PostData>();
 	const isMounted = useIsMounted();
 
 	const addComment = () => {
 		setClicked(!clicked);
 	};
-
-	// useEffect(() => {
-	// 	let mount = true;
-	// 	const routeData: CommentData[] =
-	// 		route.params.data.getPost?.comments?.items;
-	// 	if (mount) {
-	// 		setCommentData(routeData);
-	// 		setPostData(route.params.data);
-	// 	}
-	// 	return () => {
-	// 		mount = false;
-	// 	};
-	// }, []);
-	// // console.log(route);
-
-	// //
 
 	useFocusEffect(
 		React.useCallback(() => {
@@ -89,14 +54,10 @@ const ContentScreen: React.FC<ContentScreenProps> = (props) => {
 							id: route.params.data.id,
 						})
 					);
-					// console.log(postData.data);
 					if (isMounted.current) {
 						setCommentData(postData.data.getPost.comments.items);
 						setPostData(postData.data.getPost);
 					}
-					// if (mount) {
-					// 	setPosts(postData.data.listPosts?.items);
-					// }
 				} catch (e) {
 					console.log(e);
 				}

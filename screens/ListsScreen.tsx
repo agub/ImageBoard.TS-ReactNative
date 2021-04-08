@@ -3,25 +3,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React, { useEffect, useRef, useState } from "react";
 import {
 	StyleSheet,
-	Text,
-	View,
-	ScrollView,
 	FlatList,
-	SafeAreaView,
 	RefreshControl,
 	ActivityIndicator,
 } from "react-native";
 import FeedItem from "../components/FeedItem";
-import { getPost } from "../src/graphql/queries";
-
 import { listPosts } from "../assets/customGraphql/queries";
 import { RootStackParamList } from "../types";
-import { ListPostsQuery } from "../src/API";
-import {
-	onCreateComment,
-	onCreatePost,
-	onDeletePost,
-} from "../src/graphql/subscriptions";
+import { onCreatePost, onDeletePost } from "../src/graphql/subscriptions";
 import useIsMounted from "../components/custom/useIsMounted";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -32,7 +21,6 @@ type ListsScreenProps = {
 const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 	const { navigation } = props;
 	const [posts, setPosts] = useState([]);
-	const [mainPosts, setMainPosts] = useState([]);
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const isMounted = useRef(true);
@@ -110,7 +98,6 @@ const ListsScreen: React.FC<ListsScreenProps> = (props) => {
 		});
 		return () => subscription.unsubscribe();
 	});
-	console.log(posts);
 
 	return (
 		<>

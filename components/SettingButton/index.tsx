@@ -1,8 +1,8 @@
 import { AntDesign, Feather } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Alert, Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Colors from "../../constants/Colors";
 
 type SettingButtonButtonProps = {
