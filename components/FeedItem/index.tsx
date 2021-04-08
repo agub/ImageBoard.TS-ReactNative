@@ -31,10 +31,8 @@ import { onCreateComment } from "../../src/graphql/subscriptions";
 
 type FeedItemProps = {
 	navigation: StackNavigationProp<RootStackParamList, "Root"> | undefined;
-
 	posts: PostData;
 	addComment?: () => void;
-
 	clickable: boolean | null;
 };
 
