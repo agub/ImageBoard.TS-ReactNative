@@ -4,6 +4,7 @@
 実装リンク：　https://expo.io/@shintrfc/projects/CommunityAppRN
 <br>
 Username: sample
+<br>
 Password: password
 
 # ImageBoard.TS-ReactNative
